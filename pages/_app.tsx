@@ -3,11 +3,11 @@ import type { AppProps } from 'next/app'
 import { configureChains, createConfig, WagmiConfig } from 'wagmi'
 import { EthereumClient, w3mConnectors, w3mProvider } from '@web3modal/ethereum'
 import { Web3Modal } from '@web3modal/react'
-import { polygon, polygonMumbai } from 'wagmi/chains'
+import { mainnet, goerli } from 'wagmi/chains'
 
 
 // Wagmi Config
-const chains = [polygon, polygonMumbai];
+const chains = [ mainnet, goerli ];
 const projectId = process.env.NEXT_PUBLIC_W3M_PROJECT_ID
 
 const { publicClient } = configureChains(
