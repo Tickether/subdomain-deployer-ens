@@ -7,7 +7,6 @@ import { fromHex } from 'viem'
 
 
 
-
 export default function Register() {
 
     const {address, isConnected} = useAccount()
@@ -33,12 +32,14 @@ export default function Register() {
     },[])
 
     useEffect(()=>{
+        //conditions for reload - browser re-entry
         if (rootENS === 'eth') {
             //set some true
         }
-        if (address! === nodeData[0]) {
+        else if (address! === nodeData[0]) {
             //set some true
-        } else if (namehash(subENS)) {
+        } 
+        else if (namehash(subENS)) {
             //set some true
         }   
     },[])

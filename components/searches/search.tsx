@@ -1,12 +1,11 @@
 import styles from '@/styles/Search.module.css'
-import axios from 'axios';
+import axios from 'axios'
 import { useRouter } from 'next/router'
 //import Image from 'next/image'
-//import logo from '@/public/SmokleyS.svg';
-//import Link from 'next/link';
+//import Link from 'next/link'
 import { namehash, normalize } from 'viem/ens'
-import { useEffect, useState } from 'react';
-import { useAccount, useContractRead } from 'wagmi';
+import { useEffect, useState } from 'react'
+import { useAccount, useContractRead } from 'wagmi'
 
 
 export interface SearchResults{
@@ -14,6 +13,8 @@ export interface SearchResults{
 }
 
 export default function Search() {
+
+    const router = useRouter()
 
     const [ensDomain, setEnsDomain] = useState<string>('');
     const [searchResults, setSearchResults] = useState([]);
@@ -23,7 +24,7 @@ export default function Search() {
     const [showSuggestBox, setShowSuggestBox] = useState<boolean>(false);
     const [nodeActive, setNodeActive] = useState<boolean>(false);
 
-    const router = useRouter()
+    
     
     //0x0000000000000000000000000000000000000000000000000000000000000000
     //0x675fe646308c6c88296bc9eace94ce777d74bbb0a4eaa66641afa05e99436411
@@ -34,7 +35,7 @@ export default function Search() {
             const query = `query {domains(where:{name_starts_with: "${ensDomain}"}, first:5){name}}`
             const response = await axios.post('https://api.thegraph.com/subgraphs/name/ensdomains/ensgoerli', {
               query
-            });
+            })
             // Handle the response data here
             setShowSuggestBox(true)
             console.log(response.data);
