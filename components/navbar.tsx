@@ -6,7 +6,6 @@ import { Web3Button } from '@web3modal/react';
 
 import { useEffect, useState } from 'react';
 import { useAccount, useContractRead } from 'wagmi';
-//import { Alchemy, Network } from 'alchemy-sdk';
 
 export default function Navbar() {
 
@@ -57,24 +56,30 @@ useEffect(() => {
 
   return (
     <>
-    <div className={styles.container}>
-      <div className={styles.wrapper}>
-        <div className={styles.logo}>
-          <Link href='/'>
-            <Image 
-              src='' 
-              alt="" 
-            />
-            <p>Lgooo</p>
-          </Link>
-        </div>
-        <div className={styles.menu}>
-        </div>
-        <div className={styles.connect}>
-          <Web3Button icon="hide" label="Connect" balance="hide" />
+      <div className={styles.container}>
+        <div className={styles.wrapper}>
+          <div className={styles.left}>
+            <div className={styles.logo}>
+              <Link href='/'>
+                <Image 
+                  src='' 
+                  alt="" 
+                />
+                <p>SubENS</p>
+              </Link>
+            </div>
+          </div>
+          
+          <div className={styles.right}>
+            <div className={styles.names}>
+              <Link href='/names'>names</Link>
+            </div>
+            <div className={styles.connect}>
+              <Web3Button icon="hide" label="Connect" balance="hide" />
+            </div>
+          </div>
         </div>
       </div>
-    </div>
     </>
   )
 }

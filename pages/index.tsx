@@ -9,8 +9,10 @@ export default function Home() {
       <Navbar/>
       <div className={styles.container}>
         <div className={styles.wrapper}>
-          <p>Your .eth Subdomain Identity</p>
-          <Search />
+          <div className={styles.search}>
+            <p>Your .eth Subdomain Identity</p>
+            <Search />
+          </div>
         </div>
       </div>
 

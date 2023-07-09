@@ -59,7 +59,7 @@ export default function Register() {
     console.log(fromHex(rootNodeENS, 'bigint'))
     
 
-    // check node expires
+    // check node data
     const contractReadNodeData = useContractRead({
         address: "0x114D4603199df73e7D157787f8778E21fCd13066",
         abi: [
@@ -77,9 +77,9 @@ export default function Register() {
         watch: true,
     })
     useEffect(() => {
-    if (contractReadNodeData?.data! /*&& typeof contractReadNodeExpired.data === 'Array<string' */) {
-        setNodeData(contractReadNodeData?.data!)
-    }
+        if (contractReadNodeData?.data! /*&& typeof contractReadNodeExpired.data === 'Array<string' */) {
+            setNodeData(contractReadNodeData?.data!)
+        }
     },[contractReadNodeData?.data!])
     console.log((contractReadNodeData?.data!))
       
@@ -154,6 +154,13 @@ export default function Register() {
      })
     const contractWriteSubdomain = useContractWrite(config)
 
+    const waitForTransaction = useWaitForTransaction({
+        hash: contractWriteSubdomain.data?.hash,
+        confirmations: 2,
+        onSuccess() {
+        },
+    })
+
     const handleSubdomain = async () => {
         try {
             await contractWriteSubdomain.writeAsync?.()
@@ -161,13 +168,6 @@ export default function Register() {
             console.log(err)
         }
     }
-
-    const waitForTransaction = useWaitForTransaction({
-        hash: contractWriteSubdomain.data?.hash,
-        confirmations: 2,
-        onSuccess() {
-        },
-    })
 
 
 

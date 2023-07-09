@@ -1,0 +1,21 @@
+.container {
+    background-color: #f8f8f8;
+    padding: 20px;
+  }
+  
+  .wrapper {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  .search {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+  }
+  
+  .search p {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+  }

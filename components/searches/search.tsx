@@ -6,9 +6,10 @@ import { useRouter } from 'next/router'
 import { namehash, normalize } from 'viem/ens'
 import { useEffect, useState } from 'react'
 import { useAccount, useContractRead } from 'wagmi'
+import SearchResult from './searchResult'
 
 
-export interface SearchResults{
+export interface SearchResult{
   name: string,
 }
 
@@ -23,7 +24,7 @@ export default function Search() {
     const [showSubEnsBox, setShowSubEnsBox] = useState<boolean>(false);
     const [showSuggestBox, setShowSuggestBox] = useState<boolean>(false);
     const [nodeActive, setNodeActive] = useState<boolean>(false);
-
+    
     
     
     //0x0000000000000000000000000000000000000000000000000000000000000000
@@ -32,7 +33,7 @@ export default function Search() {
       const handleEnsSearchFetch = async () => {
         if (ensDomain.length >= 1) {
           try {
-            const query = `query {domains(where:{name_starts_with: "${ensDomain}"}, first:5){name}}`
+            const query = `query {domains(where:{name_starts_with: "${ensDomain}", parent: "0x93cdeb708b7545dc668eb9280176169d1c33cfd8ed6f04690a0bcc88a93fc4ae"}, first:5){name}}`
             const response = await axios.post('https://api.thegraph.com/subgraphs/name/ensdomains/ensgoerli', {
               query
             })
@@ -55,12 +56,13 @@ export default function Search() {
     
 
 
-
+/*
     const handleEnsSearchSelect = (selectedENS: string) => {
-      setShowSubEnsBox(true);
-      setShowSuggestBox(false);
-      setEnsDomain(selectedENS);
+        setShowSubEnsBox(true);
+        setShowSuggestBox(false);
+        setEnsDomain(selectedENS);
     }
+*/
 
     useEffect(()=>{
       const handleSubEnsSearch = async() => {
@@ -86,7 +88,7 @@ export default function Search() {
     }
 
     
-
+console.log(namehash('eth'))
     
 
 const contractReadActiveNode = useContractRead({
@@ -113,8 +115,32 @@ useEffect(() => {
 console.log(contractReadActiveNode?.data!)
 
 
- 
-
+ /*
+const handleCanSubdomainResult = (canSub: boolean) => {
+  // Do something with the state received from the SearchResult component
+  // For example, update a state variable in the Search component
+  
+  setCanSub(canSub);
+};
+*/
+const handleSetShowSubEnsBox = (showSubEnsBox: boolean) => {
+  // Do something with the state received from the SearchResult component
+  // For example, update a state variable in the Search component
+  
+  setShowSubEnsBox(showSubEnsBox);
+};
+const handleSetShowSuggestBox = (showSuggestBox: boolean) => {
+  // Do something with the state received from the SearchResult component
+  // For example, update a state variable in the Search component
+  
+  setShowSuggestBox(showSuggestBox);
+};
+const handleSetSelectENS = (ENS: string) => {
+  // Do something with the state received from the SearchResult component
+  // For example, update a state variable in the Search component
+  
+  setEnsDomain(ENS);
+};
 
   return (
     <>
@@ -130,12 +156,18 @@ console.log(contractReadActiveNode?.data!)
                 {/* Search Results */}
                 {showSuggestBox && (
                   <div>
-                      {searchResults.map((searchresults : SearchResults) => (
+                      {searchResults.map((searchresult : SearchResult) => (
                       <div
-                          key={searchresults.name}
-                          onClick={() => handleEnsSearchSelect(searchresults.name)}
+                          key={searchresult.name}
                       >
-                          {searchresults.name}
+                          <SearchResult 
+                            searchresult={searchresult} 
+                            //canSubdomain={handleCanSubdomainResult} 
+                            subEnsBox={handleSetShowSubEnsBox}
+                            suggestBox={handleSetShowSuggestBox}
+                            ens={handleSetSelectENS}
+                            key={searchresult.name}
+                          />
                       </div>
                       ))}
                   </div>

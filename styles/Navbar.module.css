@@ -1,0 +1,40 @@
+.container {
+    background-color: #f8f8f8;
+    padding: 10px;
+  }
+  
+  .wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .left {
+    display: flex;
+    align-items: center;
+  }
+  
+  .logo {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+  }
+  
+  .logo p {
+    margin-left: 10px;
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
+  
+  .right {
+    display: flex;
+    align-items: center;
+  }
+  
+  .names {
+    margin-right: 20px;
+  }
+  
+  .connect {
+    margin-right: 10px;
+  }
