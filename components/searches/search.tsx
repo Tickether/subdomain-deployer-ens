@@ -55,15 +55,6 @@ export default function Search() {
     console.log(nodeActive)
     
 
-
-/*
-    const handleEnsSearchSelect = (selectedENS: string) => {
-        setShowSubEnsBox(true);
-        setShowSuggestBox(false);
-        setEnsDomain(selectedENS);
-    }
-*/
-
     useEffect(()=>{
       const handleSubEnsSearch = async() => {
         // Handle the search logic for the second search box
@@ -81,66 +72,66 @@ export default function Search() {
       handleSubEnsSearch()
     },[subEnsDomain])
     
-    const handleSubEnsSearchSelect = () => {
-      const subENS = subEnsDomain + '.' + ensDomain
-      
-      router.push('/register/[subENS]', `/register/${subENS}`);
-    }
-
+  const handleSubEnsSearchSelect = () => {
+    const subENS = subEnsDomain + '.' + ensDomain
     
-console.log(namehash('eth'))
-    
-
-const contractReadActiveNode = useContractRead({
-  address: "0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e",
-  abi: [
-      {
-          name: 'recordExists',
-          inputs: [{ internalType: "bytes32", name: "node", type: "bytes32" }],
-          outputs: [{ internalType: "bool", name: "", type: "bool" }],
-          stateMutability: 'view',
-          type: 'function',
-      },    
-  ],
-  functionName: 'recordExists',
-  args: [subEnsDomainHash],
-  chainId: 5,
-  watch: true,
-})
-useEffect(() => {
-  if (typeof contractReadActiveNode.data === 'boolean' ) {
-    setNodeActive(contractReadActiveNode?.data!)
+    router.push('/register/[subENS]', `/register/${subENS}`);
   }
-},[contractReadActiveNode?.data!])
-console.log(contractReadActiveNode?.data!)
+
+    
+  console.log(namehash('eth'))
+      
+
+  const contractReadActiveNode = useContractRead({
+    address: "0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e",
+    abi: [
+        {
+            name: 'recordExists',
+            inputs: [{ internalType: "bytes32", name: "node", type: "bytes32" }],
+            outputs: [{ internalType: "bool", name: "", type: "bool" }],
+            stateMutability: 'view',
+            type: 'function',
+        },    
+    ],
+    functionName: 'recordExists',
+    args: [subEnsDomainHash],
+    chainId: 5,
+    watch: true,
+  })
+  useEffect(() => {
+    if (typeof contractReadActiveNode.data === 'boolean' ) {
+      setNodeActive(contractReadActiveNode?.data!)
+    }
+  },[contractReadActiveNode?.data!])
+  console.log(contractReadActiveNode?.data!)
 
 
- /*
-const handleCanSubdomainResult = (canSub: boolean) => {
-  // Do something with the state received from the SearchResult component
-  // For example, update a state variable in the Search component
-  
-  setCanSub(canSub);
-};
-*/
-const handleSetShowSubEnsBox = (showSubEnsBox: boolean) => {
-  // Do something with the state received from the SearchResult component
-  // For example, update a state variable in the Search component
-  
-  setShowSubEnsBox(showSubEnsBox);
-};
-const handleSetShowSuggestBox = (showSuggestBox: boolean) => {
-  // Do something with the state received from the SearchResult component
-  // For example, update a state variable in the Search component
-  
-  setShowSuggestBox(showSuggestBox);
-};
-const handleSetSelectENS = (ENS: string) => {
-  // Do something with the state received from the SearchResult component
-  // For example, update a state variable in the Search component
-  
-  setEnsDomain(ENS);
-};
+  const handleSetShowSubEnsBox = (showSubEnsBox: boolean) => {
+    // Do something with the state received from the SearchResult component
+    // For example, update a state variable in the Search component
+    
+    setShowSubEnsBox(showSubEnsBox);
+  };
+  const handleSetShowSuggestBox = (showSuggestBox: boolean) => {
+    // Do something with the state received from the SearchResult component
+    // For example, update a state variable in the Search component
+    
+    setShowSuggestBox(showSuggestBox);
+  };
+  const handleSetSelectENS = (ENS: string) => {
+    // Do something with the state received from the SearchResult component
+    // For example, update a state variable in the Search component
+    
+    setEnsDomain(ENS);
+  };
+
+  const normalise = (item : string) =>{
+    if (item.length < 1){
+      return
+    } else {
+      return normalize(item)
+    }
+  }
 
   return (
     <>
@@ -150,7 +141,7 @@ const handleSetSelectENS = (ENS: string) => {
                 <input
                     type="text"
                     placeholder="Search your favorite ENS Community"
-                    value={ensDomain}
+                    value={normalise(ensDomain)}
                     onChange={(e) => setEnsDomain(e.target.value)}
                 />
                 {/* Search Results */}
@@ -178,7 +169,7 @@ const handleSetSelectENS = (ENS: string) => {
                         <input
                           type="text"
                           placeholder="Pick your communinty identyity"
-                          value={subEnsDomain}
+                          value={normalise(subEnsDomain)}
                           onChange={(e) => setSubEnsDomain(e.target.value)}
                         />
                         {
