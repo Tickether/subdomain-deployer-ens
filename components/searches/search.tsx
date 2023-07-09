@@ -125,13 +125,6 @@ export default function Search() {
     setEnsDomain(ENS);
   };
 
-  const normalise = (item : string) =>{
-    if (item.length < 1){
-      return
-    } else {
-      return normalize(item)
-    }
-  }
 
   return (
     <>
@@ -141,11 +134,15 @@ export default function Search() {
                 <input
                     type="text"
                     placeholder="Search your favorite ENS Community"
-                    value={normalise(ensDomain)}
-                    onChange={(e) => setEnsDomain(e.target.value)}
+                    value={(ensDomain)}
+                    onChange={(e) => {
+                      (e.target.value.length >= 1) 
+                      ? setEnsDomain(normalize(e.target.value)) 
+                      : setEnsDomain((e.target.value))
+                    }}
                 />
                 {/* Search Results */}
-                {showSuggestBox && (
+                {showSuggestBox && ensDomain.length >= 1 && (
                   <div>
                       {searchResults.map((searchresult : SearchResult) => (
                       <div
@@ -169,8 +166,12 @@ export default function Search() {
                         <input
                           type="text"
                           placeholder="Pick your communinty identyity"
-                          value={normalise(subEnsDomain)}
-                          onChange={(e) => setSubEnsDomain(e.target.value)}
+                          value={(subEnsDomain)}
+                          onChange={(e) => {
+                            (e.target.value.length >= 1)
+                            ? setSubEnsDomain(normalize(e.target.value))
+                            : setSubEnsDomain((e.target.value))
+                          }}
                         />
                         {
                           subEnsDomain.length >= 1
