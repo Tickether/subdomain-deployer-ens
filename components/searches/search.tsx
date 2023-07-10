@@ -27,7 +27,10 @@ export default function Search() {
     const router = useRouter()
 
     const [ensDomain, setEnsDomain] = useState<string>('');
+    const [ensSearch, setEnsSearch] = useState<string>('');
+    
     const [searchResults, setSearchResults] = useState([]);
+    //
     const [subEnsDomain, setSubEnsDomain] = useState<string>('');
     const [errorMsg, setErrorMsg] = useState<string>('');
     const [subEnsDomainHash, setSubEnsDomainHash] = useState<string>('0x0000000000000000000000000000000000000000000000000000000000000000');
@@ -41,9 +44,9 @@ export default function Search() {
     //0x675fe646308c6c88296bc9eace94ce777d74bbb0a4eaa66641afa05e99436411
     useEffect(()=>{
       const handleEnsSearchFetch = async () => {
-        if (ensDomain.length >= 1) {
+        if (ensSearch.length >= 1) {
           try {
-            const query = `query {domains(where:{name_starts_with: "${ensDomain}", parent: "0x93cdeb708b7545dc668eb9280176169d1c33cfd8ed6f04690a0bcc88a93fc4ae"}, first:5){name owner{id} wrappedOwner{id}}}`
+            const query = `query {domains(where:{name_starts_with: "${ensSearch}", parent: "0x93cdeb708b7545dc668eb9280176169d1c33cfd8ed6f04690a0bcc88a93fc4ae"}, first:5){name owner{id} wrappedOwner{id}}}`
             const response = await axios.post('https://api.thegraph.com/subgraphs/name/ensdomains/ensgoerli', {
               query
             })
@@ -57,7 +60,7 @@ export default function Search() {
         }
       }
       handleEnsSearchFetch()
-    },[ensDomain])
+    },[ensSearch])
 
     console.log(ensDomain)
     console.log(searchResults)
@@ -145,10 +148,13 @@ export default function Search() {
                     type="text"
                     placeholder="Search your favorite ENS Community"
                     value={(ensDomain)}
-                    onChange={(e) => setEnsDomain((e.target.value))}
+                    onChange={(e) => {
+                      setEnsDomain((e.target.value))
+                      setEnsSearch((e.target.value))
+                    }}
                 />
                 {/* Search Results */}
-                {showSuggestBox && ensDomain.length >= 1 && (
+                {showSuggestBox && ensSearch.length >= 1 && (
                   <div>
                       {searchResults.map((searchresult : SearchResult) => (
                       <div
