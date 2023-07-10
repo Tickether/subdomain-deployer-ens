@@ -33,10 +33,11 @@ export default function Names() {
 
     
     useEffect(()=>{
+        let ensNames: any = []
         const handleEnsOwnedFetch = async ()=>{
-            let ensNames = []
+            
             try {
-                const query = `query { domains(where:{owner: "${address!.toLowerCase()}"}){name} wrappedDomains(where: {owner:"0xf7b083022560c6b7fd0a758a5a1edd47ea87c2bc"}){name} }`
+                const query = `query { domains(where:{owner: "${address!.toLowerCase()}"}){name} wrappedDomains(where: {owner:"${address!.toLowerCase()}"}){name} }`
                 const response = await axios.post('https://api.thegraph.com/subgraphs/name/ensdomains/ensgoerli', {
                 query
                 })
@@ -64,7 +65,7 @@ export default function Names() {
             }        
         }
         handleEnsOwnedFetch()
-    })
+    },[address])
 
     console.log(ensDomains)
 

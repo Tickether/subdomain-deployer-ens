@@ -155,26 +155,27 @@ export default function Search() {
                 />
                 {/* Search Results */}
                 {showSuggestBox && ensSearch.length >= 1 && (
-                  <div>
+                  <div className={styles.searchResults}>
                       {searchResults.map((searchresult : SearchResult) => (
                       <div
-                          key={searchresult.name}
+                        className={styles.searchResultItem}
+                        key={searchresult.name}
                       >
-                          <SearchResult 
-                            searchresult={searchresult} 
-                            //canSubdomain={handleCanSubdomainResult} 
-                            subEnsBox={handleSetShowSubEnsBox}
-                            suggestBox={handleSetShowSuggestBox}
-                            ens={handleSetSelectENS}
-                            key={searchresult.name}
-                          />
+                        <SearchResult 
+                          searchresult={searchresult} 
+                          //canSubdomain={handleCanSubdomainResult} 
+                          subEnsBox={handleSetShowSubEnsBox}
+                          suggestBox={handleSetShowSuggestBox}
+                          ens={handleSetSelectENS}
+                          key={searchresult.name}
+                        />
                       </div>
                       ))}
                   </div>
                 )}
                 
                 {showSubEnsBox && (
-                    <div>
+                    <div className={styles.subDomainContainer}>
                         <input
                           type="text"
                           placeholder="Pick your communinty identyity"
@@ -195,20 +196,20 @@ export default function Search() {
                         />
                         {
                           errorMsg.length >=1 && (
-                            <div>{errorMsg}</div>
+                            <div className={styles.errorMsg}>{errorMsg}</div>
                           )
                         }
                         {
                           subEnsDomain.length >= 1
                           ? (
-                            <div>
+                            <div className={styles.subDomainResult}>
                               { 
                                 nodeActive  
                                 ? <div>already registered</div>
                                 : (
                                   <div>
                                     <div>available to regiter</div>
-                                    <button onClick={handleSubEnsSearchSelect}>Register SubDomain</button> 
+                                    <button className={styles.button} onClick={handleSubEnsSearchSelect}>Register SubDomain</button> 
                                   </div>
                                 )
                               }

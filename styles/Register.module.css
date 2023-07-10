@@ -1,0 +1,26 @@
+
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .wrapper {
+    background-color: #f2f2f2;
+    border-radius: 8px;
+    padding: 20px;
+  }
+  
+  .subButtons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+  }
+  
+  
+  /* Additional styling for the Lets Go! button */
+  button#letsGoButton {
+    background-color: #0f9d58;
+  }

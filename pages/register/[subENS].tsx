@@ -1,9 +1,9 @@
-import styles from '@/styles/Home.module.css'
+import styles from '@/styles/Register.module.css'
 import Navbar from '@/components/navbar'
 import { useEffect, useState } from 'react'
 import { namehash } from 'viem/ens'
 import { useAccount, useContractRead, useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi'
-import { fromHex } from 'viem'
+import { formatEther, fromHex } from 'viem'
 
 
 
@@ -178,14 +178,17 @@ export default function Register() {
                 <div className={styles.wrapper}> 
                     <div>
                         <p>{subENStoString}</p>
-                        <div className={styles.claimItemButtons}>
-                            <button onClick={handleDecrement}>-</button>
-                            <input 
-                                readOnly
-                                type='number' 
-                                value={subsYears}
-                            />
-                            <button onClick={handleIncrement}>+</button>
+                        <div className={styles.subButtons}>
+                            <div>
+                                <button onClick={handleDecrement}>-</button>
+                                <input 
+                                    readOnly
+                                    type='number' 
+                                    value={subsYears}
+                                />
+                                <button onClick={handleIncrement}>+</button>
+                            </div>
+                            <span>{formatEther(subNodeFee)}</span>
                             <button 
                                 disabled={!connected}
                                 

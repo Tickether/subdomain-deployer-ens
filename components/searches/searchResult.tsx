@@ -1,4 +1,4 @@
-import styles from '@/styles/Home.module.css'
+import styles from '@/styles/SearchResults.module.css'
 import { useEffect, useState } from 'react'
 import { namehash } from 'viem'
 import { useAccount, useContractRead } from 'wagmi'
