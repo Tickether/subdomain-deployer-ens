@@ -11,7 +11,16 @@ import SearchResult from './searchResult'
 
 export interface SearchResult{
   name: string,
+  owner: Owner,
+  wrappedOwner: Owner,
 }
+
+export interface Owner{
+  id: string,
+}
+
+
+
 
 export default function Search() {
 
@@ -20,6 +29,7 @@ export default function Search() {
     const [ensDomain, setEnsDomain] = useState<string>('');
     const [searchResults, setSearchResults] = useState([]);
     const [subEnsDomain, setSubEnsDomain] = useState<string>('');
+    const [errorMsg, setErrorMsg] = useState<string>('');
     const [subEnsDomainHash, setSubEnsDomainHash] = useState<string>('0x0000000000000000000000000000000000000000000000000000000000000000');
     const [showSubEnsBox, setShowSubEnsBox] = useState<boolean>(false);
     const [showSuggestBox, setShowSuggestBox] = useState<boolean>(false);
@@ -33,7 +43,7 @@ export default function Search() {
       const handleEnsSearchFetch = async () => {
         if (ensDomain.length >= 1) {
           try {
-            const query = `query {domains(where:{name_starts_with: "${ensDomain}", parent: "0x93cdeb708b7545dc668eb9280176169d1c33cfd8ed6f04690a0bcc88a93fc4ae"}, first:5){name}}`
+            const query = `query {domains(where:{name_starts_with: "${ensDomain}", parent: "0x93cdeb708b7545dc668eb9280176169d1c33cfd8ed6f04690a0bcc88a93fc4ae"}, first:5){name owner{id} wrappedOwner{id}}}`
             const response = await axios.post('https://api.thegraph.com/subgraphs/name/ensdomains/ensgoerli', {
               query
             })
@@ -135,11 +145,7 @@ export default function Search() {
                     type="text"
                     placeholder="Search your favorite ENS Community"
                     value={(ensDomain)}
-                    onChange={(e) => {
-                      (e.target.value.length >= 1) 
-                      ? setEnsDomain(normalize(e.target.value)) 
-                      : setEnsDomain((e.target.value))
-                    }}
+                    onChange={(e) => setEnsDomain((e.target.value))}
                 />
                 {/* Search Results */}
                 {showSuggestBox && ensDomain.length >= 1 && (
@@ -168,11 +174,24 @@ export default function Search() {
                           placeholder="Pick your communinty identyity"
                           value={(subEnsDomain)}
                           onChange={(e) => {
-                            (e.target.value.length >= 1)
-                            ? setSubEnsDomain(normalize(e.target.value))
-                            : setSubEnsDomain((e.target.value))
+                            try {
+                              (e.target.value.length >= 1)
+                              ? setSubEnsDomain(normalize(e.target.value))
+                              : setSubEnsDomain((e.target.value))
+                            } catch (error : any) {
+                              console.log(error.message)
+                              setErrorMsg(error.message)
+                              setTimeout(() => {
+                                setErrorMsg(''); // Clear error state after 3 seconds
+                              }, 3666);
+                            }
                           }}
                         />
+                        {
+                          errorMsg.length >=1 && (
+                            <div>{errorMsg}</div>
+                          )
+                        }
                         {
                           subEnsDomain.length >= 1
                           ? (

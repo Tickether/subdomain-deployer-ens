@@ -19,6 +19,7 @@ export default function SearchResult({searchresult, /*canSubdomain,*/ subEnsBox,
     const {address, isConnected} = useAccount()
 
     //const [prices, setPrices] = useState<any[]>([[BigInt(0), BigInt(0), BigInt(0)]])
+    const [owner, setOwner] = useState<string>('0x0000000000000000000000000000000000000000');
     const [activeParentNode, setActiveParentNode] = useState<boolean>(false)
     const [approved, setApproved] = useState<boolean>(false)
     const [wrapped, setWrapped] = useState<boolean>(false)
@@ -50,7 +51,7 @@ console.log(searchresult.name)
         }
     },[contractReadWrapped?.data!])
     
-    // check approved
+    // check approved // must replace address with own ofer ens in search
     const contractReadApproved = useContractRead({
         address: "0x114D4603199df73e7D157787f8778E21fCd13066",
         abi: [
@@ -63,7 +64,7 @@ console.log(searchresult.name)
             },
         ],
         functionName: 'isApprovedForAll',
-        args: [(address!), ('0x229C0715e70741F854C299913C2446eb4400e76C')],
+        args: [(owner!), ('0x229C0715e70741F854C299913C2446eb4400e76C')],
         watch: true,
         chainId: 5,
     })  
@@ -162,7 +163,13 @@ console.log(searchresult.name)
     console.log(contractReadThreeUpLetterFee?.data!, contractReadFourFiveLetterFee?.data!, contractReadSixDownLetterFee?.data!)
     */
     
-    
+    useEffect(()=>{
+        if (wrapped) {
+            setOwner(searchresult.wrappedOwner.id)
+        } else {
+            setOwner(searchresult.owner.id)
+        }
+    },[wrapped])
 
     
     return (

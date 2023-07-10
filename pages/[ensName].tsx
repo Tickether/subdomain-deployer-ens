@@ -2,7 +2,7 @@ import styles from '@/styles/Names.module.css'
 import Navbar from '@/components/navbar'
 import { useEffect, useState } from 'react'
 import { useAccount, useContractRead, useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi'
-import {namehash} from 'viem/ens'
+import {namehash} from 'viem'
 
 
 export default function EnsName() {
@@ -196,7 +196,7 @@ export default function EnsName() {
   })
   const contractWriteParentNode = useContractWrite(prepareContractWriteParentNode.config)
 
-  const waitForTransaction = useWaitForTransaction({
+  const waitForSetParentNode = useWaitForTransaction({
     hash: contractWriteParentNode.data?.hash,
     confirmations: 2,
     onSuccess() {
@@ -211,7 +211,7 @@ export default function EnsName() {
     }
   }
 
-/*
+
   const prepareContractWriteParentNodeFee = usePrepareContractWrite({
     address: '0x229C0715e70741F854C299913C2446eb4400e76C',
     abi: [
@@ -224,13 +224,13 @@ export default function EnsName() {
       },
     ],
     functionName: 'setLetterFees',
-    args: [ (namehash(ENS)), (BigInt(0)), (BigInt(0)), (BigInt(0)) ],
+    args: [ (namehash(ENS)), (BigInt(newPrices[0])), (BigInt(newPrices[1])), (BigInt(newPrices[2])) ],
     value: BigInt(0),
     chainId: 5,
   })
   const contractWriteParentNodeFee = useContractWrite(prepareContractWriteParentNodeFee.config)
 
-  const waitForTransaction = useWaitForTransaction({
+  const waitForSetParentNodeFee = useWaitForTransaction({
     hash: contractWriteParentNodeFee.data?.hash,
     confirmations: 2,
     onSuccess() {
@@ -244,7 +244,7 @@ export default function EnsName() {
         console.log(err)
     }
   }
-  */
+  
 
   console.log(new Intl.NumberFormat('us-US', { style: 'currency', currency: 'USD' }).format(Number(newPrices[1])))//
 /*
