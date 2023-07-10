@@ -92,7 +92,7 @@ export default function Search() {
   }
 
     
-  console.log(namehash('eth'))
+  console.log(namehash('geeloko.eth'))
       
 
   const contractReadActiveNode = useContractRead({

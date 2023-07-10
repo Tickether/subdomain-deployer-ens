@@ -1,8 +1,10 @@
-import styles from '@/styles/Names.module.css'
+import styles from '@/styles/Name.module.css'
 import Navbar from '@/components/navbar'
 import { useEffect, useState } from 'react'
 import { useAccount, useContractRead, useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi'
 import {namehash} from 'viem'
+import axios from 'axios'
+import { SearchResult } from '@/components/searches/search'
 
 
 export default function EnsName() {
@@ -10,13 +12,16 @@ export default function EnsName() {
   const {address, isConnected} = useAccount()
 
   const [ENS, setENS] = useState<string>('')
+  const [owner, setOwner] = useState<string>('0x0000000000000000000000000000000000000000')
   const [nodeData, setNodeData] = useState<any>([])
+  const [subsEns, setSubsEns] = useState([])
   const [prices, setPrices] = useState<any>([[BigInt(0), BigInt(0), BigInt(0)]])
   const [newPrices, setNewPrices] = useState<string[]>(['0', '0', '0'])
   const [dollarPrices, setDollarPrices] = useState<string[]>(['0', '0', '0'])
   const [activeParentNode, setActiveParentNode] = useState<boolean>(false)
   const [fuseBurned, setFuseBurned] = useState<boolean>(false)
   const [connected, setConnected] = useState<boolean>(false)
+  const [approved, setApproved] = useState<boolean>(false)
     
 
   console.log(ENS)
@@ -30,6 +35,12 @@ export default function EnsName() {
         setConnected((false))
     }
   },[isConnected])
+
+  useEffect(() => {
+    if (address && typeof address === 'string') {
+        setOwner((address))
+    } 
+  },[address])
     
     
   useEffect(()=>{
@@ -38,6 +49,66 @@ export default function EnsName() {
 
   console.log(ENS)
 
+  const contractReadApproved = useContractRead({
+    address: "0x114D4603199df73e7D157787f8778E21fCd13066",
+    abi: [
+        {
+            name: 'isApprovedForAll',
+            inputs: [{ internalType: "address", name: "account", type: "address" }, { internalType: "address", name: "operator", type: "address" }],
+            outputs: [{ internalType: "bool", name: "", type: "bool" }],
+            stateMutability: 'view',
+            type: 'function',
+        },
+    ],
+    functionName: 'isApprovedForAll',
+    args: [(address!), ('0x229C0715e70741F854C299913C2446eb4400e76C')],
+    watch: true,
+    chainId: 5,
+  })  
+  console.log(contractReadApproved.data)
+    
+  useEffect(() => {
+      if (contractReadApproved?.data! && typeof contractReadApproved.data === 'boolean') {
+          setApproved((contractReadApproved?.data!))
+      }
+  },[contractReadApproved?.data!])
+
+  const prepareContractWriteApproval = usePrepareContractWrite({
+      address: '0x114D4603199df73e7D157787f8778E21fCd13066',
+      abi: [
+          {
+            name: 'setApprovalForAll',
+            inputs: [ {internalType: "address", name: "operator", type: "address"}, { internalType: "bool", name: "approved", type: "bool" } ],
+            outputs: [],
+            stateMutability: 'nonpayable',
+            type: 'function',
+          },
+        ],
+      functionName: 'setApprovalForAll',
+      args: [ ('0x229C0715e70741F854C299913C2446eb4400e76C'), (true) ],
+      chainId: 5,
+      value: BigInt(0),
+  })
+
+
+
+
+  const  contractWriteApproval = useContractWrite(prepareContractWriteApproval.config)
+
+  const waitForApproval = useWaitForTransaction({
+      hash: contractWriteApproval.data?.hash,
+      confirmations: 1,
+      onSuccess() {
+      },
+  })
+
+  const handleApproval = async () => {
+      try {
+          await contractWriteApproval.writeAsync?.()
+      } catch (err) {
+          console.log(err)
+      }    
+  }
 
   const contractReadActiveParentNode = useContractRead({
     address: "0x229C0715e70741F854C299913C2446eb4400e76C",
@@ -106,7 +177,7 @@ export default function EnsName() {
   
   useEffect(() => {
     if (contractReadFuseBurned?.data! && typeof contractReadFuseBurned.data === 'boolean' ) {
-      //setFuseBurned(contractReadFuseBurned?.data!)
+      setFuseBurned(contractReadFuseBurned?.data!)
     }
   },[contractReadFuseBurned?.data!])
   console.log((contractReadFuseBurned?.data!))
@@ -183,9 +254,9 @@ export default function EnsName() {
     abi: [
       {
         name: 'setBaseEns',
-        inputs: [ {internalType: "bytes32", name: "node", type: "bytes32"}, {internalType: "string", name: "subNodeLabel", type: "string"}, {internalType: "address", name: "owner", type: "address"}, {internalType: "uint256", name: "duration", type: "uint256" } ],
+        inputs: [ {internalType: "bytes32", name: "node", type: "bytes32"} ],
         outputs: [],
-        stateMutability: 'payable',
+        stateMutability: 'nonpayable',
         type: 'function',
       },
     ],
@@ -246,12 +317,6 @@ export default function EnsName() {
   }
   
 
-  console.log(new Intl.NumberFormat('us-US', { style: 'currency', currency: 'USD' }).format(Number(newPrices[1])))//
-/*
-  const formatCurrency = (value: string) => {
-    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(Number(value))
-  };
-*/
 
   useEffect(()=>{
     let dPrices = []
@@ -261,6 +326,24 @@ export default function EnsName() {
     setDollarPrices(dPrices)
   },[newPrices])
 
+  useEffect(()=>{
+    const handleShowSubEns = async () => {
+      try {
+        const query = `query {domains(where:{parent: "${namehash(ENS)}"}) {name}}`
+        const response = await axios.post('https://api.thegraph.com/subgraphs/name/ensdomains/ensgoerli', {
+          query
+        })
+        console.log(response.data);
+        setSubsEns(response.data.data.domains)
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    handleShowSubEns()
+  },[ENS])
+  console.log(subsEns)
+
+  //read balance and withdraw
   return (
     <>
       <Navbar/>
@@ -268,50 +351,99 @@ export default function EnsName() {
         <div className={styles.wrapper}>
           <div className={styles.name}> 
             {
-              address! === nodeData[0]
+              owner! === nodeData[0]
               ? (
                 <div className={styles.nameOwner}>
                   {
-                    activeParentNode
+                    approved 
                     ? (
                       <div>
-                        {/** some stuff subs & n general info */}
-                        <div>
-                            <input 
-                              type='number' 
-                              placeholder={(newPrices[0])}
-                              value={(newPrices[0])}
-                              onChange={(e) => {
-                                const updatedPrices = [...newPrices]
-                                updatedPrices[0] = (e.target.value)
-                                setNewPrices(updatedPrices)
-                              }}
-                            />
-                            <input
-                              type='number' 
-                              placeholder={(newPrices[1])}
-                              value={(newPrices[1])}
-                              onChange={(e) => {
-                                const updatedPrices = [...newPrices]
-                                updatedPrices[1] = (e.target.value)
-                                setNewPrices(updatedPrices)
-                              }}
-                            />
-                            <input
-                              type='number' 
-                              placeholder={(newPrices[2])}
-                              value={(newPrices[2])}
-                              onChange={(e) => {
-                                const updatedPrices = [...newPrices]
-                                updatedPrices[2] = (e.target.value)
-                                setNewPrices(updatedPrices)
-                              }}
-                            />
-                        </div>
+                        {
+                          activeParentNode
+                          ? (
+                            <div className={styles.nameOwnerActiveParentNode}>
+                              {/** some stuff subs & n general info */}
+                              {/**will propably modal */}
+                              <p>You've made it this far! Set Price in Dollars for your Subdomain or leave as is for free Subdomains</p>
+                              <div className={styles.nameOwnerActiveParentNodeFeeSet}>
+                                  <label>Three Letter & below</label>
+                                  <input 
+                                    type='number' 
+                                    placeholder={(newPrices[0])}
+                                    value={(newPrices[0])}
+                                    onChange={(e) => {
+                                      const updatedPrices = [...newPrices]
+                                      updatedPrices[0] = (e.target.value)
+                                      setNewPrices(updatedPrices)
+                                    }}
+                                  />
+                                  <label>Four & Five Letter </label>
+                                  <input
+                                    type='number' 
+                                    placeholder={(newPrices[1])}
+                                    value={(newPrices[1])}
+                                    onChange={(e) => {
+                                      const updatedPrices = [...newPrices]
+                                      updatedPrices[1] = (e.target.value)
+                                      setNewPrices(updatedPrices)
+                                    }}
+                                  />
+                                  <label>Six Letter Up </label>
+                                  <input
+                                    type='number' 
+                                    placeholder={(newPrices[2])}
+                                    value={(newPrices[2])}
+                                    onChange={(e) => {
+                                      const updatedPrices = [...newPrices]
+                                      updatedPrices[2] = (e.target.value)
+                                      setNewPrices(updatedPrices)
+                                    }}
+                                  />
+                              </div>
+                              <button> Set Fees </button>
+                              <div>
+                                {/** show list subnames */}
+                                {
+                                  subsEns.length < 1
+                                  ? (
+                                    <div>
+                                      <p>No Subdmains for this ENS yet...</p>
+                                    </div>
+                                  )
+                                  : (
+                                    <div>
+                                      <p>ENS Subdomains</p>
+                                      {
+                                        subsEns.map((subEns : SearchResult)=> (
+                                          <div>
+                                            
+                                            <p>{subEns.name}</p>
+                                          </div>
+                                        ))
+                                      }
+                                    </div>
+                                  )
+                                }
+                              </div>
+                            </div>
+                          )
+                          : (
+                            <div className={styles.nameOwnerNoParentNode}>
+               
+                                <span>Parent Node is not set! Dont worry click below to init</span>
+                                <button onClick={handleSetParentNode}>Set Parent Node</button>
+                
+                            </div>
+                          )
+                        }
                       </div>
                     )
                     : (
-                      <div>
+                      <div className={styles.nameOwnerNotApproved}>
+                        
+                          <span>Please approve to enable domain mangement dashboard</span>
+                          <button onClick={handleApproval}>approve</button>
+                
                       </div>
                     )
                   }
@@ -320,9 +452,35 @@ export default function EnsName() {
               : (
                 <div className={styles.nameBuyer}>
                   {
-                    activeParentNode
-                    ? <div></div>
-                    : <div></div>
+                    approved
+                    ? (
+                      <div className={styles.nameBuyerApproved}>
+                        {
+                          activeParentNode
+                          ? (
+                            <div className={styles.nameBuyerActiveParentNode}>
+                              <div>
+                                {/**route to register page */}
+                              </div>
+                            </div>
+                          )
+                          : (
+                            <div className={styles.nameBuyerNoParentNode}>
+                    
+                                <span>domain not active yet, owner must add parent</span>
+                 
+                            </div>
+                          )
+                        }
+                      </div>
+                    )
+                    : (
+                      <div className={styles.nameBuyerNotApproved}>
+     
+                          <span>domain not active yet</span>
+             
+                      </div>
+                    )
                   }
                 </div>
               )

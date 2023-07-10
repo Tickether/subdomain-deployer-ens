@@ -116,7 +116,7 @@ export default function Names() {
 
     const  contractWriteApproval = useContractWrite(prepareContractWriteApproval.config)
 
-    const waitForTransaction = useWaitForTransaction({
+    const waitForApproval = useWaitForTransaction({
         hash: contractWriteApproval.data?.hash,
         confirmations: 1,
         onSuccess() {
@@ -148,7 +148,9 @@ export default function Names() {
                         {ensDomains.map(( ensDomains: ensNames) =>(
                         <div 
                             onClick={() => {
-                                router.push('/[subENS]', `/${ensDomains.name}`)
+                                if (approved) {
+                                    router.push('/[subENS]', `/${ensDomains.name}`)
+                                } 
                             }} 
                             key={ensDomains.name}
                         >
