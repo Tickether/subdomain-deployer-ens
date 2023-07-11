@@ -2,9 +2,10 @@ import styles from '@/styles/Name.module.css'
 import Navbar from '@/components/navbar'
 import { useEffect, useState } from 'react'
 import { useAccount, useContractRead, useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi'
-import {namehash} from 'viem'
+import {formatEther, namehash} from 'viem'
 import axios from 'axios'
 import { SearchResult } from '@/components/searches/search'
+import SubEnsFee from '@/components/name/subensfee'
 
 
 export default function EnsName() {
@@ -15,14 +16,14 @@ export default function EnsName() {
   const [owner, setOwner] = useState<string>('0x0000000000000000000000000000000000000000')
   const [nodeData, setNodeData] = useState<any>([])
   const [subsEns, setSubsEns] = useState([])
-  const [prices, setPrices] = useState<any>([[BigInt(0), BigInt(0), BigInt(0)]])
-  const [newPrices, setNewPrices] = useState<string[]>(['0', '0', '0'])
-  const [dollarPrices, setDollarPrices] = useState<string[]>(['0', '0', '0'])
+  //ParentNodeBalance
+  const [parentNodeBalance, setParentNodeBalance] = useState<bigint>(BigInt(0))
   const [activeParentNode, setActiveParentNode] = useState<boolean>(false)
   const [fuseBurned, setFuseBurned] = useState<boolean>(false)
   const [connected, setConnected] = useState<boolean>(false)
   const [approved, setApproved] = useState<boolean>(false)
-    
+  const [openModal, setOpenModal] = useState<boolean>(false)
+
 
   console.log(ENS)
   console.log(nodeData)
@@ -183,71 +184,6 @@ export default function EnsName() {
   console.log((contractReadFuseBurned?.data!))
 
   
-  const contractReadThreeUpLetterFee = useContractRead({
-    address: "0x229C0715e70741F854C299913C2446eb4400e76C",
-    abi: [
-        {
-            name: 'threeUpLetterFee',
-            inputs: [{ internalType: "bytes32", name: "node", type: "bytes32" }],
-            outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
-            stateMutability: 'view',
-            type: 'function',
-        },    
-    ],
-    functionName: 'threeUpLetterFee',
-    args: [(namehash(ENS))],
-    chainId: 5,
-    watch: true,
-  })
-  const contractReadFourFiveLetterFee = useContractRead({
-    address: "0x229C0715e70741F854C299913C2446eb4400e76C",
-    abi: [
-        {
-            name: 'fourFiveLetterFee',
-            inputs: [{ internalType: "bytes32", name: "node", type: "bytes32" }],
-            outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
-            stateMutability: 'view',
-            type: 'function',
-        },    
-    ],
-    functionName: 'fourFiveLetterFee',
-    args: [(namehash(ENS))],
-    chainId: 5,
-    watch: true,
-  })
-  const contractReadSixDownLetterFee = useContractRead({
-    address: "0x229C0715e70741F854C299913C2446eb4400e76C",
-    abi: [
-        {
-            name: 'sixDownLetterFee',
-            inputs: [{ internalType: "bytes32", name: "node", type: "bytes32" }],
-            outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
-            stateMutability: 'view',
-            type: 'function',
-        },    
-    ],
-    functionName: 'sixDownLetterFee',
-    args: [(namehash(ENS))],
-    chainId: 5,
-    watch: true,
-  })
-  useEffect(() => {
-    let prices_ = []
-    if (contractReadThreeUpLetterFee?.data! && typeof contractReadThreeUpLetterFee.data === 'bigint' ) {
-      prices_.push(contractReadThreeUpLetterFee?.data!)
-    }
-    if (contractReadFourFiveLetterFee?.data! && typeof contractReadFourFiveLetterFee.data === 'bigint' ) {
-      prices_.push(contractReadFourFiveLetterFee?.data!)
-    }
-    if (contractReadSixDownLetterFee?.data! && typeof contractReadSixDownLetterFee.data === 'bigint' ) {
-      prices_.push(contractReadSixDownLetterFee?.data!)
-    }
-    setPrices(prices_)
-  },[contractReadThreeUpLetterFee?.data!, contractReadFourFiveLetterFee?.data!, contractReadSixDownLetterFee?.data!])
-  console.log(contractReadThreeUpLetterFee?.data!, contractReadFourFiveLetterFee?.data!, contractReadSixDownLetterFee?.data!)
-  console.log(newPrices[0], newPrices[1], newPrices[2])
-  
-
 
   const prepareContractWriteParentNode = usePrepareContractWrite({
     address: '0x229C0715e70741F854C299913C2446eb4400e76C',
@@ -283,41 +219,32 @@ export default function EnsName() {
   }
 
 
-  const prepareContractWriteParentNodeFee = usePrepareContractWrite({
-    address: '0x229C0715e70741F854C299913C2446eb4400e76C',
+  const contractReadParentNodeBalance = useContractRead({
+    address: "0x229C0715e70741F854C299913C2446eb4400e76C",
     abi: [
-      {
-        name: 'setLetterFees',
-        inputs: [ {internalType: "bytes32", name: "node", type: "bytes32"}, {internalType: "uint256", name: "threeUpLetterFee_", type: "uint256"}, {internalType: "uint256", name: "fourFiveLetterFee_", type: "uint256"}, {internalType: "uint256", name: "sixDownLetterFee_", type: "uint256" } ],
-        outputs: [],
-        stateMutability: 'nonpayable',
-        type: 'function',
-      },
+        {
+            name: 'parentNodeBalance',
+            inputs: [{ internalType: "bytes32", name: "node", type: "bytes32" }],
+            outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+            stateMutability: 'view',
+            type: 'function',
+        },    
     ],
-    functionName: 'setLetterFees',
-    args: [ (namehash(ENS)), (BigInt(newPrices[0])), (BigInt(newPrices[1])), (BigInt(newPrices[2])) ],
-    value: BigInt(0),
+    functionName: 'parentNodeBalance',
+    args: [(namehash(ENS))],
     chainId: 5,
+    watch: true,
   })
-  const contractWriteParentNodeFee = useContractWrite(prepareContractWriteParentNodeFee.config)
-
-  const waitForSetParentNodeFee = useWaitForTransaction({
-    hash: contractWriteParentNodeFee.data?.hash,
-    confirmations: 2,
-    onSuccess() {
-    },
-})
-
-  const handleSetParentNodeFee = async () => {
-    try {
-        await contractWriteParentNodeFee.writeAsync?.()
-    } catch (err) {
-        console.log(err)
+  useEffect(() => {
+    
+    if (contractReadParentNodeBalance?.data! && typeof contractReadParentNodeBalance.data === 'bigint' ) {
+      setParentNodeBalance(contractReadParentNodeBalance?.data!)
     }
-  }
+
+  },[ contractReadParentNodeBalance?.data!])
   
 
-
+/*
   useEffect(()=>{
     let dPrices = []
     for (let i = 0; i < newPrices.length; i++) {
@@ -325,18 +252,21 @@ export default function EnsName() {
     }
     setDollarPrices(dPrices)
   },[newPrices])
+*/
 
   useEffect(()=>{
     const handleShowSubEns = async () => {
-      try {
-        const query = `query {domains(where:{parent: "${namehash(ENS)}"}) {name}}`
-        const response = await axios.post('https://api.thegraph.com/subgraphs/name/ensdomains/ensgoerli', {
-          query
-        })
-        console.log(response.data);
-        setSubsEns(response.data.data.domains)
-      } catch (error) {
-        console.log(error);
+      if (ENS.length >= 1) {
+        try {
+          const query = `query {domains(where:{parent: "${namehash(ENS)}"}) { name wrappedOwner{id} }}`
+          const response = await axios.post('https://api.thegraph.com/subgraphs/name/ensdomains/ensgoerli', {
+            query
+          })
+          console.log(response.data);
+          setSubsEns(response.data.data.domains)
+        } catch (error) {
+          console.log(error);
+        }
       }
     }
     handleShowSubEns()
@@ -362,45 +292,15 @@ export default function EnsName() {
                           activeParentNode
                           ? (
                             <div className={styles.nameOwnerActiveParentNode}>
+                              <div>
+                                <span>baolance{formatEther(parentNodeBalance)}</span>
+                                <button onClick={() => setOpenModal(true)}>set Prices</button>
+                                <button>withdraw</button>
+                              </div> 
                               {/** some stuff subs & n general info */}
-                              {/**will propably modal */}
-                              <p>You've made it this far! Set Price in Dollars for your Subdomain or leave as is for free Subdomains</p>
-                              <div className={styles.nameOwnerActiveParentNodeFeeSet}>
-                                  <label>Three Letter & below</label>
-                                  <input 
-                                    type='number' 
-                                    placeholder={(newPrices[0])}
-                                    value={(newPrices[0])}
-                                    onChange={(e) => {
-                                      const updatedPrices = [...newPrices]
-                                      updatedPrices[0] = (e.target.value)
-                                      setNewPrices(updatedPrices)
-                                    }}
-                                  />
-                                  <label>Four & Five Letter </label>
-                                  <input
-                                    type='number' 
-                                    placeholder={(newPrices[1])}
-                                    value={(newPrices[1])}
-                                    onChange={(e) => {
-                                      const updatedPrices = [...newPrices]
-                                      updatedPrices[1] = (e.target.value)
-                                      setNewPrices(updatedPrices)
-                                    }}
-                                  />
-                                  <label>Six Letter Up </label>
-                                  <input
-                                    type='number' 
-                                    placeholder={(newPrices[2])}
-                                    value={(newPrices[2])}
-                                    onChange={(e) => {
-                                      const updatedPrices = [...newPrices]
-                                      updatedPrices[2] = (e.target.value)
-                                      setNewPrices(updatedPrices)
-                                    }}
-                                  />
-                              </div>
-                              <button> Set Fees </button>
+                              {/**will propably modal // moved to modal*/}
+                              {openModal && <SubEnsFee setOpen ={setOpenModal} ENS ={ENS} />}
+                              
                               <div>
                                 {/** show list subnames */}
                                 {
@@ -418,6 +318,8 @@ export default function EnsName() {
                                           <div>
                                             
                                             <p>{subEns.name}</p>
+                                            <p>{subEns.wrappedOwner.id}</p>
+
                                           </div>
                                         ))
                                       }

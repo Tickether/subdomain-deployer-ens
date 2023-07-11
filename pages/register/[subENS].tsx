@@ -94,7 +94,7 @@ export default function Register() {
             const nodeExpiry = Number(nodeData[2]) * 1000
             timeNow = Date.now()
             timeLeft = nodeExpiry - timeNow
-            setYearsLeft( Math.floor(timeLeft / year) )
+            setYearsLeft( (Math.floor(timeLeft / year) - 1) ) // till sync
         }
     },[nodeData])
 

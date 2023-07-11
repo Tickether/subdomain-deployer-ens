@@ -4,7 +4,7 @@ import Navbar from '@/components/navbar'
 import { labelhash , fromHex} from 'viem'
 import { useEffect, useState } from 'react'
 import { useAccount, useContractRead, useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi'
-import { useRouter } from 'next/router'
+import Name from '@/components/names/name'
 
 console.log(labelhash('geeloko'))
 console.log(fromHex(labelhash('buju'), 'bigint'))
@@ -12,11 +12,17 @@ console.log(fromHex(labelhash('buju'), 'bigint'))
 export interface ensNames{
     name: string,
     wrapped: boolean,
+    expiry: number,
+    parent: Parent 
+}
+
+export interface Parent{
+    expiry : number
 }
 
 export default function Names() {
 
-    const router = useRouter()
+    
     const {address, isConnected} = useAccount()
 
     const [ensDomains, setEnsDomains] = useState<ensNames[]>([])
@@ -37,7 +43,7 @@ export default function Names() {
         const handleEnsOwnedFetch = async ()=>{
             
             try {
-                const query = `query { domains(where:{owner: "${address!.toLowerCase()}"}){name} wrappedDomains(where: {owner:"${address!.toLowerCase()}"}){name} }`
+                const query = `query { domains(where:{owner: "${address!.toLowerCase()}"}){name expiryDate parent{expiryDate}} wrappedDomains(where: {owner:"${address!.toLowerCase()}"}){name expiryDate domain {parent {expiryDate}}} }`
                 const response = await axios.post('https://api.thegraph.com/subgraphs/name/ensdomains/ensgoerli', {
                 query
                 })
@@ -49,14 +55,20 @@ export default function Names() {
                     if (!nw[i].name.includes('addr.reverse')) {
                         ensNames.push({
                             name: nw[i].name,
-                            wrapped: false
+                            wrapped: false,
+                            expiry: nw[i].expiryDate,
+                            parent : nw[i].parent.expiryDate === null ? 16571273 : nw[i].parent.expiryDate
+
+
                         }) 
                     }
                 }
                 for (let i = 0; i < wr.length; i++) {
                     ensNames.push({
                         name: wr[i].name,
-                        wrapped: true
+                        wrapped: true,
+                        expiry: wr[i].expiryDate,
+                        parent : wr[i].domain.parent.expiryDate === null ? 0 : wr[i].domain.parent.expiryDate
                     })
                 }
                 setEnsDomains(ensNames)
@@ -147,15 +159,12 @@ export default function Names() {
                     
                         {ensDomains.map(( ensDomains: ensNames) =>(
                         <div 
-                            onClick={() => {
-                                if (approved) {
-                                    router.push('/[subENS]', `/${ensDomains.name}`)
-                                } 
-                            }} 
+                            
                             key={ensDomains.name}
                         >
-                            <p>{ensDomains.name}</p>
-                            <span>wrapped</span>
+                            <Name
+                                ensDomains={ensDomains}
+                            /> 
                         </div>
                         ))}
                     </div>
