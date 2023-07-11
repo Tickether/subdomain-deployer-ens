@@ -218,7 +218,7 @@ export default function EnsName() {
     }
   }
 
-
+//read balance and withdraw
   const contractReadParentNodeBalance = useContractRead({
     address: "0x229C0715e70741F854C299913C2446eb4400e76C",
     abi: [
@@ -244,15 +244,44 @@ export default function EnsName() {
   },[ contractReadParentNodeBalance?.data!])
   
 
-/*
-  useEffect(()=>{
-    let dPrices = []
-    for (let i = 0; i < newPrices.length; i++) {
-      dPrices.push(new Intl.NumberFormat('us-US', { style: 'currency', currency: 'USD' }).format(Number(newPrices[i]))); 
-    }
-    setDollarPrices(dPrices)
-  },[newPrices])
-*/
+//read balance and withdraw
+  const prepareContractWriteWithdraw = usePrepareContractWrite({
+    address: '0x229C0715e70741F854C299913C2446eb4400e76C',
+    abi: [
+        {
+          name: 'withdrawNodeBalance',
+          inputs: [ {internalType: "bytes32", name: "node", type: "bytes32"} ],
+          outputs: [],
+          stateMutability: 'nonpayable',
+          type: 'function',
+        },
+      ],
+    functionName: 'withdrawNodeBalance',
+    args: [ (namehash(ENS)) ],
+    chainId: 5,
+    value: BigInt(0),
+  })
+
+
+
+
+  const  contractWriteWithdraw = useContractWrite(prepareContractWriteWithdraw.config)
+
+  const waitForWithdraw = useWaitForTransaction({
+    hash: contractWriteWithdraw.data?.hash,
+    confirmations: 1,
+    onSuccess() {
+    },
+  })
+
+  const handleWithdraw = async () => {
+    try {
+        await contractWriteWithdraw.writeAsync?.()
+    } catch (err) {
+        console.log(err)
+    }    
+  }
+
 
   useEffect(()=>{
     const handleShowSubEns = async () => {
@@ -273,7 +302,7 @@ export default function EnsName() {
   },[ENS])
   console.log(subsEns)
 
-  //read balance and withdraw
+  
   return (
     <>
       <Navbar/>
@@ -295,7 +324,7 @@ export default function EnsName() {
                               <div>
                                 <span>baolance{formatEther(parentNodeBalance)}</span>
                                 <button onClick={() => setOpenModal(true)}>set Prices</button>
-                                <button>withdraw</button>
+                                <button onClick={handleWithdraw}>withdraw</button>
                               </div> 
                               {/** some stuff subs & n general info */}
                               {/**will propably modal // moved to modal*/}
