@@ -140,12 +140,13 @@ console.log((contractReadSubNodeFee?.data!))
                                 <button onClick={handleIncrement}>+</button>
                                 </div>
                                 <button onClick={() => setExtend(false)}>cancel</button>
+                                <button onClick={handleExtendExp}>do it ++</button>
                             </div>
                         )
                         : <div></div>
                     }
                     
-                    <button disabled={yearsLeft <= 0} onClick={()=> {extended ? handleExtendExp : setExtend(true)}}>extend</button>
+                    <button disabled={yearsLeft <= 0 || extended} onClick={()=> {extended ? null : setExtend(true)}}>extend</button>
                     
             </div>
             </div>
