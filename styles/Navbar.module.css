@@ -1,15 +1,26 @@
 .container {
     background-color: #f8f8f8;
-    padding: 10px;
+    height: 10vh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
   }
   
   .wrapper {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    width: 95%;
   }
   
   .left {
+    display: flex;
+    align-items: center;
+    
+  }
+  .right {
     display: flex;
     align-items: center;
   }
@@ -26,10 +37,7 @@
     font-weight: bold;
   }
   
-  .right {
-    display: flex;
-    align-items: center;
-  }
+  
   
   .names {
     margin-right: 20px;

@@ -4,6 +4,7 @@ import { configureChains, createConfig, WagmiConfig } from 'wagmi'
 import { EthereumClient, w3mConnectors, w3mProvider } from '@web3modal/ethereum'
 import { Web3Modal } from '@web3modal/react'
 import { mainnet, goerli } from 'wagmi/chains'
+import Navbar from '@/components/navbar'
 
 
 // Wagmi Config
@@ -29,6 +30,7 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <>
     <WagmiConfig config={wagmiConfig} >
+      <Navbar/>
       <Component {...pageProps} />
     </WagmiConfig>
     <Web3Modal projectId={projectId} ethereumClient={ethereumClient} />

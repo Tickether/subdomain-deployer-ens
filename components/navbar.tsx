@@ -72,7 +72,7 @@ useEffect(() => {
           
           <div className={styles.right}>
             <div className={styles.names}>
-              <Link href='/names'>names</Link>
+              <Link href='/names'>Names</Link>
             </div>
             <div className={styles.connect}>
               <Web3Button icon="hide" label="Connect" balance="hide" />

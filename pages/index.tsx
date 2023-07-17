@@ -6,11 +6,11 @@ import Search from '@/components/searches/search';
 export default function Home() {
   return (
     <>
-      <Navbar/>
       <div className={styles.container}>
         <div className={styles.wrapper}>
           <div className={styles.search}>
-            <p>Your .eth Subdomain Identity</p>
+            <h1>Your .eth Subdomain Identity</h1>
+            <span>Your identity across web3, one name for all your crypto addresses, and your decentralised website.</span>
             <Search />
           </div>
         </div>

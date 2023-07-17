@@ -1,80 +1,59 @@
 .container {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 20px;
+    display: flex;
+
   }
   
   .wrapper {
     background-color: #f2f2f2;
-    border-radius: 8px;
-    padding: 20px;
+  
   }
   
   
   .searchResults {
-    margin-top: 10px;
+
   }
   
   .searchResultItem {
-    background-color: #ffffff;
-    border-radius: 4px;
-    padding: 10px;
-    margin-bottom: 10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
   }
   
   .searchResultItem h3 {
-    font-size: 18px;
-    margin: 0;
-    margin-bottom: 5px;
+
   }
   
   .searchResultItem p {
-    font-size: 14px;
-    margin: 0;
+
   }
   
   .errorMsg {
-    color: #ff0000;
-    font-size: 14px;
-    margin-top: 5px;
+   
   }
   
   .button {
-    background-color: #4285f4;
-    color: #ffffff;
-    border: none;
-    border-radius: 4px;
-    padding: 10px 20px;
+ 
     cursor: pointer;
   }
   
   .button:hover {
-    background-color: #3367d6;
+
   }
   
   .subDomainContainer {
-    margin-top: 20px;
+
   }
   
   .subDomainInput {
-    width: 100%;
-    padding: 10px;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    margin-bottom: 10px;
+    
   }
   
   .subDomainResult {
-    margin-top: 10px;
+
   }
   
   .subDomainResult p {
-    margin: 0;
-    font-size: 14px;
+    
   }
   
   .subDomainResult .registerButton {
-    margin-top: 10px;
+    
   }
