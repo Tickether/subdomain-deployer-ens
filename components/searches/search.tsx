@@ -143,7 +143,7 @@ export default function Search() {
     <>
         <div className={styles.container}>
             <div className={styles.wrapper}>
-            <div>
+            <div className={styles.search}>
                 <input
                     type="text"
                     placeholder="Search your favorite ENS Community"

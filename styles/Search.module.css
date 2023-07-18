@@ -4,9 +4,17 @@
   }
   
   .wrapper {
-    background-color: #f2f2f2;
+    background-color: #F4F5F7;
   
   }
+
+  .search input {
+    height: 80px;
+    width: 460px;
+    border-radius: 20px;
+
+  }
+  
   
   
   .searchResults {
