@@ -214,8 +214,8 @@ console.log(loading)
                     )
                     : (
                         wrapped && approved && activeParentNode
-                        ?   <span>can sub</span>
-                        :   <span>cannot sub</span>
+                        ?   <span>Available</span>
+                        :   <span>Unavailable</span>
                     )
                 }
             </div>

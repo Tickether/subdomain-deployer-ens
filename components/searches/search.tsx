@@ -48,7 +48,7 @@ export default function Search() {
         if (ensSearch.length >= 1) {
           setLoading(true)
           try {
-            const query = `query {domains(where:{name_starts_with: "${ensSearch}", parent: "0x93cdeb708b7545dc668eb9280176169d1c33cfd8ed6f04690a0bcc88a93fc4ae"}, first:5){name owner{id} wrappedOwner{id}}}`
+            const query = `query {domains(where:{name_starts_with: "${ensSearch}", parent: "0x93cdeb708b7545dc668eb9280176169d1c33cfd8ed6f04690a0bcc88a93fc4ae"}, first:3){name owner{id} wrappedOwner{id}}}`
             const response = await axios.post('https://api.thegraph.com/subgraphs/name/ensdomains/ensgoerli', {
               query
             })

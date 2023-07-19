@@ -1,9 +1,8 @@
 import styles from '@/styles/Navbar.module.css'
-import Image from 'next/image'
-//import logo from '@/public/SmokleyS.svg';
+import namesSVG from '@/public/assets/icons/names.svg'
+import Image from 'next/image';
 import Link from 'next/link';
 import { Web3Button } from '@web3modal/react';
-
 import { useEffect, useState } from 'react';
 import { useAccount, useContractRead } from 'wagmi';
 
@@ -61,10 +60,6 @@ useEffect(() => {
           <div className={styles.left}>
             <div className={styles.logo}>
               <Link href='/'>
-                <Image 
-                  src='' 
-                  alt="" 
-                />
                 <p>SubENS</p>
               </Link>
             </div>
@@ -72,7 +67,10 @@ useEffect(() => {
           
           <div className={styles.right}>
             <div className={styles.names}>
-              <Link href='/names'>Names</Link>
+              <Image src={namesSVG} alt=''/>
+              <Link href='/names'>
+                <p>My Names</p>
+              </Link>
             </div>
             <div className={styles.connect}>
               <Web3Button icon="hide" label="Connect" balance="hide" />
