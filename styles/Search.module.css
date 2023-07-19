@@ -28,6 +28,7 @@
     font-weight: 700;
     font-size: x-large;
     padding: 0 35px;
+    border: 1px solid #E8E8E8;
   }
 
   .clear{
@@ -52,6 +53,8 @@
     display: flex;
     flex-direction: column;
     width: 400px;
+    background-color: #FFFFFF;
+    border-radius: 20px;
   }
   /*
   .searchResultItem {

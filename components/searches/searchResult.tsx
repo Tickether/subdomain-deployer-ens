@@ -214,8 +214,8 @@ console.log(loading)
                     )
                     : (
                         wrapped && approved && activeParentNode
-                        ?   <span>Available</span>
-                        :   <span>Unavailable</span>
+                        ?   <div className={styles.available}><span>Available</span></div>
+                        :   <div className={styles.unavailable}><span>Unavailable</span></div> 
                     )
                 }
             </div>

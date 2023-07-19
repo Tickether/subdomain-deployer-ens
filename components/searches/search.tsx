@@ -146,11 +146,13 @@ export default function Search() {
   const handleClearInput = () => {
     setEnsSearch('')
     setEnsDomain('')
+    handleFocus()
   };
 
   
   const handleFocus = () => {
     setShowSubEnsBox(false);
+    setSubEnsDomain('')
   };
 
   return (
