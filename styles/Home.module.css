@@ -15,9 +15,21 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 10px;
+    gap: 20px;
+    margin-bottom: 100px;
   }
   
-  .search p {
-    font-size: 1.2rem;
+  .search h1 {
+    font-weight: 900;
+    background-clip: text;
+    background: linear-gradient(to left, #0023DD 0%, #667EFF 50%, #AAB2FF 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .search span {
+    font-weight: 600;
+    color: #9B9BA6;
+    font-size: 1rem;
+    text-align: center;
   }

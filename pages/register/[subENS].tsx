@@ -1,5 +1,4 @@
 import styles from '@/styles/Register.module.css'
-import Navbar from '@/components/navbar'
 import { useEffect, useState } from 'react'
 import { namehash } from 'viem/ens'
 import { useAccount, useContractRead, useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi'
@@ -173,7 +172,6 @@ export default function Register() {
 
     return (
         <>
-            <Navbar/>
             <div className={styles.container}>
                 <div className={styles.wrapper}> 
                     <div>

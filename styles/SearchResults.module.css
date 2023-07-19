@@ -1,27 +1,19 @@
 .container {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 20px;
     font-family: 'Segoe UI';
   }
   
   .wrapper {
-    background-color: #f2f2f2;
     border-radius: 8px;
     padding: 20px;
   }
   
   .searchResults {
-    background-color: #ffffff;
-    border-radius: 4px;
-    padding: 10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: space-between;
   }
-  
+  /*
   .searchResults:hover {
     background-color: #f2f2f2;
   }
@@ -35,3 +27,4 @@
     font-size: 12px;
     color: #666666;
   }
+  */

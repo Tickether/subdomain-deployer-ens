@@ -1,7 +1,8 @@
 import styles from '@/styles/Search.module.css'
 import axios from 'axios'
 import { useRouter } from 'next/router'
-//import Image from 'next/image'
+import clearSVG from '@/public/assets/icons/clear.svg'
+import Image from 'next/image';
 //import Link from 'next/link'
 import { namehash, normalize } from 'viem/ens'
 import { useEffect, useState } from 'react'
@@ -38,7 +39,6 @@ export default function Search() {
     const [showSuggestBox, setShowSuggestBox] = useState<boolean>(false);
     const [nodeActive, setNodeActive] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(false)
-    
     
     
     //0x0000000000000000000000000000000000000000000000000000000000000000
@@ -143,21 +143,40 @@ export default function Search() {
     setEnsDomain(ENS);
   };
 
+  const handleClearInput = () => {
+    setEnsSearch('')
+    setEnsDomain('')
+  };
+
+  
+  const handleFocus = () => {
+    setShowSubEnsBox(false);
+  };
 
   return (
     <>
         <div className={styles.container}>
             <div className={styles.wrapper}>
             <div className={styles.search}>
-                <input
-                    type="text"
-                    placeholder="Search your favorite ENS Community"
-                    value={(ensDomain)}
-                    onChange={(e) => {
-                      setEnsDomain((e.target.value))
-                      setEnsSearch((e.target.value))
-                    }}
-                />
+                <div className={styles.searchENS}>
+                  <input
+                      type="text"
+                      placeholder="Search an ENS"
+                      onFocus={handleFocus}
+                      value={(ensDomain)}
+                      onChange={(e) => {
+                        setEnsDomain((e.target.value))
+                        setEnsSearch((e.target.value))
+                      }}
+                  />
+                  {
+                    ensSearch.length >= 1 && (
+                      <div onClick={handleClearInput} className={styles.clear}>
+                        <Image  src={clearSVG} alt='' />
+                      </div>
+                    )
+                  }
+                </div>
                 {/* Search Results */}
                 {showSuggestBox && ensSearch.length >= 1 && (
                   <div className={styles.searchResults}>
@@ -167,8 +186,7 @@ export default function Search() {
                         key={searchresult.name}
                       >
                         <SearchResult 
-                          searchresult={searchresult} 
-                          //canSubdomain={handleCanSubdomainResult} 
+                          searchresult={searchresult}
                           subEnsBox={handleSetShowSubEnsBox}
                           suggestBox={handleSetShowSuggestBox}
                           ens={handleSetSelectENS}
@@ -181,7 +199,7 @@ export default function Search() {
                 )}
                 
                 {showSubEnsBox && (
-                    <div className={styles.subDomainContainer}>
+                    <div className={styles.searchSubdomain}>
                         <input
                           type="text"
                           placeholder="Pick your communinty identyity"

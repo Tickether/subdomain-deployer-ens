@@ -8,19 +8,52 @@
   
   }
 
-  .search input {
-    height: 80px;
-    width: 460px;
-    border-radius: 20px;
+  .searchENS{
+    display: flex;
+    position: relative;
+  }
+  
+  .search{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+  }
 
+  .search input {
+    
+    height: 70px;
+    width: 400px;
+    border-radius: 20px;
+    font-family: 'Segoe UI';
+    font-weight: 700;
+    font-size: x-large;
+    padding: 0 35px;
+  }
+
+  .clear{
+    position: absolute;
+    top: 20px;
+    right: 10px;
+    display: flex;
+    cursor: pointer;
+    height: 35px;
+    width: 35px;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .searchSubdomain{
+    margin-top: 20px;
   }
   
   
   
   .searchResults {
-
+    display: flex;
+    flex-direction: column;
+    width: 400px;
   }
-  
+  /*
   .searchResultItem {
 
   }
@@ -65,3 +98,4 @@
   .subDomainResult .registerButton {
     
   }
+  */
