@@ -3,6 +3,10 @@ import { useEffect, useState } from 'react'
 import { namehash } from 'viem'
 import { useAccount, useContractRead } from 'wagmi'
 import { SearchResult } from './search'
+import { motion } from 'framer-motion'
+import loadingSVG from '@/public/assets/icons/loading.png'
+import Image from 'next/image';
+
 
 interface SearchResultProps {
     searchresult: SearchResult,
@@ -10,11 +14,12 @@ interface SearchResultProps {
     subEnsBox : (showSubEnsBox : boolean) => void;
     suggestBox : (showSuggestBox : boolean) => void;
     ens : (ENS : string) => void;
+    loading : boolean
 }
 
 
 
-export default function SearchResult({searchresult, /*canSubdomain,*/ subEnsBox, suggestBox, ens} : SearchResultProps) {
+export default function SearchResult({searchresult, /*canSubdomain,*/ subEnsBox, suggestBox, ens, loading} : SearchResultProps) {
 
     const {address, isConnected} = useAccount()
 
@@ -23,8 +28,10 @@ export default function SearchResult({searchresult, /*canSubdomain,*/ subEnsBox,
     const [activeParentNode, setActiveParentNode] = useState<boolean>(false)
     const [approved, setApproved] = useState<boolean>(false)
     const [wrapped, setWrapped] = useState<boolean>(false)
+    //const [loading, setLoading] = useState<boolean>(false)
 
 console.log(searchresult.name)
+console.log(loading)
     
     // check wrapped
     const contractReadWrapped = useContractRead({
@@ -172,6 +179,7 @@ console.log(searchresult.name)
     },[wrapped])
 
     
+    
     return (
         <>
         <div className={styles.container}>
@@ -188,9 +196,27 @@ console.log(searchresult.name)
             >
                 <p>{searchresult.name}</p>
                 {
-                    wrapped && approved && activeParentNode
-                    ?   <span>can sub</span>
-                    :   <span>cannot sub</span>
+                    loading 
+                    ? (
+                        <>
+                            <motion.div
+                                initial={{ rotate: 0 }} // Initial rotation value (0 degrees)
+                                animate={{ rotate: 360 }} // Final rotation value (360 degrees)
+                                transition={{
+                                    duration: 1, // Animation duration in seconds
+                                    repeat: Infinity, // Infinity will make it rotate indefinitely
+                                    ease: "linear", // Animation easing function (linear makes it constant speed)
+                                }}
+                            >
+                                <Image className={styles.spinner} src={loadingSVG} alt='' />
+                            </motion.div>
+                        </>
+                    )
+                    : (
+                        wrapped && approved && activeParentNode
+                        ?   <span>can sub</span>
+                        :   <span>cannot sub</span>
+                    )
                 }
             </div>
             </div>

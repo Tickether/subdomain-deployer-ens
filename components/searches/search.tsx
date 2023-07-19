@@ -37,6 +37,7 @@ export default function Search() {
     const [showSubEnsBox, setShowSubEnsBox] = useState<boolean>(false);
     const [showSuggestBox, setShowSuggestBox] = useState<boolean>(false);
     const [nodeActive, setNodeActive] = useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(false)
     
     
     
@@ -45,6 +46,7 @@ export default function Search() {
     useEffect(()=>{
       const handleEnsSearchFetch = async () => {
         if (ensSearch.length >= 1) {
+          setLoading(true)
           try {
             const query = `query {domains(where:{name_starts_with: "${ensSearch}", parent: "0x93cdeb708b7545dc668eb9280176169d1c33cfd8ed6f04690a0bcc88a93fc4ae"}, first:5){name owner{id} wrappedOwner{id}}}`
             const response = await axios.post('https://api.thegraph.com/subgraphs/name/ensdomains/ensgoerli', {
@@ -54,6 +56,9 @@ export default function Search() {
             setShowSuggestBox(true)
             console.log(response.data);
             setSearchResults(response.data.data.domains)
+            setTimeout(() => {
+              setLoading(false);
+            }, 1000);
           } catch (error) {
             console.error(error);
           }
@@ -168,6 +173,7 @@ export default function Search() {
                           suggestBox={handleSetShowSuggestBox}
                           ens={handleSetSelectENS}
                           key={searchresult.name}
+                          loading={loading}
                         />
                       </div>
                       ))}
