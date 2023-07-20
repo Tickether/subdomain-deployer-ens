@@ -14,18 +14,40 @@
     justify-content: space-between;
     padding: 0 30px;
   }
-  
-  .searchResults p {
-    font-size: 13px;
-  }
 
+  .searchResultsText{
+    font-size: 13px;
+    font-weight: 600;
+    max-width: 240px;
+    white-space: nowrap; /* Prevent text from wrapping */
+    overflow: hidden; /* Hide overflowing text */
+    text-overflow: ellipsis;
+  }
+/*
+  .searchResultsAvailable{
+    font-size: 10px;
+  }
+  .searchResultsUnavailable{
+    font-size: 10px;
+  }
+*/
+/*
+  .searchResults div {
+    font-size: 12px;
+    border-radius: 20px;
+    background-color: red;
+  }
+*/
   .searchResults span {
     font-size: 12px;
+  
   }
 
-  
+
   .container:hover {
     background-color: #f2f2f2;
   }
+
+
   
   

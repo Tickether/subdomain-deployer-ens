@@ -1,5 +1,4 @@
 import styles from '@/styles/Name.module.css'
-import Navbar from '@/components/navbar'
 import { useEffect, useState } from 'react'
 import { useAccount, useContractRead, useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi'
 import {formatEther, namehash} from 'viem'
@@ -305,7 +304,6 @@ export default function EnsName() {
   
   return (
     <>
-      <Navbar/>
       <div className={styles.container}>
         <div className={styles.wrapper}>
           <div className={styles.name}> 

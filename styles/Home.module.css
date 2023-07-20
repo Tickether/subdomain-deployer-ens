@@ -3,7 +3,6 @@
     height: 90vh; 
     display: flex;
     justify-content: center;
-    align-items: center;
     font-family: 'Segoe UI';
   }
   
@@ -16,7 +15,7 @@
     flex-direction: column;
     align-items: center;
     gap: 20px;
-    margin-bottom: 100px;
+    margin-top: 290px;
   }
   
   .search h1 {

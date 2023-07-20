@@ -194,7 +194,12 @@ console.log(loading)
                       }
                 }}
             >
-                <p>{searchresult.name}</p>
+                <div 
+                    title={searchresult.name}
+                    className={styles.searchResultsText}
+                >
+                    {searchresult.name}
+                </div>
                 {
                     loading 
                     ? (
@@ -214,14 +219,51 @@ console.log(loading)
                     )
                     : (
                         wrapped && approved && activeParentNode
-                        ?   <div className={styles.available}><span>Available</span></div>
-                        :   <div className={styles.unavailable}><span>Unavailable</span></div> 
+                        ?   (
+                            <div
+                                style={{
+                                    backgroundColor: '#F0F6FF',
+                                    padding: '5px 10px', 
+                                    borderRadius: '15px',
+                                    display: 'flex',
+                                    justifyContent: 'center', 
+                                    alignItems: 'center',
+                                }}
+                            >
+                                <span
+                                    style={{
+
+                                        color: '#008000',
+                                        
+                                    }}
+                                >Available</span>
+                            </div>
+                        )
+                        :   (
+                            <div 
+                                style={{
+                                    backgroundColor: '#F0F6FF',
+                                    padding: '5px 10px', 
+                                    borderRadius: '15px',
+                                    display: 'flex',
+                                    justifyContent: 'center', 
+                                    alignItems: 'center',
+                                }}
+                            >  
+                                <span
+                                    style={{
+                                        
+                                        color: 'red',
+                        
+                                    }}
+                                >Unavailable</span>
+                            </div> 
+                        )
                     )
                 }
             </div>
             </div>
         </div>
-
         </>
     )
 }

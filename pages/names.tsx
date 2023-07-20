@@ -1,6 +1,5 @@
 import styles from '@/styles/Names.module.css'
 import axios from 'axios'
-import Navbar from '@/components/navbar'
 import { labelhash , fromHex} from 'viem'
 import { useEffect, useState } from 'react'
 import { useAccount, useContractRead, useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi'
@@ -146,7 +145,6 @@ export default function Names() {
 
     return (
         <>
-            <Navbar/>
             <div className={styles.container}>
                 <div className={styles.wrapper}>
                 <div className={styles.names}>
