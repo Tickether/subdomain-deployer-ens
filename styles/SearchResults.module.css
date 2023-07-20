@@ -38,12 +38,7 @@
     background-color: red;
   }
 */
-  .searchResults span {
-    font-size: 12px;
   
-  }
-
-
   .container:hover {
     background-color: #f2f2f2;
   }

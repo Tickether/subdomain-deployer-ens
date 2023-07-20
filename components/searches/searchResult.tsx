@@ -234,6 +234,7 @@ console.log(loading)
                                     style={{
 
                                         color: '#008000',
+                                        fontSize: '12px',
                                         
                                     }}
                                 >Available</span>
@@ -254,6 +255,7 @@ console.log(loading)
                                     style={{
                                         
                                         color: 'red',
+                                        fontSize: '12px',
                         
                                     }}
                                 >Unavailable</span>
