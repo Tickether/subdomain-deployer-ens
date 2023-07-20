@@ -66,12 +66,20 @@ useEffect(() => {
           </div>
           
           <div className={styles.right}>
-            <div className={styles.names}>
-              <Image src={namesSVG} alt=''/>
-              <Link href='/names'>
-                <p>My Names</p>
-              </Link>
-            </div>
+            {
+              connected 
+              ? (
+                <>
+                  <div className={styles.names}>
+                    <Image src={namesSVG} alt=''/>
+                    <Link href='/names'>
+                      <p>My Names</p>
+                    </Link>
+                  </div>
+                </>
+              ) 
+              : <></>
+            }
             <div className={styles.connect}>
               <Web3Button icon="hide" label="Connect" balance="hide" />
             </div>
