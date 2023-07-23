@@ -28,7 +28,7 @@ export default function Register() {
     
     useEffect(()=>{
         setSubENS(window.location.pathname.split('/')[2])
-    },[window])
+    },[])
 
     useEffect(()=>{
         //conditions for reload - browser re-entry
