@@ -1,7 +1,7 @@
 import styles from '@/styles/SearchResults.module.css'
 import { useEffect, useState } from 'react'
 import { namehash } from 'viem'
-import { useAccount, useContractRead } from 'wagmi'
+import { useAccount, useContractRead, useContractReads } from 'wagmi'
 import { SearchResult } from './search'
 import { motion } from 'framer-motion'
 import loadingSVG from '@/public/assets/icons/loading.png'
@@ -18,6 +18,18 @@ interface SearchResultProps {
 }
 
 
+export interface Validator {
+    Wrapped: boolean,
+    Approved: boolean,
+    ActiveNode: boolean,
+    Erc20Approved: boolean,
+    Erc20ActiveNode: boolean,
+    WLApproved:boolean,
+    WLActiveNode:boolean,
+    Erc20WLApproved: boolean,
+    Erc20WLActiveNode: boolean,
+}
+
 
 export default function SearchResult({searchresult, /*canSubdomain,*/ subEnsBox, suggestBox, ens, loading} : SearchResultProps) {
 
@@ -25,15 +37,30 @@ export default function SearchResult({searchresult, /*canSubdomain,*/ subEnsBox,
 
     //const [prices, setPrices] = useState<any[]>([[BigInt(0), BigInt(0), BigInt(0)]])
     const [owner, setOwner] = useState<string>('0x0000000000000000000000000000000000000000');
-    const [activeParentNode, setActiveParentNode] = useState<boolean>(false)
-    const [approved, setApproved] = useState<boolean>(false)
-    const [wrapped, setWrapped] = useState<boolean>(false)
+    //const [activeParentNode, setActiveParentNode] = useState<boolean>(false)
+    //const [approved, setApproved] = useState<boolean>(false)
+    //const [wrapped, setWrapped] = useState<boolean>(false)
     //const [loading, setLoading] = useState<boolean>(false)
 
-console.log(searchresult.name)
-console.log(loading)
+
+    const validatorDefault = {
+        Wrapped: false,
+        Approved: false,
+        ActiveNode: false,
+        Erc20Approved: false,
+        Erc20ActiveNode: false,
+        WLApproved:false,
+        WLActiveNode:false,
+        Erc20WLApproved: false,
+        Erc20WLActiveNode: false,
+    };
+    const [validators, setValidators] = useState<Validator>(validatorDefault)
+
+    console.log(searchresult.name)
+    console.log(loading)
     
     // check wrapped
+    /*
     const contractReadWrapped = useContractRead({
         address: "0x114D4603199df73e7D157787f8778E21fCd13066",
         abi: [
@@ -57,8 +84,10 @@ console.log(loading)
             setWrapped((contractReadWrapped?.data!))
         }
     },[contractReadWrapped?.data!])
-    
+    */
     // check approved // must replace address with own ofer ens in search
+    
+    /*
     const contractReadApproved = useContractRead({
         address: "0x114D4603199df73e7D157787f8778E21fCd13066",
         abi: [
@@ -82,7 +111,9 @@ console.log(loading)
             setApproved((contractReadApproved?.data!))
         }
     },[contractReadApproved?.data!])
+    */
     // check setBase/ParentNodeActive
+    /*
     const contractReadActiveParentNode = useContractRead({
         address: "0x229C0715e70741F854C299913C2446eb4400e76C",
         abi: [
@@ -104,6 +135,7 @@ console.log(loading)
             setActiveParentNode((contractReadActiveParentNode?.data!))
         }
     },[contractReadActiveParentNode?.data!])
+    */
     // prices not zero
     /*
     const contractReadThreeUpLetterFee = useContractRead({
@@ -171,12 +203,201 @@ console.log(loading)
     */
     
     useEffect(()=>{
-        if (wrapped) {
+        if (validators!.Wrapped) {
             setOwner(searchresult.wrappedOwner.id)
         } else {
             setOwner(searchresult.owner.id)
         }
-    },[wrapped])
+    },[validators!.Wrapped])
+
+    const { data, isLoading } = useContractReads({
+        contracts: [
+            //contract 0 check if name is wrapped on nameWrapper
+            {
+                address: "0x114D4603199df73e7D157787f8778E21fCd13066",
+                abi: [
+                    {
+                        name: 'isWrapped',
+                        inputs: [{ internalType: "bytes32", name: "", type: "bytes32" }],
+                        outputs: [{ internalType: "bool", name: "", type: "bool" }],
+                        stateMutability: 'view',
+                        type: 'function',
+                    },
+                ],
+                functionName: 'isWrapped',
+                args: [(namehash(searchresult.name))],
+                chainId: 5,
+            },
+            //contract 1a check if SubENS contract is approved on nameWrapper
+            {
+                address: "0x114D4603199df73e7D157787f8778E21fCd13066",
+                abi: [
+                    {
+                        name: 'isApprovedForAll',
+                        inputs: [{ internalType: "address", name: "account", type: "address" }, { internalType: "address", name: "operator", type: "address" }],
+                        outputs: [{ internalType: "bool", name: "", type: "bool" }],
+                        stateMutability: 'view',
+                        type: 'function',
+                    },
+                ],
+                functionName: 'isApprovedForAll',
+                args: [(owner!), ('0x229C0715e70741F854C299913C2446eb4400e76C')],
+                chainId: 5,
+            },
+            //contract 1b check if name is enabled on SubENS contract
+            {
+                address: "0x229C0715e70741F854C299913C2446eb4400e76C",
+                abi: [
+                    {
+                        name: 'parentNodeActive',
+                        inputs: [{ internalType: "bytes32", name: "", type: "bytes32" }],
+                        outputs: [{ internalType: "bool", name: "", type: "bool" }],
+                        stateMutability: 'view',
+                        type: 'function',
+                    },    
+                ],
+                functionName: 'parentNodeActive',
+                args: [(namehash(searchresult.name))],
+                chainId: 5,
+            },
+            //contract 2a check if SubENSERC20 contract is approved on nameWrapper
+            {
+                address: "0x114D4603199df73e7D157787f8778E21fCd13066",
+                abi: [
+                    {
+                        name: 'isApprovedForAll',
+                        inputs: [{ internalType: "address", name: "account", type: "address" }, { internalType: "address", name: "operator", type: "address" }],
+                        outputs: [{ internalType: "bool", name: "", type: "bool" }],
+                        stateMutability: 'view',
+                        type: 'function',
+                    },
+                ],
+                functionName: 'isApprovedForAll',
+                args: [(owner!), ('0x229C0715e70741F854C299913C2446eb4400e76C')],
+                chainId: 5,
+            },
+            //contract 2b check if name is enabled on SubENSERC20 contract
+            {
+                address: "0x229C0715e70741F854C299913C2446eb4400e76C",
+                abi: [
+                    {
+                        name: 'parentNodeActive',
+                        inputs: [{ internalType: "bytes32", name: "", type: "bytes32" }],
+                        outputs: [{ internalType: "bool", name: "", type: "bool" }],
+                        stateMutability: 'view',
+                        type: 'function',
+                    },    
+                ],
+                functionName: 'parentNodeActive',
+                args: [(namehash(searchresult.name))],
+                chainId: 5,
+            },
+            //contract 3a check if SubENSWL contract is approved on nameWrapper
+            {
+                address: "0x114D4603199df73e7D157787f8778E21fCd13066",
+                abi: [
+                    {
+                        name: 'isApprovedForAll',
+                        inputs: [{ internalType: "address", name: "account", type: "address" }, { internalType: "address", name: "operator", type: "address" }],
+                        outputs: [{ internalType: "bool", name: "", type: "bool" }],
+                        stateMutability: 'view',
+                        type: 'function',
+                    },
+                ],
+                functionName: 'isApprovedForAll',
+                args: [(owner!), ('0x229C0715e70741F854C299913C2446eb4400e76C')],
+                chainId: 5,
+            },
+            //contract 3b check if name is enabled on SubENSWL contract
+            {
+                address: "0x229C0715e70741F854C299913C2446eb4400e76C",
+                abi: [
+                    {
+                        name: 'parentNodeActive',
+                        inputs: [{ internalType: "bytes32", name: "", type: "bytes32" }],
+                        outputs: [{ internalType: "bool", name: "", type: "bool" }],
+                        stateMutability: 'view',
+                        type: 'function',
+                    },    
+                ],
+                functionName: 'parentNodeActive',
+                args: [(namehash(searchresult.name))],
+                chainId: 5,
+            },
+            //contract 4a check if SubENSERC20WL contract is approved on nameWrapper
+            {
+                address: "0x114D4603199df73e7D157787f8778E21fCd13066",
+                abi: [
+                    {
+                        name: 'isApprovedForAll',
+                        inputs: [{ internalType: "address", name: "account", type: "address" }, { internalType: "address", name: "operator", type: "address" }],
+                        outputs: [{ internalType: "bool", name: "", type: "bool" }],
+                        stateMutability: 'view',
+                        type: 'function',
+                    },
+                ],
+                functionName: 'isApprovedForAll',
+                args: [(owner!), ('0x229C0715e70741F854C299913C2446eb4400e76C')],
+                chainId: 5,
+            },
+            //contract 4b check if name is enabled on SubENSERC20WL contract
+            {
+                address: "0x229C0715e70741F854C299913C2446eb4400e76C",
+                abi: [
+                    {
+                        name: 'parentNodeActive',
+                        inputs: [{ internalType: "bytes32", name: "", type: "bytes32" }],
+                        outputs: [{ internalType: "bool", name: "", type: "bool" }],
+                        stateMutability: 'view',
+                        type: 'function',
+                    },    
+                ],
+                functionName: 'parentNodeActive',
+                args: [(namehash(searchresult.name))],
+                chainId: 5,
+            }
+        ],
+        watch: true,
+    })  
+    console.log(data)
+    useEffect(() => {
+        //let dataRes : Validaters[] = [] 
+        if (data! /*&& typeof data === 'boolean'*/) {
+
+            // Extract the results from the data array
+            const [isWrapped, isApproved, isNodeActive, isERC20Approved, isERC20NodeActive, isWLApproved, isWLNodeActive, isERC20WLApproved, isERC20WLNodeActive] = data.map(item => item.result as boolean);
+
+            // Create a new Validator object using the extracted data
+            const validatorData: Validator = {
+                Wrapped: isWrapped,
+                Approved: isApproved,
+                ActiveNode: isNodeActive,
+                Erc20Approved: isERC20Approved,
+                Erc20ActiveNode: isERC20NodeActive,
+                WLApproved: isWLApproved,
+                WLActiveNode: isWLNodeActive,
+                Erc20WLApproved: isERC20WLApproved,
+                Erc20WLActiveNode: isERC20WLNodeActive,
+            };
+
+            /*
+            const validatorData : Validator = {
+                wrapped: data[0].result,
+                approved: data[1].result,
+                activeNode: data[2].result,
+                erc20Approved: data[3].result,
+                erc20ActiveNode: data[4].result,
+                wLApproved:data[5].result,
+                wLActiveNode:data[6].result,
+                erc20WLApproved: data[7].result,
+                erc20WLActiveNode: data[8].result,
+            }
+            */
+            //dataRes.wrapped = data[0].result
+            setValidators(validatorData)
+        }
+    },[data!])
+    console.log(validators)
 
     
     
@@ -187,7 +408,7 @@ console.log(loading)
             <div 
                 className={styles.searchResults}
                 onClick={() => {
-                    if (wrapped && approved && activeParentNode) {
+                    if (validators!.Wrapped && validators!.Approved && validators!.ActiveNode || validators!.Wrapped && validators!.Erc20Approved && validators!.Erc20ActiveNode || validators!.Wrapped && validators!.WLApproved && validators!.WLActiveNode || validators!.Wrapped && validators!.Erc20WLApproved && validators!.Erc20WLActiveNode /*wrapped && approved && activeParentNode*/) {
                         subEnsBox(true);
                         suggestBox(false);
                         ens(searchresult.name);
@@ -201,7 +422,7 @@ console.log(loading)
                     {searchresult.name}
                 </div>
                 {
-                    loading 
+                    loading
                     ? (
                         <>
                             <motion.div
@@ -218,7 +439,7 @@ console.log(loading)
                         </>
                     )
                     : (
-                        wrapped && approved && activeParentNode
+                        validators!.Wrapped && validators!.Approved && validators!.ActiveNode || validators!.Wrapped && validators!.Erc20Approved && validators!.Erc20ActiveNode || validators!.Wrapped && validators!.WLApproved && validators!.WLActiveNode || validators!.Wrapped && validators!.Erc20WLApproved && validators!.Erc20WLActiveNode  //wrapped && approved && activeParentNode // 
                         ?   (
                             <div
                                 style={{
