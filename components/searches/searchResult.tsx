@@ -22,12 +22,16 @@ export interface Validator {
     Wrapped: boolean,
     Approved: boolean,
     ActiveNode: boolean,
+    CanSubENS: boolean,
     Erc20Approved: boolean,
     Erc20ActiveNode: boolean,
+    Erc20CanSubENS: boolean,
     WLApproved:boolean,
     WLActiveNode:boolean,
+    WLCanSubENS: boolean,
     Erc20WLApproved: boolean,
     Erc20WLActiveNode: boolean,
+    Erc20WLCanSubENS: boolean,
 }
 
 
@@ -47,12 +51,16 @@ export default function SearchResult({searchresult, /*canSubdomain,*/ subEnsBox,
         Wrapped: false,
         Approved: false,
         ActiveNode: false,
+        CanSubENS: false,
         Erc20Approved: false,
         Erc20ActiveNode: false,
+        Erc20CanSubENS: false,
         WLApproved:false,
         WLActiveNode:false,
+        WLCanSubENS: false,
         Erc20WLApproved: false,
         Erc20WLActiveNode: false,
+        Erc20WLCanSubENS: false,
     };
     const [validators, setValidators] = useState<Validator>(validatorDefault)
 
@@ -260,6 +268,22 @@ export default function SearchResult({searchresult, /*canSubdomain,*/ subEnsBox,
                 args: [(namehash(searchresult.name))],
                 chainId: 5,
             },
+            //contract 1c check if CanSub name is enabled on SubENS contract
+            {
+                address: "0x229C0715e70741F854C299913C2446eb4400e76C",
+                abi: [
+                    {
+                        name: 'parentNodeCanSubActive',
+                        inputs: [{ internalType: "bytes32", name: "", type: "bytes32" }],
+                        outputs: [{ internalType: "bool", name: "", type: "bool" }],
+                        stateMutability: 'view',
+                        type: 'function',
+                    },    
+                ],
+                functionName: 'parentNodeCanSubActive',
+                args: [(namehash(searchresult.name))],
+                chainId: 5,
+            },
             //contract 2a check if SubENSERC20 contract is approved on nameWrapper
             {
                 address: "0x114D4603199df73e7D157787f8778E21fCd13066",
@@ -289,6 +313,22 @@ export default function SearchResult({searchresult, /*canSubdomain,*/ subEnsBox,
                     },    
                 ],
                 functionName: 'parentNodeActive',
+                args: [(namehash(searchresult.name))],
+                chainId: 5,
+            },
+            //contract 2c check if CanSub name is enabled on SubENSERC20 contract
+            {
+                address: "0x229C0715e70741F854C299913C2446eb4400e76C",
+                abi: [
+                    {
+                        name: 'parentNodeCanSubActive',
+                        inputs: [{ internalType: "bytes32", name: "", type: "bytes32" }],
+                        outputs: [{ internalType: "bool", name: "", type: "bool" }],
+                        stateMutability: 'view',
+                        type: 'function',
+                    },    
+                ],
+                functionName: 'parentNodeCanSubActive',
                 args: [(namehash(searchresult.name))],
                 chainId: 5,
             },
@@ -324,6 +364,22 @@ export default function SearchResult({searchresult, /*canSubdomain,*/ subEnsBox,
                 args: [(namehash(searchresult.name))],
                 chainId: 5,
             },
+            //contract 3c check if CanSub name is enabled on SubENSWL contract
+            {
+                address: "0x229C0715e70741F854C299913C2446eb4400e76C",
+                abi: [
+                    {
+                        name: 'parentNodeCanSubActive',
+                        inputs: [{ internalType: "bytes32", name: "", type: "bytes32" }],
+                        outputs: [{ internalType: "bool", name: "", type: "bool" }],
+                        stateMutability: 'view',
+                        type: 'function',
+                    },    
+                ],
+                functionName: 'parentNodeCanSubActive',
+                args: [(namehash(searchresult.name))],
+                chainId: 5,
+            },
             //contract 4a check if SubENSERC20WL contract is approved on nameWrapper
             {
                 address: "0x114D4603199df73e7D157787f8778E21fCd13066",
@@ -355,7 +411,24 @@ export default function SearchResult({searchresult, /*canSubdomain,*/ subEnsBox,
                 functionName: 'parentNodeActive',
                 args: [(namehash(searchresult.name))],
                 chainId: 5,
-            }
+            },
+            //contract 4c check if CanSub name is enabled on SubENSERC20WL contract
+            {
+                address: "0x229C0715e70741F854C299913C2446eb4400e76C",
+                abi: [
+                    {
+                        name: 'parentNodeCanSubActive',
+                        inputs: [{ internalType: "bytes32", name: "", type: "bytes32" }],
+                        outputs: [{ internalType: "bool", name: "", type: "bool" }],
+                        stateMutability: 'view',
+                        type: 'function',
+                    },    
+                ],
+                functionName: 'parentNodeCanSubActive',
+                args: [(namehash(searchresult.name))],
+                chainId: 5,
+            },
+            
         ],
         watch: true,
     })  
@@ -365,19 +438,23 @@ export default function SearchResult({searchresult, /*canSubdomain,*/ subEnsBox,
         if (data! /*&& typeof data === 'boolean'*/) {
 
             // Extract the results from the data array
-            const [isWrapped, isApproved, isNodeActive, isERC20Approved, isERC20NodeActive, isWLApproved, isWLNodeActive, isERC20WLApproved, isERC20WLNodeActive] = data.map(item => item.result as boolean);
+            const [isWrapped, isApproved, isNodeActive, isCanSubENS, isERC20Approved, isERC20NodeActive, isErc20CanSubENS, isWLApproved, isWLNodeActive, isWLCanSubENS, isERC20WLApproved, isERC20WLNodeActive, isErc20WLCanSubENS] = data.map(item => item.result as boolean);
 
             // Create a new Validator object using the extracted data
             const validatorData: Validator = {
                 Wrapped: isWrapped,
                 Approved: isApproved,
                 ActiveNode: isNodeActive,
+                CanSubENS: isCanSubENS,
                 Erc20Approved: isERC20Approved,
                 Erc20ActiveNode: isERC20NodeActive,
+                Erc20CanSubENS: isErc20CanSubENS,
                 WLApproved: isWLApproved,
                 WLActiveNode: isWLNodeActive,
+                WLCanSubENS: isWLCanSubENS,
                 Erc20WLApproved: isERC20WLApproved,
                 Erc20WLActiveNode: isERC20WLNodeActive,
+                Erc20WLCanSubENS: isErc20WLCanSubENS,
             };
 
             /*
