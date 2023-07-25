@@ -499,7 +499,7 @@ export default function SearchResult({searchresult, /*canSubdomain,*/ subEnsBox,
                     {searchresult.name}
                 </div>
                 {
-                    loading
+                    loading || isLoading
                     ? (
                         <>
                             <motion.div
