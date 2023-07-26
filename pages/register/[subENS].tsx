@@ -36,6 +36,9 @@ export default function Register() {
         Erc20WLCanSubENS: false,
     };
     const [validators, setValidators] = useState<Validator>(validatorDefault)
+    const [selectedPayment, setSelectedPayment] = useState<string | null>(null);
+
+  
     
 /*
     useEffect(() => {
@@ -451,31 +454,133 @@ export default function Register() {
     },[data!])
     console.log(validators)
 
+    const handlePaymentChange = (option: string) => {
+        setSelectedPayment(option);
+    };
+
+    const handleClearOption = async () => {
+        try {
+            //set to null
+            setSelectedPayment(null)
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
     return (
         <>
             <div className={styles.container}>
                 <div className={styles.wrapper}> 
-                    <div className={styles.register}>
-                        <p>{subENStoString}</p>
-                        <div className={styles.registerOptions}>
-                            <Ether 
-                                rootNodeENS={rootNodeENS}
-                                subLabel={subLabel}
-                            />
-                            <Erc20 
-                                rootNodeENS={rootNodeENS}
-                                subLabel={subLabel}
-                            />
-                            <EtherWL 
-                                rootNodeENS={rootNodeENS}
-                                subLabel={subLabel}
-                            />
-                            <Erc20WL
-                                rootNodeENS={rootNodeENS}
-                                subLabel={subLabel}
-                            />
+                    <div className={styles.registerParent}>
+                        <div>
+                            <p>{subENStoString} - {rootENS}</p>
                         </div>
-                    </div>       
+                        <div className={styles.registerChild}>
+                            <div className={styles.register}>
+                                <div>
+                                    <p>Register {subENStoString}</p>
+                                </div>
+                                {/*** <div>{some intro banner}</div>*/}
+                                <div className={styles.registerOptionsXY}>
+                                    {selectedPayment === null && (
+        
+                                    <div className={styles.registerOptionsParent}>
+                                        <div className={styles.registerOptionsTitle}>
+                                            <div className={styles.registerOptionsChild}>
+                                                <span>Payment Options</span>
+                                            </div>
+                                        </div>
+                                        <div className={styles.registerOptions}>
+                                            <div className={styles.registerOptionsChild}>
+                                                <div className={styles.registerOption}>
+                                                    <input
+                                                    type="radio"
+                                                    name="paymentOption"
+                                                    id="ether"
+                                                    value="ether"
+                                                    checked={selectedPayment === 'ether'}
+                                                    onChange={() => handlePaymentChange('ether')}
+                                                    />
+                                                    <label htmlFor="ether">Ether</label>
+                                                </div>
+                                                <hr />
+                                                <div className={styles.registerOption}>
+                                                    <input
+                                                    type="radio"
+                                                    name="paymentOption"
+                                                    id="erc20"
+                                                    value="erc20"
+                                                    checked={selectedPayment === 'erc20'}
+                                                    onChange={() => handlePaymentChange('erc20')}
+                                                    />
+                                                    <label htmlFor="erc20">ERC20</label> 
+                                                </div>
+                                                <hr />
+                                                <div className={styles.registerOption}>
+                                                    <input
+                                                    type="radio"
+                                                    name="paymentOption"
+                                                    id="etherWL"
+                                                    value="etherWL"
+                                                    checked={selectedPayment === 'etherWL'}
+                                                    onChange={() => handlePaymentChange('etherWL')}
+                                                    />
+                                                    <label htmlFor="etherWL">EtherWL</label>
+                                                </div>
+                                                <hr />
+                                                <div className={styles.registerOption}>
+                                                    <input
+                                                    type="radio"
+                                                    name="paymentOption"
+                                                    id="erc20WL"
+                                                    value="erc20WL"
+                                                    checked={selectedPayment === 'erc20WL'}
+                                                    onChange={() => handlePaymentChange('erc20WL')}
+                                                    />
+                                                    <label htmlFor="erc20WL">ERC20WL</label>
+                                                </div>
+                                            </div>
+                                            
+                                        </div>
+                                    </div>
+                                    )}
+
+                                    <div>
+                                    {selectedPayment === 'ether' && (
+                                        <Ether
+                                            rootNodeENS={rootNodeENS}
+                                            subLabel={subLabel}
+                                            clearOption={handleClearOption}
+
+                                        />
+                                    )}
+                                    {selectedPayment === 'erc20' && (
+                                        <Erc20
+                                            rootNodeENS={rootNodeENS}
+                                            subLabel={subLabel}
+                                            clearOption={handleClearOption}
+                                        />
+                                    )}
+                                    {selectedPayment === 'etherWL' && (
+                                        <EtherWL
+                                            rootNodeENS={rootNodeENS}
+                                            subLabel={subLabel}
+                                            clearOption={handleClearOption}
+                                        />
+                                    )}
+                                    {selectedPayment === 'erc20WL' && (
+                                        <Erc20WL
+                                            rootNodeENS={rootNodeENS}
+                                            subLabel={subLabel}
+                                            clearOption={handleClearOption}
+                                        />
+                                    )}
+                                    </div>
+                                    
+                                </div>
+                            </div> 
+                        </div>
+                    </div>
                 </div>
             </div>
         </>

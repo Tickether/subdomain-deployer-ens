@@ -1,15 +1,103 @@
 
-.container {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 20px;
+  .container {
+    background-color: #F4F5F7;
+    height: 90vh;
     font-family: 'Segoe UI';
   }
   
   .wrapper {
-    background-color: #f2f2f2;
-    border-radius: 8px;
-    padding: 20px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .registerParent{
+    display: flex;
+    flex-direction: column;
+    width: 680px;
+    max-width: 100%;
+    gap: 25px;
+  }
+  
+  .register{
+    display: flex;
+    flex-direction: column;
+    background-color: #FFFFFF;
+    width: 85%;
+    gap: 20px;
+  }
+
+  .registerChild{
+    background-color: #FFFFFF;
+    display: flex;
+    border-radius: 20px;
+    border: 1px solid #E8E8E8;
+    max-width: 100%;
+    justify-content: center;
+    padding: 20px 0px;
+
+  }
+
+  .registerParent p {
+    
+    font-weight: 700;
+    font-size: x-large;
+    
+  }
+
+  .registerOptionsTitle{
+    font-weight: 500;
+    color: #9B9BA6;
+    display: flex;
+    width: 100%; 
+    justify-content: center;
+  }
+
+  .registerOptionsParent{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%; 
+  }
+
+  .registerOptions{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+    border: 1px solid #E8E8E8;
+    border-radius: 10px;
+  }
+
+  .registerOption{
+    padding: 20px 0px;
+    font-weight: 500;
+    font-size: 15px;
+  }
+  
+  .registerOption input[type="radio"] {
+    margin-right: 8px; /* Adjust the space between the radio button and label */
+    cursor: pointer;
+  }
+  .registerOption label {
+    cursor: pointer;
+  }
+  .registerOptionsChild{
+    display: flex;
+    flex-direction: column;
+    width: 95%;
+  }
+
+  .registerOptionsChild hr{
+    border: 0.1px solid #E8E8E8;
+    width: 105.5%;
+    align-self: center;
+  }
+
+  
+  .registerOptionsXY{
+    display: flex;
+    width: 100%;
+    justify-content: center;
   }
   
   .subButtons {
@@ -20,8 +108,3 @@
     margin-top: 20px;
   }
   
-  
-  /* Additional styling for the Lets Go! button */
-  button#letsGoButton {
-    background-color: #0f9d58;
-  }

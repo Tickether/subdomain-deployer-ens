@@ -1,4 +1,4 @@
-import styles from '@/styles/Register.module.css'
+import styles from '@/styles/RegisterOptions.module.css'
 import { useEffect, useState } from 'react'
 import { formatEther, fromHex } from 'viem'
 import { useAccount, useContractRead, useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi'
@@ -8,11 +8,12 @@ import { useAccount, useContractRead, useContractWrite, usePrepareContractWrite,
 interface RegisterProps {
     rootNodeENS: `0x${string}`,
     subLabel : string
+    clearOption: () => void;
 }
 
 
 
-export default function Erc20WL({rootNodeENS, subLabel, } : RegisterProps) {
+export default function Erc20WL({rootNodeENS, subLabel, clearOption} : RegisterProps) {
 
     const {address, isConnected} = useAccount()
     //const [subENS, setSubENS] = useState<string>('')
@@ -157,9 +158,13 @@ export default function Erc20WL({rootNodeENS, subLabel, } : RegisterProps) {
                         <button onClick={handleIncrement}>+</button>
                     </div>
                         <span>{formatEther(subNodeFee)}</span>
-                        <button 
-                            disabled={!connected}
-                            
+                        <button
+                            onClick={() => clearOption()}
+                            //onClick={handleSubdomain}
+                        >
+                            Choose Payment..
+                        </button>
+                        <button
                             //onClick={() => setOpenModal(true)}
                             onClick={handleSubdomain}
                         >
