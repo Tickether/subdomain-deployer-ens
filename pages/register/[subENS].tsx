@@ -1,8 +1,13 @@
 import styles from '@/styles/Register.module.css'
 import { useEffect, useState } from 'react'
 import { namehash } from 'viem/ens'
-import { useAccount, useContractRead, useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi'
+import { useAccount, useContractRead, useContractReads, useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi'
 import { formatEther, fromHex } from 'viem'
+import Ether from '@/components/register/ether'
+import { Validator } from '@/components/searches/searchResult'
+import Erc20WL from '@/components/register/erc20WL'
+import EtherWL from '@/components/register/etherWL'
+import Erc20 from '@/components/register/erc20'
 
 
 
@@ -11,12 +16,28 @@ export default function Register() {
     const {address, isConnected} = useAccount()
     const [ subENS, setSubENS ] = useState<string>('')
     const [nodeData, setNodeData] = useState<any>([])
-    const [yearsLeft, setYearsLeft] = useState<number>(0)
-    const [subsYears, setSubsYears] = useState<number>(1)
-    const [subNodeFee, setSubNodeFee] = useState<bigint>(BigInt(0))
-    const [connected, setConnected] = useState<boolean>(false)
+    //const [yearsLeft, setYearsLeft] = useState<number>(0)
+    //const [subsYears, setSubsYears] = useState<number>(1)
+    //const [subNodeFee, setSubNodeFee] = useState<bigint>(BigInt(0))
+    //const [connected, setConnected] = useState<boolean>(false)
+    const validatorDefault = {
+        Wrapped: false,
+        Approved: false,
+        ActiveNode: false,
+        CanSubENS: false,
+        Erc20Approved: false,
+        Erc20ActiveNode: false,
+        Erc20CanSubENS: false,
+        WLApproved:false,
+        WLActiveNode:false,
+        WLCanSubENS: false,
+        Erc20WLApproved: false,
+        Erc20WLActiveNode: false,
+        Erc20WLCanSubENS: false,
+    };
+    const [validators, setValidators] = useState<Validator>(validatorDefault)
     
-
+/*
     useEffect(() => {
         if (isConnected && typeof isConnected === 'boolean') {
             setConnected((true))
@@ -24,7 +45,7 @@ export default function Register() {
             setConnected((false))
         }
     },[isConnected])
-    
+*/
     
     useEffect(()=>{
         setSubENS(window.location.pathname.split('/')[2])
@@ -52,13 +73,14 @@ export default function Register() {
     const rootENS = subENStoString!.substring(dotIndex + 1) // Extract the substring after the dot
     const rootNodeENS = namehash(rootENS)//
 
-    console.log(subLabel)
-    console.log(rootENS)
-    console.log(rootNodeENS)
-    console.log(fromHex(rootNodeENS, 'bigint'))
+    //console.log(subLabel)
+    //console.log(rootENS)
+    //console.log(rootNodeENS)
+    //console.log(fromHex(rootNodeENS, 'bigint'))
     
 
     // check node data
+    
     const contractReadNodeData = useContractRead({
         address: "0x114D4603199df73e7D157787f8778E21fCd13066",
         abi: [
@@ -76,12 +98,12 @@ export default function Register() {
         watch: true,
     })
     useEffect(() => {
-        if (contractReadNodeData?.data! /*&& typeof contractReadNodeExpired.data === 'Array<string' */) {
+        if (contractReadNodeData?.data!) {
             setNodeData(contractReadNodeData?.data!)
         }
     },[contractReadNodeData?.data!])
     console.log((contractReadNodeData?.data!))
-      
+    /*
     
     
     
@@ -167,34 +189,291 @@ export default function Register() {
             console.log(err)
         }
     }
+    */
 
+    // use this info to check which option of payments should be tagged available
+    const { data, isLoading } = useContractReads({
+        contracts: [
+            //contract 0 check if name is wrapped on nameWrapper
+            {
+                address: "0x114D4603199df73e7D157787f8778E21fCd13066",
+                abi: [
+                    {
+                        name: 'isWrapped',
+                        inputs: [{ internalType: "bytes32", name: "", type: "bytes32" }],
+                        outputs: [{ internalType: "bool", name: "", type: "bool" }],
+                        stateMutability: 'view',
+                        type: 'function',
+                    },
+                ],
+                functionName: 'isWrapped',
+                args: [(rootNodeENS)],
+                chainId: 5,
+            },
+            //contract 1a check if SubENS contract is approved on nameWrapper
+            {
+                address: "0x114D4603199df73e7D157787f8778E21fCd13066",
+                abi: [
+                    {
+                        name: 'isApprovedForAll',
+                        inputs: [{ internalType: "address", name: "account", type: "address" }, { internalType: "address", name: "operator", type: "address" }],
+                        outputs: [{ internalType: "bool", name: "", type: "bool" }],
+                        stateMutability: 'view',
+                        type: 'function',
+                    },
+                ],
+                functionName: 'isApprovedForAll',
+                args: [(nodeData[0]!), ('0x229C0715e70741F854C299913C2446eb4400e76C')],
+                chainId: 5,
+            },
+            //contract 1b check if name is enabled on SubENS contract
+            {
+                address: "0x229C0715e70741F854C299913C2446eb4400e76C",
+                abi: [
+                    {
+                        name: 'parentNodeActive',
+                        inputs: [{ internalType: "bytes32", name: "", type: "bytes32" }],
+                        outputs: [{ internalType: "bool", name: "", type: "bool" }],
+                        stateMutability: 'view',
+                        type: 'function',
+                    },    
+                ],
+                functionName: 'parentNodeActive',
+                args: [(rootNodeENS)],
+                chainId: 5,
+            },
+            //contract 1c check if CanSub name is enabled on SubENS contract
+            {
+                address: "0x229C0715e70741F854C299913C2446eb4400e76C",
+                abi: [
+                    {
+                        name: 'parentNodeCanSubActive',
+                        inputs: [{ internalType: "bytes32", name: "", type: "bytes32" }],
+                        outputs: [{ internalType: "bool", name: "", type: "bool" }],
+                        stateMutability: 'view',
+                        type: 'function',
+                    },    
+                ],
+                functionName: 'parentNodeCanSubActive',
+                args: [(rootNodeENS)],
+                chainId: 5,
+            },
+            //contract 2a check if SubENSERC20 contract is approved on nameWrapper
+            {
+                address: "0x114D4603199df73e7D157787f8778E21fCd13066",
+                abi: [
+                    {
+                        name: 'isApprovedForAll',
+                        inputs: [{ internalType: "address", name: "account", type: "address" }, { internalType: "address", name: "operator", type: "address" }],
+                        outputs: [{ internalType: "bool", name: "", type: "bool" }],
+                        stateMutability: 'view',
+                        type: 'function',
+                    },
+                ],
+                functionName: 'isApprovedForAll',
+                args: [(nodeData[0]!), ('0x229C0715e70741F854C299913C2446eb4400e76C')],
+                chainId: 5,
+            },
+            //contract 2b check if name is enabled on SubENSERC20 contract
+            {
+                address: "0x229C0715e70741F854C299913C2446eb4400e76C",
+                abi: [
+                    {
+                        name: 'parentNodeActive',
+                        inputs: [{ internalType: "bytes32", name: "", type: "bytes32" }],
+                        outputs: [{ internalType: "bool", name: "", type: "bool" }],
+                        stateMutability: 'view',
+                        type: 'function',
+                    },    
+                ],
+                functionName: 'parentNodeActive',
+                args: [(rootNodeENS)],
+                chainId: 5,
+            },
+            //contract 2c check if CanSub name is enabled on SubENSERC20 contract
+            {
+                address: "0x229C0715e70741F854C299913C2446eb4400e76C",
+                abi: [
+                    {
+                        name: 'parentNodeCanSubActive',
+                        inputs: [{ internalType: "bytes32", name: "", type: "bytes32" }],
+                        outputs: [{ internalType: "bool", name: "", type: "bool" }],
+                        stateMutability: 'view',
+                        type: 'function',
+                    },    
+                ],
+                functionName: 'parentNodeCanSubActive',
+                args: [(rootNodeENS)],
+                chainId: 5,
+            },
+            //contract 3a check if SubENSWL contract is approved on nameWrapper
+            {
+                address: "0x114D4603199df73e7D157787f8778E21fCd13066",
+                abi: [
+                    {
+                        name: 'isApprovedForAll',
+                        inputs: [{ internalType: "address", name: "account", type: "address" }, { internalType: "address", name: "operator", type: "address" }],
+                        outputs: [{ internalType: "bool", name: "", type: "bool" }],
+                        stateMutability: 'view',
+                        type: 'function',
+                    },
+                ],
+                functionName: 'isApprovedForAll',
+                args: [(nodeData[0]!), ('0x229C0715e70741F854C299913C2446eb4400e76C')],
+                chainId: 5,
+            },
+            //contract 3b check if name is enabled on SubENSWL contract
+            {
+                address: "0x229C0715e70741F854C299913C2446eb4400e76C",
+                abi: [
+                    {
+                        name: 'parentNodeActive',
+                        inputs: [{ internalType: "bytes32", name: "", type: "bytes32" }],
+                        outputs: [{ internalType: "bool", name: "", type: "bool" }],
+                        stateMutability: 'view',
+                        type: 'function',
+                    },    
+                ],
+                functionName: 'parentNodeActive',
+                args: [(rootNodeENS)],
+                chainId: 5,
+            },
+            //contract 3c check if CanSub name is enabled on SubENSWL contract
+            {
+                address: "0x229C0715e70741F854C299913C2446eb4400e76C",
+                abi: [
+                    {
+                        name: 'parentNodeCanSubActive',
+                        inputs: [{ internalType: "bytes32", name: "", type: "bytes32" }],
+                        outputs: [{ internalType: "bool", name: "", type: "bool" }],
+                        stateMutability: 'view',
+                        type: 'function',
+                    },    
+                ],
+                functionName: 'parentNodeCanSubActive',
+                args: [(rootNodeENS)],
+                chainId: 5,
+            },
+            //contract 4a check if SubENSERC20WL contract is approved on nameWrapper
+            {
+                address: "0x114D4603199df73e7D157787f8778E21fCd13066",
+                abi: [
+                    {
+                        name: 'isApprovedForAll',
+                        inputs: [{ internalType: "address", name: "account", type: "address" }, { internalType: "address", name: "operator", type: "address" }],
+                        outputs: [{ internalType: "bool", name: "", type: "bool" }],
+                        stateMutability: 'view',
+                        type: 'function',
+                    },
+                ],
+                functionName: 'isApprovedForAll',
+                args: [(nodeData[0]!), ('0x229C0715e70741F854C299913C2446eb4400e76C')],
+                chainId: 5,
+            },
+            //contract 4b check if name is enabled on SubENSERC20WL contract
+            {
+                address: "0x229C0715e70741F854C299913C2446eb4400e76C",
+                abi: [
+                    {
+                        name: 'parentNodeActive',
+                        inputs: [{ internalType: "bytes32", name: "", type: "bytes32" }],
+                        outputs: [{ internalType: "bool", name: "", type: "bool" }],
+                        stateMutability: 'view',
+                        type: 'function',
+                    },    
+                ],
+                functionName: 'parentNodeActive',
+                args: [(rootNodeENS)],
+                chainId: 5,
+            },
+            //contract 4c check if CanSub name is enabled on SubENSERC20WL contract
+            {
+                address: "0x229C0715e70741F854C299913C2446eb4400e76C",
+                abi: [
+                    {
+                        name: 'parentNodeCanSubActive',
+                        inputs: [{ internalType: "bytes32", name: "", type: "bytes32" }],
+                        outputs: [{ internalType: "bool", name: "", type: "bool" }],
+                        stateMutability: 'view',
+                        type: 'function',
+                    },    
+                ],
+                functionName: 'parentNodeCanSubActive',
+                args: [(rootNodeENS)],
+                chainId: 5,
+            },
+            
+        ],
+        watch: true,
+    })  
+    console.log(data)
 
+    useEffect(() => {
+        //let dataRes : Validaters[] = [] 
+        if (data! /*&& typeof data === 'boolean'*/) {
+
+            // Extract the results from the data array
+            const [isWrapped, isApproved, isNodeActive, isCanSubENS, isERC20Approved, isERC20NodeActive, isErc20CanSubENS, isWLApproved, isWLNodeActive, isWLCanSubENS, isERC20WLApproved, isERC20WLNodeActive, isErc20WLCanSubENS] = data.map(item => item.result as boolean);
+
+            // Create a new Validator object using the extracted data
+            const validatorData: Validator = {
+                Wrapped: isWrapped,
+                Approved: isApproved,
+                ActiveNode: isNodeActive,
+                CanSubENS: isCanSubENS,
+                Erc20Approved: isERC20Approved,
+                Erc20ActiveNode: isERC20NodeActive,
+                Erc20CanSubENS: isErc20CanSubENS,
+                WLApproved: isWLApproved,
+                WLActiveNode: isWLNodeActive,
+                WLCanSubENS: isWLCanSubENS,
+                Erc20WLApproved: isERC20WLApproved,
+                Erc20WLActiveNode: isERC20WLNodeActive,
+                Erc20WLCanSubENS: isErc20WLCanSubENS,
+            };
+
+            /*
+            const validatorData : Validator = {
+                wrapped: data[0].result,
+                approved: data[1].result,
+                activeNode: data[2].result,
+                erc20Approved: data[3].result,
+                erc20ActiveNode: data[4].result,
+                wLApproved:data[5].result,
+                wLActiveNode:data[6].result,
+                erc20WLApproved: data[7].result,
+                erc20WLActiveNode: data[8].result,
+            }
+            */
+            //dataRes.wrapped = data[0].result
+            setValidators(validatorData)
+        }
+    },[data!])
+    console.log(validators)
 
     return (
         <>
             <div className={styles.container}>
                 <div className={styles.wrapper}> 
-                    <div>
+                    <div className={styles.register}>
                         <p>{subENStoString}</p>
-                        <div className={styles.subButtons}>
-                            <div>
-                                <button onClick={handleDecrement}>-</button>
-                                <input 
-                                    readOnly
-                                    type='number' 
-                                    value={subsYears}
-                                />
-                                <button onClick={handleIncrement}>+</button>
-                            </div>
-                            <span>{formatEther(subNodeFee)}</span>
-                            <button 
-                                disabled={!connected}
-                                
-                                //onClick={() => setOpenModal(true)}
-                                onClick={handleSubdomain}
-                            >
-                                Lets Go!
-                            </button>
+                        <div className={styles.registerOptions}>
+                            <Ether 
+                                rootNodeENS={rootNodeENS}
+                                subLabel={subLabel}
+                            />
+                            <Erc20 
+                                rootNodeENS={rootNodeENS}
+                                subLabel={subLabel}
+                            />
+                            <EtherWL 
+                                rootNodeENS={rootNodeENS}
+                                subLabel={subLabel}
+                            />
+                            <Erc20WL
+                                rootNodeENS={rootNodeENS}
+                                subLabel={subLabel}
+                            />
                         </div>
                     </div>       
                 </div>
