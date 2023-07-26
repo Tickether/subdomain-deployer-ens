@@ -37,6 +37,25 @@
 
   }
 
+  .registerInfo{
+    border: 1px solid #0023DD;
+    border-radius: 10px;
+    background-color: #F0F6FF;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 20px 0px;
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  .registerInfoText{
+    display: flex;
+    
+  }
+
   .registerParent p {
     
     font-weight: 700;

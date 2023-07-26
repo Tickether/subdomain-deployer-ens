@@ -8,6 +8,8 @@ import { Validator } from '@/components/searches/searchResult'
 import Erc20WL from '@/components/register/erc20WL'
 import EtherWL from '@/components/register/etherWL'
 import Erc20 from '@/components/register/erc20'
+import cautionSVG from '@/public/assets/icons/caution.svg'
+import Image from 'next/image'
 
 
 
@@ -480,7 +482,24 @@ export default function Register() {
                                 <div>
                                     <p>Register {subENStoString}</p>
                                 </div>
-                                {/*** <div>{some intro banner}</div>*/}
+                                {
+                                    selectedPayment === null
+                                    ?   (
+                                        <div className={styles.registerInfo}>
+                                            <div>
+                                                <Image src={cautionSVG} alt='' />
+                                            </div>
+                                            <div className={styles.registerInfoText}>
+                                                <span>Kindly select one of the avaible payment options below to continue with your ENS subdomain registraion.</span>
+                                            </div>
+                                        </div>
+                                    )
+                                    :(
+                                        <div>  
+                                        </div>
+                                    )
+                                }
+                                
                                 <div className={styles.registerOptionsXY}>
                                     {selectedPayment === null && (
         
