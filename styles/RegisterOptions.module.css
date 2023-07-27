@@ -1,0 +1,163 @@
+    .container {
+        display: flex;
+        font-family: 'Segoe UI';
+        width: 578px;
+        justify-content: center;
+    }
+
+    .wrapper {
+        display: flex;
+        width: 100%;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .content{
+        display: flex;
+        width: 100%;
+        flex-direction: column;
+        align-self: center;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .yearButtons{
+        display: flex;
+        width: 100%;
+        align-items: center;
+        border: 1px solid #E8E8E8;
+        border-radius: 30px;
+        justify-content: center;
+        padding: 10px 0px;
+    }
+
+    .yearButtonsInput{    
+        display: flex;
+        justify-content: center;
+        width: 80%;
+    }
+
+    .yearButtonsInput input{   
+        text-align: center;
+        border: none; 
+        color: #0023DD;
+        font-size: xx-large;
+        font-weight: 600;
+        cursor: pointer;
+        outline: none;
+        
+    }
+
+    .yearButtonsInput input:hover {
+        /* Hover state styles */
+        border-radius: 30px;
+        background-color: #F0F6FF; /* Example: Light gray background on hover */
+      }
+      
+      .yearButtonsInput input:checked {
+        /* Selected state styles */
+        background-color: #0023DD; /* Example: Blue background on selection */
+        color: #fff; /* Example: White text color on selection */
+      }
+
+    .countButtons{
+        display: flex;
+        align-self: center;
+        align-items: center;
+    }
+
+    .feeNgas{
+        display: flex;
+        width: 100%;
+        flex-direction: column;
+        align-items: center;
+        color: #9B9BA6;
+    }
+
+    .feeNgasTop{
+        display: flex;
+        width: 100%;
+        flex-direction: column;
+        align-items: center;
+        padding: 5px 0px;
+    }
+    .feeNgasTopChild{
+        
+        display: flex;
+        width: 95%;
+        justify-content: space-between;
+
+    }
+
+    .feeNgasTopToggle{
+        display: flex;
+        background-color: #F5F5F5;
+        border-radius: 10px;
+        font-size: small;
+        font-weight: 700;
+        padding: 3px;
+    }
+
+    .feeNgasTopToggleSelectETH{
+        background-color: #0023DD;
+        padding: 7px 11px;
+        border-radius: 5px;
+        cursor: pointer;
+        color: #FFFFFF;
+    }
+
+    .feeNgasTopToggleUSD{
+
+        padding: 7px 11px;
+        color: #9B9BA6;
+        cursor: pointer;
+    }
+
+    .feeNgasTopToggleETH{
+        padding: 7px 11px;
+        color: #9B9BA6;
+        cursor: pointer;
+    }
+
+    .feeNgasTopToggleSelectUSD{
+
+        padding: 7px 11px;
+        color: #FFFFFF;
+        background-color: #0023DD;
+        border-radius: 5px;
+        cursor: pointer;
+
+
+    }
+
+    .feeNgasDown{
+        display: flex;
+        width: 100%;
+        flex-direction: column;
+        background-color: #F5F5F5;
+        align-items: center;
+    }
+    .feeNgasDownChild{
+        
+        display: flex;
+        width: 95%;
+        flex-direction: column;
+        gap: 5px;
+        padding: 5px 0px;
+
+    }
+
+    .feeNgasDownFees{
+        display: flex;
+        justify-content: space-between;
+    }
+    .feeNgasDownGas{
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .feeNgasDownSum{
+        color: black;
+        display: flex;
+        justify-content: space-between;
+    }

@@ -482,23 +482,56 @@ export default function Register() {
                                 <div>
                                     <p>Register {subENStoString}</p>
                                 </div>
-                                {
-                                    selectedPayment === null
-                                    ?   (
-                                        <div className={styles.registerInfo}>
-                                            <div>
-                                                <Image src={cautionSVG} alt='' />
-                                            </div>
-                                            <div className={styles.registerInfoText}>
-                                                <span>Kindly select one of the avaible payment options below to continue with your ENS subdomain registraion.</span>
-                                            </div>
+                                {selectedPayment === null && (
+                                    <div className={styles.registerInfo}>
+                                        <div>
+                                            <Image src={cautionSVG} alt='' />
                                         </div>
-                                    )
-                                    :(
-                                        <div>  
+                                        <div className={styles.registerInfoText}>
+                                            <span>Kindly select one of the avaible payment options below to continue with your ENS subdomain registraion.</span>
                                         </div>
-                                    )
-                                }
+                                    </div>
+                                )}
+                                {selectedPayment === 'ether' && (
+                                    <div className={styles.registerInfo}>
+                                        <div>
+                                            <Image src={cautionSVG} alt='' />
+                                        </div>
+                                        <div className={styles.registerInfoText}>
+                                            <span>Kindly select one of the avaible payment options below to continue with your ENS subdomain registraion.</span>
+                                        </div>
+                                    </div>
+                                )}
+                                {selectedPayment === 'erc20' && (
+                                    <div className={styles.registerInfo}>
+                                        <div>
+                                            <Image src={cautionSVG} alt='' />
+                                        </div>
+                                        <div className={styles.registerInfoText}>
+                                            <span>Kindly select one of the avaible payment options below to continue with your ENS subdomain registraion.</span>
+                                        </div>
+                                    </div>
+                                )}
+                                {selectedPayment === 'etherWL' && (
+                                    <div className={styles.registerInfo}>
+                                        <div>
+                                            <Image src={cautionSVG} alt='' />
+                                        </div>
+                                        <div className={styles.registerInfoText}>
+                                            <span>Kindly select one of the avaible payment options below to continue with your ENS subdomain registraion.</span>
+                                        </div>
+                                    </div>
+                                )}
+                                {selectedPayment === 'erc20WL' && (
+                                    <div className={styles.registerInfo}>
+                                        <div>
+                                            <Image src={cautionSVG} alt='' />
+                                        </div>
+                                        <div className={styles.registerInfoText}>
+                                            <span>Kindly select one of the avaible payment options below to continue with your ENS subdomain registraion.</span>
+                                        </div>
+                                    </div>
+                                )}
                                 
                                 <div className={styles.registerOptionsXY}>
                                     {selectedPayment === null && (
