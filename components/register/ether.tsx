@@ -170,8 +170,8 @@ export default function Ether({rootNodeENS, subLabel, clearOption} : RegisterPro
         <>
             <div className={styles.container}>
                 <div className={styles.wrapper}>
-                <div className={styles.content}>
-                    <div className={styles.yearButtons}>
+                    <div className={styles.content}>
+                        <div className={styles.yearButtons}>
                         
                             <div 
                                 className={styles.countButtons}

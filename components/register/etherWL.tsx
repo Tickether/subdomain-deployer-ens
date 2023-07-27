@@ -1,7 +1,10 @@
 import styles from '@/styles/RegisterOptions.module.css'
 import { useEffect, useState } from 'react'
 import { formatEther, fromHex } from 'viem'
-import { useAccount, useContractRead, useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi'
+import { useAccount, useContractRead, useContractWrite, useFeeData, usePrepareContractWrite, useWaitForTransaction } from 'wagmi'
+import plusSVG from '@/public/assets/icons/plus.svg'
+import minusSVG from '@/public/assets/icons/minus.svg'
+import Image from 'next/image'
 
 
 
@@ -16,11 +19,13 @@ interface RegisterProps {
 export default function EtherWL({rootNodeENS, subLabel, clearOption} : RegisterProps) {
 
     const {address, isConnected} = useAccount()
-    //const [subENS, setSubENS] = useState<string>('')
+    const { data, isError, isLoading } = useFeeData()
+    const [gas, setGas] = useState<string>('')
     const [nodeData, setNodeData] = useState<any>([])
     const [yearsLeft, setYearsLeft] = useState<number>(0)
     const [subsYears, setSubsYears] = useState<number>(1)
     const [subNodeFee, setSubNodeFee] = useState<bigint>(BigInt(0))
+    const [showUSD, setShowUSD] = useState<boolean>(false)
     const [connected, setConnected] = useState<boolean>(false)
     
 
@@ -31,6 +36,14 @@ export default function EtherWL({rootNodeENS, subLabel, clearOption} : RegisterP
             setConnected((false))
         }
     },[isConnected])
+    useEffect(() => {
+        if (data /* && typeof isConnected === 'boolean'*/) {
+            const valueAsString = data?.formatted.gasPrice;
+            const truncatedValue = parseFloat(valueAsString!).toFixed(2);
+            setGas((truncatedValue))
+        } 
+    },[data])
+    console.log(data?.formatted.gasPrice)
 
     // check node data
     const contractReadNodeData = useContractRead({
@@ -142,38 +155,100 @@ export default function EtherWL({rootNodeENS, subLabel, clearOption} : RegisterP
         }
     }
 
+    const handleToggle =  () => {
+        if(showUSD){
+            setShowUSD(false)
+        } else {
+            setShowUSD(true)
+        }
+        
+    }
+
     return (
         <>
             <div className={styles.container}>
                 <div className={styles.wrapper}>
-                <div className={styles.search}>
-                <div className={styles.subButtons}>
-                    <div>
-                        <button onClick={handleDecrement}>-</button>
-                        <input 
-                            readOnly
-                            type='number' 
-                            value={subsYears}
-                        />
-                        <button onClick={handleIncrement}>+</button>
-                    </div>
-                        <span>{formatEther(subNodeFee)}</span>
-                        <button
-                            onClick={() => clearOption()}
-                            //onClick={handleSubdomain}
-                        >
-                            Choose Payment..
-                        </button>
-                        <button 
-                            disabled={!connected}
+                    <div className={styles.content}>
+                        <div className={styles.yearButtons}>
+                        
+                            <div 
+                                className={styles.countButtons}
+                                onClick={handleDecrement}
+                            >
+                                <Image src={minusSVG} alt='' />
+                            </div>
+                            <div className={styles.yearButtonsInput}>
+                                <input 
+                                    readOnly
+                                    type='text' 
+                                    value={subsYears === 1 ? subsYears + ' ' + 'year' : subsYears + ' ' + 'years'}
+                                />
+                            </div>
+                            <div 
+                                className={styles.countButtons}
+                                onClick={handleIncrement}
+                            >
+                                <Image src={plusSVG} alt='' />
+                            </div>
                             
-                            //onClick={() => setOpenModal(true)}
-                            onClick={handleSubdomain}
-                        >
-                            Lets Go!
-                        </button>
+                        </div>
+                        <div className={styles.feeNgas}>
+                            <div className={styles.feeNgasTop}>
+                                <div onClick={handleToggle} className={styles.feeNgasTopChild}>
+                                    
+                                        <span>{gas} Gwei</span>
+                                        <div className={styles.feeNgasTopToggle}>
+                                            {
+                                                showUSD 
+                                                ?(
+                                                    <>
+                                                        <div className={styles.feeNgasTopToggleETH}>
+                                                            <span>ETH</span>
+                                                        </div>
+                                                        <div className={styles.feeNgasTopToggleSelectUSD}>
+                                                            <span>USD</span>
+                                                        </div>
+                                                    </>
+                                                )
+                                                :(
+                                                    <>
+                                                        <div className={styles.feeNgasTopToggleSelectETH}><span>ETH</span></div>
+                                                        <div className={styles.feeNgasTopToggleUSD}><span>USD</span></div>
+                                                    </>
+                                                )
+                                            }
+                                        </div>
+                                    
+                                </div>
+                            </div>
+                            <div className={styles.feeNgasDown}>
+                                <div className={styles.feeNgasDownChild}>
+                                    <div className={styles.feeNgasDownFees}><span>{subsYears === 1 ? subsYears + ' ' + 'year' : subsYears + ' ' + 'years'} registraion</span><span>{formatEther(subNodeFee)} ETH</span></div>
+                                    <div className={styles.feeNgasDownGas}><span>Est. network fee</span><span>0 ETH</span></div>
+                                    <div className={styles.feeNgasDownSum}><span>Estimated total</span><span>0 ETH</span></div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                        <div className={styles.actionButtons}>
+                            <button
+                                onClick={() => clearOption()}
+                                //onClick={handleSubdomain}
+                            >
+                                Choose Payment..
+                            </button>
+                            <button 
+                                disabled={!connected}
+                                
+                                //onClick={() => setOpenModal(true)}
+                                onClick={handleSubdomain}
+                            >
+                                Lets Go!
+                            </button>
+                        </div>
+
                     </div>
-                </div>
+                    
                 </div>
             </div>
         </>
