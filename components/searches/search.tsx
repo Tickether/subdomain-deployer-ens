@@ -4,6 +4,7 @@ import { useRouter } from 'next/router'
 import clearSVG from '@/public/assets/icons/clear.svg'
 import unavailableSVG from '@/public/assets/icons/unavailable.svg'
 import availableSVG from '@/public/assets/icons/available.svg'
+import warningSVG from '@/public/assets/icons/warning.svg'
 import Image from 'next/image';
 //import Link from 'next/link'
 import { namehash, normalize } from 'viem/ens'
@@ -224,7 +225,12 @@ export default function Search() {
                         />
                         {
                           errorMsg.length >=1 && (
-                            <div className={styles.errorMsg}>{errorMsg}</div>
+                            <div className={styles.errorMsgParent}>
+                              <div className={styles.errorMsg}>
+                                <Image  src={warningSVG} alt='' />
+                                <p>{errorMsg}</p>
+                              </div>
+                            </div>
                           )
                         }
                         {

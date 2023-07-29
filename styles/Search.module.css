@@ -57,6 +57,23 @@
     border-radius: 20px;
   }
 
+  .errorMsg {
+   display: flex;
+   justify-content: end;
+   background-color: #fee8a536;
+   color: #EEC443;
+   width: fit-content;
+   font-weight: 600;
+   font-size: 13px;
+   gap: 5px;
+   
+  }
+
+  .errorMsgParent {
+    display: flex;
+    justify-content: end;
+    padding: 0px 15px;
+   }
 
   .subDomainMsg{
     display: flex;
@@ -109,9 +126,7 @@
 
   }
   
-  .errorMsg {
-   
-  }
+  
   
   
   
