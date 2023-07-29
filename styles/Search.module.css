@@ -44,6 +44,7 @@
   
   .searchSubdomain{
     margin-top: 20px;
+    gap: 20px;
   }
   
   
@@ -56,11 +57,44 @@
     border-radius: 20px;
   }
 
-  .register {
-    cursor: pointer;
-    border-radius: 5px;
+
+  .subDomainMsg{
+    display: flex;
+    align-items: center;
+    padding: 10px 35px;
+    gap: 5px;
+    font-weight: 700;
+    font-size: 13px;
   }
 
+  .subDomainRegister button {
+    cursor: pointer;
+    border-radius: 5px;
+    background-color: #0023DD;
+    color: white;
+    width: 150px;
+    height: 40px;
+    font-weight: bold;
+    font-family: 'Segoe UI';
+    border: none;
+  }
+
+  .subDomainRegister button:disabled{
+    color: #9B9BA6;
+    background-color: #E8E8E8;
+    cursor: not-allowed;
+  }
+
+  .subDomainResult{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .subDomainRegister{
+    display: flex;
+    justify-content: center;
+  }
 
   /*
   .searchResultItem {

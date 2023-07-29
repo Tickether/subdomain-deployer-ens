@@ -552,7 +552,7 @@ export default function SearchResult({searchresult, /*canSubdomain,*/ subEnsBox,
                                 <span
                                     style={{
                                         
-                                        color: 'red',
+                                        color: '#BF5345',
                                         fontSize: '12px',
                         
                                     }}

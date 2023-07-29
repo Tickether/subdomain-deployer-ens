@@ -2,6 +2,8 @@ import styles from '@/styles/Search.module.css'
 import axios from 'axios'
 import { useRouter } from 'next/router'
 import clearSVG from '@/public/assets/icons/clear.svg'
+import unavailableSVG from '@/public/assets/icons/unavailable.svg'
+import availableSVG from '@/public/assets/icons/available.svg'
 import Image from 'next/image';
 //import Link from 'next/link'
 import { namehash, normalize } from 'viem/ens'
@@ -231,21 +233,38 @@ export default function Search() {
                             <div className={styles.subDomainResult}>
                               { 
                                 nodeActive  
-                                ? <div>already registered</div>
-                                : (
-                                  <div>
-                                    <div>available to regiter</div>
-                                    <button className={styles.register} onClick={handleSubEnsSearchSelect}>Register SubDomain</button> 
+                                ? <div className={styles.subDomainMsg}>
+                                    <Image  src={unavailableSVG} alt='' />
+                                    <p
+                                      style={{
+                                        color: '#BF5345',
+                                      }}
+                                    >
+                                      Unvailable to register
+                                    </p>
                                   </div>
-                                )
+                                : <div className={styles.subDomainMsg}>
+                                    <Image  src={availableSVG} alt='' />
+                                    <p 
+                                      style={{
+                                        color: '#008000', 
+                                      }}
+                                    >
+                                      Available</p>
+                                  </div>
                               }
+                              <div className={styles.subDomainRegister}>
+                                <button disabled= {nodeActive} className={styles.register} onClick={handleSubEnsSearchSelect}>Register</button> 
+                              </div>
                             </div>
+                            
                           )
                           : null
                         }              
                         {/* Display subdomain search results */}
                         {/* Add code to display the subdomain search results */}
                     </div>
+                    
                     
                 )}
                 </div>
