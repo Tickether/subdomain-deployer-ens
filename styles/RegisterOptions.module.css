@@ -21,6 +21,55 @@
         gap: 20px;
     }
 
+    .caption{
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+        gap: 5px;
+    }
+
+    .caption span{
+        color: #9B9BA6;
+        font-weight: 600;
+        font-size: small;
+        cursor: pointer;
+    }
+
+    .allowlist{
+        
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    .allowlisted{
+        
+        border: 1px solid #008000;
+        padding: 5px 180px;
+        border-radius: 20px;
+        background-color: #00800030;
+        color: #0A8A17;
+        
+    }
+
+      .allowlistNot{
+        border: 1px solid #BF5345;
+        padding: 5px 180px;
+        border-radius: 20px;
+        background-color: #BF534530;
+        color: #C52F1B;
+        
+      }
+    
+      .allowlistedInfoText{
+        display: flex;
+        
+      }
+
     .yearButtons{
         display: flex;
         width: 100%;
@@ -46,6 +95,12 @@
         cursor: pointer;
         outline: none;
         
+    }
+
+    .feeNgasTopToggleParent{
+        display: flex;
+        align-items: center;
+        gap: 3px;
     }
 
     .yearButtonsInput input:hover {
@@ -81,11 +136,18 @@
         align-items: center;
         padding: 5px 0px;
     }
+
+    .gas{
+        display: flex;
+        align-content: center;
+        gap: 3px;
+    }
     .feeNgasTopChild{
         
         display: flex;
         width: 95%;
         justify-content: space-between;
+        align-items: center;
 
     }
 
@@ -160,4 +222,22 @@
         color: black;
         display: flex;
         justify-content: space-between;
+    }
+
+    .actionButtons button{
+        cursor: pointer;
+        border-radius: 5px;
+        background-color: #0023DD;
+        color: white;
+        width: 150px;
+        height: 40px;
+        font-weight: bold;
+        font-family: 'Segoe UI';
+        border: none;
+    }
+
+    .actionButtons button:disabled{
+        color: #9B9BA6;
+        background-color: #E8E8E8;
+        cursor: not-allowed;
     }

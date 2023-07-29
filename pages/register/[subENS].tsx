@@ -39,6 +39,7 @@ export default function Register() {
     };
     const [validators, setValidators] = useState<Validator>(validatorDefault)
     const [selectedPayment, setSelectedPayment] = useState<string | null>(null);
+    const [tempSelectedPayment, setTempSelectedPayment] = useState<string | null>(null);
 
   
     
@@ -457,7 +458,7 @@ export default function Register() {
     console.log(validators)
 
     const handlePaymentChange = (option: string) => {
-        setSelectedPayment(option);
+        setTempSelectedPayment(option);
     };
 
     const handleClearOption = async () => {
@@ -468,6 +469,13 @@ export default function Register() {
             console.log(err)
         }
     }
+
+    const handleNext= () => {
+        if (tempSelectedPayment != null) {
+            setSelectedPayment(tempSelectedPayment); // Update the final selected payment state
+        }
+    };
+
 
     return (
         <>
@@ -498,7 +506,7 @@ export default function Register() {
                                             <Image src={cautionSVG} alt='' />
                                         </div>
                                         <div className={styles.registerInfoText}>
-                                            <span>Kindly select one of the avaible payment options below to continue with your ENS subdomain registraion.</span>
+                                            <span>Select the number of available years & continue with your eth payment.</span>
                                         </div>
                                     </div>
                                 )}
@@ -508,7 +516,7 @@ export default function Register() {
                                             <Image src={cautionSVG} alt='' />
                                         </div>
                                         <div className={styles.registerInfoText}>
-                                            <span>Kindly select one of the avaible payment options below to continue with your ENS subdomain registraion.</span>
+                                            <span>Select the number of available years & continue with your token payment.</span>
                                         </div>
                                     </div>
                                 )}
@@ -518,7 +526,7 @@ export default function Register() {
                                             <Image src={cautionSVG} alt='' />
                                         </div>
                                         <div className={styles.registerInfoText}>
-                                            <span>Kindly select one of the avaible payment options below to continue with your ENS subdomain registraion.</span>
+                                            <span>Check you allowlist status, select the number of available years & continue with your eth payment.</span>
                                         </div>
                                     </div>
                                 )}
@@ -528,7 +536,7 @@ export default function Register() {
                                             <Image src={cautionSVG} alt='' />
                                         </div>
                                         <div className={styles.registerInfoText}>
-                                            <span>Kindly select one of the avaible payment options below to continue with your ENS subdomain registraion.</span>
+                                            <span>Check you allowlist status, select the number of available years & continue with your token payment.</span>
                                         </div>
                                     </div>
                                 )}
@@ -546,53 +554,55 @@ export default function Register() {
                                             <div className={styles.registerOptionsChild}>
                                                 <div className={styles.registerOption}>
                                                     <input
-                                                    type="radio"
-                                                    name="paymentOption"
-                                                    id="ether"
-                                                    value="ether"
-                                                    checked={selectedPayment === 'ether'}
-                                                    onChange={() => handlePaymentChange('ether')}
+                                                        type="radio"
+                                                        name="paymentOption"
+                                                        id="ether"
+                                                        value="ether"
+                                                        checked={tempSelectedPayment === 'ether'}
+                                                        onChange={() => handlePaymentChange('ether')}
                                                     />
-                                                    <label htmlFor="ether">Ether</label>
+                                                    <label htmlFor="ether">Ethereum</label>
                                                 </div>
                                                 <hr />
                                                 <div className={styles.registerOption}>
                                                     <input
-                                                    type="radio"
-                                                    name="paymentOption"
-                                                    id="erc20"
-                                                    value="erc20"
-                                                    checked={selectedPayment === 'erc20'}
-                                                    onChange={() => handlePaymentChange('erc20')}
+                                                        type="radio"
+                                                        name="paymentOption"
+                                                        id="erc20"
+                                                        value="erc20"
+                                                        checked={tempSelectedPayment === 'erc20'}
+                                                        onChange={() => handlePaymentChange('erc20')}
                                                     />
                                                     <label htmlFor="erc20">ERC20</label> 
                                                 </div>
                                                 <hr />
                                                 <div className={styles.registerOption}>
                                                     <input
-                                                    type="radio"
-                                                    name="paymentOption"
-                                                    id="etherWL"
-                                                    value="etherWL"
-                                                    checked={selectedPayment === 'etherWL'}
-                                                    onChange={() => handlePaymentChange('etherWL')}
-                                                    />
-                                                    <label htmlFor="etherWL">EtherWL</label>
+                                                        type="radio"
+                                                        name="paymentOption"
+                                                        id="etherWL"
+                                                        value="etherWL"
+                                                        checked={tempSelectedPayment === 'etherWL'}
+                                                        onChange={() => handlePaymentChange('etherWL')}
+                                                        />
+                                                    <label htmlFor="etherWL">Ethereum + Allowlist</label>
                                                 </div>
                                                 <hr />
                                                 <div className={styles.registerOption}>
                                                     <input
-                                                    type="radio"
-                                                    name="paymentOption"
-                                                    id="erc20WL"
-                                                    value="erc20WL"
-                                                    checked={selectedPayment === 'erc20WL'}
-                                                    onChange={() => handlePaymentChange('erc20WL')}
+                                                        type="radio"
+                                                        name="paymentOption"
+                                                        id="erc20WL"
+                                                        value="erc20WL"
+                                                        checked={tempSelectedPayment === 'erc20WL'}
+                                                        onChange={() => handlePaymentChange('erc20WL')}
                                                     />
-                                                    <label htmlFor="erc20WL">ERC20WL</label>
+                                                    <label htmlFor="erc20WL">ERC20 + Allowlist</label>
                                                 </div>
                                             </div>
-                                            
+                                        </div>
+                                        <div className={styles.registerOptionNext}>
+                                            <button onClick={handleNext}>Next</button>
                                         </div>
                                     </div>
                                     )}

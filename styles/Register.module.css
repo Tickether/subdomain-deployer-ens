@@ -118,6 +118,24 @@
     width: 100%;
     justify-content: center;
   }
+
+  .registerOptionNext{
+    display: flex;
+    justify-content: center;
+
+  }
+
+  .registerOptionNext button{
+    cursor: pointer;
+    border-radius: 5px;
+    background-color: #0023DD;
+    color: white;
+    width: 150px;
+    height: 40px;
+    font-weight: bold;
+    font-family: 'Segoe UI';
+    border: none;
+  }
   
   .subButtons {
     display: flex;

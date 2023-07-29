@@ -4,6 +4,10 @@ import { formatEther, fromHex } from 'viem'
 import { useAccount, useContractRead, useContractWrite, useFeeData, usePrepareContractWrite, useWaitForTransaction } from 'wagmi'
 import plusSVG from '@/public/assets/icons/plus.svg'
 import minusSVG from '@/public/assets/icons/minus.svg'
+import plus_disabledSVG from '@/public/assets/icons/plus-disabled.svg'
+import minus_disabledSVG from '@/public/assets/icons/minus-disabled.svg'
+import gasSVG from '@/public/assets/icons/gas.svg'
+import dropSVG from '@/public/assets/icons/drop.svg'
 import Image from 'next/image'
 
 
@@ -168,14 +172,30 @@ export default function Erc20({rootNodeENS, subLabel, clearOption} : RegisterPro
             <div className={styles.container}>
                 <div className={styles.wrapper}>
                 <div className={styles.content}>
+                        <div onClick={() => clearOption()} className={styles.caption}>
+                            <p>ERC20</p>
+                            <span>Select Another Payment Method</span>
+                        </div>
                         <div className={styles.yearButtons}>
-                        
-                            <div 
-                                className={styles.countButtons}
-                                onClick={handleDecrement}
-                            >
-                                <Image src={minusSVG} alt='' />
-                            </div>
+                            {
+                                subsYears == 1
+                                ?(
+                                    <div 
+                                        className={styles.countButtons}
+                                    >
+                                        <Image src={minus_disabledSVG} alt='' />
+                                    </div>
+                                )
+                                :(
+                                    <div 
+                                        className={styles.countButtons}
+                                        onClick={handleDecrement}
+                                    >
+                                        <Image src={minusSVG} alt='' />
+                                    </div>
+                                )
+                            }
+
                             <div className={styles.yearButtonsInput}>
                                 <input 
                                     readOnly
@@ -183,20 +203,40 @@ export default function Erc20({rootNodeENS, subLabel, clearOption} : RegisterPro
                                     value={subsYears === 1 ? subsYears + ' ' + 'year' : subsYears + ' ' + 'years'}
                                 />
                             </div>
-                            <div 
-                                className={styles.countButtons}
-                                onClick={handleIncrement}
-                            >
-                                <Image src={plusSVG} alt='' />
-                            </div>
+                            {
+                                subsYears == yearsLeft 
+                                ?(
+                                    <div 
+                                        className={styles.countButtons}
+                                    >
+                                        <Image src={plus_disabledSVG} alt='' />
+                                    </div>
+                                ) 
+                                :(
+                                    <div 
+                                        className={styles.countButtons}
+                                        onClick={handleIncrement}
+                                    >
+                                        <Image src={plusSVG} alt='' />
+                                    </div>
+                                )
+                            }
                             
                         </div>
                         <div className={styles.feeNgas}>
                             <div className={styles.feeNgasTop}>
                                 <div onClick={handleToggle} className={styles.feeNgasTopChild}>
                                     
+                                    <div className={styles.gas}>
+                                        <Image src={gasSVG} alt='' />
                                         <span>{gas} Gwei</span>
+                                    </div>
+                                    <div className={styles.feeNgasTopToggleParent}>
+                                        <div /*onClick={handleToggle}*/>
+                                            <Image src={dropSVG} alt='' />
+                                        </div>
                                         <div className={styles.feeNgasTopToggle}>
+                                            
                                             {
                                                 showUSD 
                                                 ?(
@@ -217,6 +257,7 @@ export default function Erc20({rootNodeENS, subLabel, clearOption} : RegisterPro
                                                 )
                                             }
                                         </div>
+                                    </div>
                                     
                                 </div>
                             </div>
@@ -230,12 +271,6 @@ export default function Erc20({rootNodeENS, subLabel, clearOption} : RegisterPro
                             
                         </div>
                         <div className={styles.actionButtons}>
-                            <button
-                                onClick={() => clearOption()}
-                                //onClick={handleSubdomain}
-                            >
-                                Choose Payment..
-                            </button>
                             <button 
                                 disabled={!connected}
                                 

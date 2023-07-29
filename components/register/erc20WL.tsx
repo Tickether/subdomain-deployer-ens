@@ -4,6 +4,12 @@ import { formatEther, fromHex } from 'viem'
 import { useAccount, useContractRead, useContractWrite, useFeeData, usePrepareContractWrite, useWaitForTransaction } from 'wagmi'
 import plusSVG from '@/public/assets/icons/plus.svg'
 import minusSVG from '@/public/assets/icons/minus.svg'
+import plus_disabledSVG from '@/public/assets/icons/plus-disabled.svg'
+import minus_disabledSVG from '@/public/assets/icons/minus-disabled.svg'
+import gasSVG from '@/public/assets/icons/gas.svg'
+import wlSVG from '@/public/assets/icons/wl.svg'
+import nowlSVG from '@/public/assets/icons/nowl.svg'
+import dropSVG from '@/public/assets/icons/drop.svg'
 import Image from 'next/image'
 
 
@@ -25,6 +31,7 @@ export default function Erc20WL({rootNodeENS, subLabel, clearOption} : RegisterP
     const [subsYears, setSubsYears] = useState<number>(1)
     const [subNodeFee, setSubNodeFee] = useState<bigint>(BigInt(0))
     const [showUSD, setShowUSD] = useState<boolean>(false)
+    const [allowlisted, setAllowlisted] = useState<boolean>(false)
     const [connected, setConnected] = useState<boolean>(false)
     
 
@@ -168,14 +175,55 @@ export default function Erc20WL({rootNodeENS, subLabel, clearOption} : RegisterP
             <div className={styles.container}>
                 <div className={styles.wrapper}>
                 <div className={styles.content}>
+                        <div onClick={() => clearOption()} className={styles.caption}>
+                            <p>ERC20 + ALLOWLIST</p>
+                            <span>Select Another Payment Method</span>
+                        </div>
+                        <div className={styles.allowlist}>
+                            {
+                                allowlisted
+                                ?(
+                                    <div className={styles.allowlisted}>
+                                        <div>
+                                            <Image src={wlSVG} alt='' />
+                                        </div>
+                                        <div className={styles.allowlistedInfoText}>
+                                            <span>You are on allowlist.</span>
+                                        </div>
+                                    </div>
+                                )
+                                :(
+                                    <div className={styles.allowlistNot}>
+                                        <div>
+                                            <Image src={nowlSVG} alt='' />
+                                        </div>
+                                        <div className={styles.allowlistedInfoText}>
+                                            <span>You are not  on allowlist.</span>
+                                        </div>
+                                    </div>
+                                )
+                            }
+                        </div>
                         <div className={styles.yearButtons}>
-                        
-                            <div 
-                                className={styles.countButtons}
-                                onClick={handleDecrement}
-                            >
-                                <Image src={minusSVG} alt='' />
-                            </div>
+                            {
+                                subsYears == 1
+                                ?(
+                                    <div 
+                                        className={styles.countButtons}
+                                    >
+                                        <Image src={minus_disabledSVG} alt='' />
+                                    </div>
+                                )
+                                :(
+                                    <div 
+                                        className={styles.countButtons}
+                                        onClick={handleDecrement}
+                                    >
+                                        <Image src={minusSVG} alt='' />
+                                    </div>
+                                )
+                            }
+
                             <div className={styles.yearButtonsInput}>
                                 <input 
                                     readOnly
@@ -183,20 +231,40 @@ export default function Erc20WL({rootNodeENS, subLabel, clearOption} : RegisterP
                                     value={subsYears === 1 ? subsYears + ' ' + 'year' : subsYears + ' ' + 'years'}
                                 />
                             </div>
-                            <div 
-                                className={styles.countButtons}
-                                onClick={handleIncrement}
-                            >
-                                <Image src={plusSVG} alt='' />
-                            </div>
+                            {
+                                subsYears == yearsLeft 
+                                ?(
+                                    <div 
+                                        className={styles.countButtons}
+                                    >
+                                        <Image src={plus_disabledSVG} alt='' />
+                                    </div>
+                                ) 
+                                :(
+                                    <div 
+                                        className={styles.countButtons}
+                                        onClick={handleIncrement}
+                                    >
+                                        <Image src={plusSVG} alt='' />
+                                    </div>
+                                )
+                            }
                             
                         </div>
                         <div className={styles.feeNgas}>
                             <div className={styles.feeNgasTop}>
                                 <div onClick={handleToggle} className={styles.feeNgasTopChild}>
                                     
+                                    <div className={styles.gas}>
+                                        <Image src={gasSVG} alt='' />
                                         <span>{gas} Gwei</span>
+                                    </div>
+                                    <div className={styles.feeNgasTopToggleParent}>
+                                        <div /*onClick={handleToggle}*/>
+                                            <Image src={dropSVG} alt='' />
+                                        </div>
                                         <div className={styles.feeNgasTopToggle}>
+                                            
                                             {
                                                 showUSD 
                                                 ?(
@@ -217,7 +285,8 @@ export default function Erc20WL({rootNodeENS, subLabel, clearOption} : RegisterP
                                                 )
                                             }
                                         </div>
-                                    
+                                    </div>
+                    
                                 </div>
                             </div>
                             <div className={styles.feeNgasDown}>
@@ -230,12 +299,6 @@ export default function Erc20WL({rootNodeENS, subLabel, clearOption} : RegisterP
                             
                         </div>
                         <div className={styles.actionButtons}>
-                            <button
-                                onClick={() => clearOption()}
-                                //onClick={handleSubdomain}
-                            >
-                                Choose Payment..
-                            </button>
                             <button 
                                 disabled={!connected}
                                 
