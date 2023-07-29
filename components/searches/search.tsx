@@ -235,7 +235,7 @@ export default function Search() {
                                 : (
                                   <div>
                                     <div>available to regiter</div>
-                                    <button className={styles.button} onClick={handleSubEnsSearchSelect}>Register SubDomain</button> 
+                                    <button className={styles.register} onClick={handleSubEnsSearchSelect}>Register SubDomain</button> 
                                   </div>
                                 )
                               }

@@ -55,6 +55,13 @@
     background-color: #FFFFFF;
     border-radius: 20px;
   }
+
+  .register {
+    cursor: pointer;
+    border-radius: 5px;
+  }
+
+
   /*
   .searchResultItem {
 
@@ -72,10 +79,7 @@
    
   }
   
-  .button {
- 
-    cursor: pointer;
-  }
+  
   
   .button:hover {
 
