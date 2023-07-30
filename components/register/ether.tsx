@@ -1,6 +1,6 @@
 import styles from '@/styles/RegisterOptions.module.css'
 import { useEffect, useState } from 'react'
-import { formatEther, fromHex } from 'viem'
+import { createPublicClient, formatEther, formatGwei, fromHex, http, parseEther } from 'viem'
 import { useAccount, useContractRead, useContractWrite, useFeeData, usePrepareContractWrite, useWaitForTransaction } from 'wagmi'
 import plusSVG from '@/public/assets/icons/plus.svg'
 import minusSVG from '@/public/assets/icons/minus.svg'
@@ -8,6 +8,7 @@ import plus_disabledSVG from '@/public/assets/icons/plus-disabled.svg'
 import minus_disabledSVG from '@/public/assets/icons/minus-disabled.svg'
 import gasSVG from '@/public/assets/icons/gas.svg'
 import Image from 'next/image'
+import { goerli } from 'viem/chains'
 
 
 interface RegisterProps {
@@ -21,8 +22,10 @@ interface RegisterProps {
 export default function Ether({rootNodeENS, subLabel, clearOption} : RegisterProps) {
 
     const {address, isConnected} = useAccount()
-    const { data, isError, isLoading } = useFeeData()
+    const { data } = useFeeData({watch: true})
     const [gas, setGas] = useState<string>('')
+    const [gasFee, setGasFee] = useState<string>('')
+    const [totalFee, setTotalFee] = useState<string>('')
     const [nodeData, setNodeData] = useState<any>([])
     const [yearsLeft, setYearsLeft] = useState<number>(0)
     const [subsYears, setSubsYears] = useState<number>(1)
@@ -40,13 +43,14 @@ export default function Ether({rootNodeENS, subLabel, clearOption} : RegisterPro
     },[isConnected])
     useEffect(() => {
         if (data /* && typeof isConnected === 'boolean'*/) {
-            const valueAsString = data?.formatted.gasPrice;
+            const value = data?.gasPrice! + BigInt(1500000000)
+            const valueAsString = formatGwei(value)
             const truncatedValue = parseFloat(valueAsString!).toFixed(2);
             setGas((truncatedValue))
         } 
     },[data])
-    console.log(data?.formatted.gasPrice)
-
+    console.log(data)
+    console.log(gasFee)
     // check node data
     const contractReadNodeData = useContractRead({
         address: "0x114D4603199df73e7D157787f8778E21fCd13066",
@@ -124,6 +128,54 @@ export default function Ether({rootNodeENS, subLabel, clearOption} : RegisterPro
     },[contractReadSubNodeFee?.data!])
     console.log((contractReadSubNodeFee?.data!))
 
+    //transac est gas
+    useEffect(()=>{
+        const getGasFees = async () => {
+            
+            try {
+                const publicClient = createPublicClient({
+                    chain: goerli,
+                    transport: http()
+                })
+                
+                
+                const gasUsed = await publicClient.estimateContractGas({
+                    address: '0x229C0715e70741F854C299913C2446eb4400e76C',
+                    abi: [
+                        {
+                            name: 'setSubDomain',
+                            inputs: [ {internalType: "bytes32", name: "node", type: "bytes32"}, {internalType: "string", name: "subNodeLabel", type: "string"}, {internalType: "address", name: "owner", type: "address"}, {internalType: "uint256", name: "duration", type: "uint256" } ],
+                            outputs: [],
+                            stateMutability: 'payable',
+                            type: 'function',
+                        },
+                    ],
+                    functionName: 'setSubDomain',
+                    account: address!,
+                    args: [ (rootNodeENS), (subLabel), (address!), (BigInt(subsYears)) ],
+                    value: subNodeFee,
+                    //gasPrice: BigInt(gas)
+                })
+                console.log(gasUsed)
+                
+                const fee = (Number(gas) * Number(gasUsed)) * 1000000000
+    
+                setGasFee(formatEther(BigInt(fee)))
+            } catch (error) {
+                console.log(error)
+            }
+
+        }
+        getGasFees()
+        
+    },[gas])
+    
+    //total fee+gas
+    useEffect(()=>{
+        const total = subNodeFee + parseEther(gasFee)
+        setTotalFee(formatEther(total))
+    },[gasFee, subNodeFee])
+
     const { config } = usePrepareContractWrite({
         address: '0x229C0715e70741F854C299913C2446eb4400e76C',
         abi: [
@@ -139,7 +191,8 @@ export default function Ether({rootNodeENS, subLabel, clearOption} : RegisterPro
         args: [ (rootNodeENS), (subLabel), (address!), (subsYears) ],
         value: subNodeFee,
         chainId: 5,
-     })
+    })
+     
     const contractWriteSubdomain = useContractWrite(config)
 
     const waitForTransaction = useWaitForTransaction({
@@ -270,8 +323,8 @@ export default function Ether({rootNodeENS, subLabel, clearOption} : RegisterPro
                                     :(
                                         <div className={styles.feeNgasDownChild}>
                                             <div className={styles.feeNgasDownFees}><span>{subsYears === 1 ? subsYears + ' ' + 'year' : subsYears + ' ' + 'years'} registraion</span><span>{formatEther(subNodeFee)} ETH</span></div>
-                                            <div className={styles.feeNgasDownGas}><span>Est. network fee</span><span>0 ETH</span></div>
-                                            <div className={styles.feeNgasDownSum}><span>Estimated total</span><span>0 ETH</span></div>
+                                            <div className={styles.feeNgasDownGas}><span>Est. network fee</span><span>{gasFee} ETH</span></div>
+                                            <div className={styles.feeNgasDownSum}><span>Estimated total</span><span>{totalFee} ETH</span></div>
                                         </div>   
                                     )
                                 }
