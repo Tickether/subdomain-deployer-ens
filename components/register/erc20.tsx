@@ -262,11 +262,23 @@ export default function Erc20({rootNodeENS, subLabel, clearOption} : RegisterPro
                                 </div>
                             </div>
                             <div className={styles.feeNgasDown}>
-                                <div className={styles.feeNgasDownChild}>
-                                    <div className={styles.feeNgasDownFees}><span>{subsYears === 1 ? subsYears + ' ' + 'year' : subsYears + ' ' + 'years'} registraion</span><span>{formatEther(subNodeFee)} ETH</span></div>
-                                    <div className={styles.feeNgasDownGas}><span>Est. network fee</span><span>0 ETH</span></div>
-                                    <div className={styles.feeNgasDownSum}><span>Estimated total</span><span>0 ETH</span></div>
-                                </div>
+                                {
+                                    showUSD
+                                    ?( 
+                                        <div className={styles.feeNgasDownChild}>
+                                            <div className={styles.feeNgasDownFees}><span>{subsYears === 1 ? subsYears + ' ' + 'year' : subsYears + ' ' + 'years'} registraion</span><span>0 USD</span></div>
+                                            <div className={styles.feeNgasDownGas}><span>Est. network fee</span><span>0 USD</span></div>
+                                            <div className={styles.feeNgasDownSum}><span>Estimated total</span><span>0 USD</span></div>
+                                        </div>
+                                    )
+                                    :(
+                                        <div className={styles.feeNgasDownChild}>
+                                            <div className={styles.feeNgasDownFees}><span>{subsYears === 1 ? subsYears + ' ' + 'year' : subsYears + ' ' + 'years'} registraion</span><span>{formatEther(subNodeFee)} ETH</span></div>
+                                            <div className={styles.feeNgasDownGas}><span>Est. network fee</span><span>0 ETH</span></div>
+                                            <div className={styles.feeNgasDownSum}><span>Estimated total</span><span>0 ETH</span></div>
+                                        </div>   
+                                    )
+                                }
                             </div>
                             
                         </div>
