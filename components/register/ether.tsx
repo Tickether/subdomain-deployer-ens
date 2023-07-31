@@ -9,6 +9,7 @@ import minus_disabledSVG from '@/public/assets/icons/minus-disabled.svg'
 import gasSVG from '@/public/assets/icons/gas.svg'
 import Image from 'next/image'
 import { goerli } from 'viem/chains'
+import { get } from 'http'
 
 
 interface RegisterProps {
@@ -31,6 +32,9 @@ export default function Ether({rootNodeENS, subLabel, clearOption} : RegisterPro
     const [subsYears, setSubsYears] = useState<number>(1)
     const [subNodeFee, setSubNodeFee] = useState<bigint>(BigInt(0))
     const [showUSD, setShowUSD] = useState<boolean>(false)
+    const [etherPrice, setEtherPrice] = useState<number>(0)
+    const [roundData, setRoundData] = useState<bigint[] | null>(null)
+    const [USData, setUSData] = useState<any>([])
     const [connected, setConnected] = useState<boolean>(false)
     
 
@@ -128,6 +132,62 @@ export default function Ether({rootNodeENS, subLabel, clearOption} : RegisterPro
     },[contractReadSubNodeFee?.data!])
     console.log((contractReadSubNodeFee?.data!))
 
+    // check node price in usd
+    const contractReadETH = useContractRead({
+        address: "0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419",
+        abi: [
+            {
+                name: 'latestRoundData',
+                inputs: [/*{ internalType: "uint80", name: "_roundId", type: "uint80" }*/],
+                outputs: [
+                    { internalType: "uint80", name: "roundId", type: "uint80" }, 
+                    { internalType: "int256", name: "answer", type: "int256" }, 
+                    { internalType: "uint256", name: "startedAt", type: "uint256" },
+                    { internalType: "uint256", name: "updatedAt", type: "uint256" },
+                    { internalType: "uint80", name: "answeredInRound", type: "uint80" },
+                ],
+
+                stateMutability: 'view',
+                type: 'function',
+            },    
+        ],
+        functionName: 'latestRoundData',
+        chainId: 1,
+        watch: true,
+    })
+    useEffect(() => {
+        if (contractReadETH?.data/* && contractReadETH.data === bigint[]*/) {
+            setRoundData(contractReadETH?.data as bigint[])
+        }
+    },[contractReadETH?.data!])
+
+    
+    useEffect(() => {
+        if (roundData != null) {
+            const ethPrice = Number((Number(roundData[1].toString()) / Math.pow(10, 8)).toFixed(2));
+            setEtherPrice(ethPrice)
+        }
+    },[roundData])
+    
+    
+
+    
+    useEffect(()=>{
+        const setUSD = async () => {
+            setUSData([
+                (Number(formatEther(subNodeFee)) * etherPrice).toFixed(2), //(Number(ether) * etherPrice).toFixed(2)
+                (Number(gasFee) * etherPrice).toFixed(2), 
+                (Number(totalFee) * etherPrice).toFixed(2)
+            ])
+        }
+        setUSD()
+    },[subNodeFee, gasFee, totalFee, etherPrice])
+    
+    //console.log(getUSD(totalFee))
+
+    console.log((contractReadETH?.data))
+    console.log(etherPrice)
+
     //transac est gas
     useEffect(()=>{
         const getGasFees = async () => {
@@ -151,7 +211,7 @@ export default function Ether({rootNodeENS, subLabel, clearOption} : RegisterPro
                         },
                     ],
                     functionName: 'setSubDomain',
-                    account: address!,
+                    account: '0x2d5Ec844CB145924AE76DFd526670F16b5f91120',
                     args: [ (rootNodeENS), (subLabel), (address!), (BigInt(subsYears)) ],
                     value: subNodeFee,
                     //gasPrice: BigInt(gas)
@@ -315,9 +375,9 @@ export default function Ether({rootNodeENS, subLabel, clearOption} : RegisterPro
                                     showUSD
                                     ?( 
                                         <div className={styles.feeNgasDownChild}>
-                                            <div className={styles.feeNgasDownFees}><span>{subsYears === 1 ? subsYears + ' ' + 'year' : subsYears + ' ' + 'years'} registraion</span><span>0 USD</span></div>
-                                            <div className={styles.feeNgasDownGas}><span>Est. network fee</span><span>0 USD</span></div>
-                                            <div className={styles.feeNgasDownSum}><span>Estimated total</span><span>0 USD</span></div>
+                                            <div className={styles.feeNgasDownFees}><span>{subsYears === 1 ? subsYears + ' ' + 'year' : subsYears + ' ' + 'years'} registraion</span><span>{USData[0]} USD</span></div>
+                                            <div className={styles.feeNgasDownGas}><span>Est. network fee</span><span>{USData[1]} USD</span></div>
+                                            <div className={styles.feeNgasDownSum}><span>Estimated total</span><span>{USData[2]} USD</span></div>
                                         </div>
                                     )
                                     :(
