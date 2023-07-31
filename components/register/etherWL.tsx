@@ -240,6 +240,8 @@ export default function EtherWL({rootNodeENS, subLabel, clearOption} : RegisterP
         setTotalFee(formatEther(total))
     },[gasFee, subNodeFee])
 
+    //read on-Allow
+
     const { config } = usePrepareContractWrite({
         address: '0x229C0715e70741F854C299913C2446eb4400e76C',
         abi: [
@@ -417,7 +419,7 @@ export default function EtherWL({rootNodeENS, subLabel, clearOption} : RegisterP
                         </div>
                         <div className={styles.actionButtons}>
                             <button 
-                                disabled={!connected}
+                                disabled={!connected || !allowlisted}
                                 
                                 //onClick={() => setOpenModal(true)}
                                 onClick={handleSubdomain}
