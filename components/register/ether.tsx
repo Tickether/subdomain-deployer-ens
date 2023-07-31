@@ -9,7 +9,6 @@ import minus_disabledSVG from '@/public/assets/icons/minus-disabled.svg'
 import gasSVG from '@/public/assets/icons/gas.svg'
 import Image from 'next/image'
 import { goerli } from 'viem/chains'
-import { get } from 'http'
 
 
 interface RegisterProps {
@@ -55,6 +54,7 @@ export default function Ether({rootNodeENS, subLabel, clearOption} : RegisterPro
     },[data])
     console.log(data)
     console.log(gasFee)
+    
     // check node data
     const contractReadNodeData = useContractRead({
         address: "0x114D4603199df73e7D157787f8778E21fCd13066",
