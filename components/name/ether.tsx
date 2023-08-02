@@ -16,7 +16,7 @@ export default function Ether({ENS} : any) {
     const [parentNodeBalance, setParentNodeBalance] = useState<bigint>(BigInt(0))
     const [activeParentNode, setActiveParentNode] = useState<boolean>(false)
     const [fuseBurned, setFuseBurned] = useState<boolean>(false)
-    const [approved, setApproved] = useState<boolean>(false)
+    const [approved, setApproved] = useState<boolean>(false) 
 
 
     const contractReadApproved = useContractRead({

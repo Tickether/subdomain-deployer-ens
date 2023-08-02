@@ -25,8 +25,25 @@ export default function Names() {
     const {address, isConnected} = useAccount()
 
     const [ensDomains, setEnsDomains] = useState<ensNames[]>([])
-    const [approved, setApproved] = useState<boolean>(false)
     const [connected, setConnected] = useState<boolean>(false)
+    // State for the current page number
+    const [currentPage, setCurrentPage] = useState<number>(1);
+
+    // Number of items per page
+    const itemsPerPage = 10;
+
+    // Calculate the total number of pages based on the number of items and items per page
+    const totalPages = Math.ceil(ensDomains.length / itemsPerPage);
+
+    // Slice the ensNames array to display only the items for the current page
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const currentItems = ensDomains.slice(startIndex, endIndex);
+
+    // Function to handle changing the page
+    const handlePageChange = (pageNumber: number) => {
+        setCurrentPage(pageNumber);
+    };
 
     useEffect(() => {
         if (isConnected && typeof isConnected === 'boolean') {
@@ -81,89 +98,28 @@ export default function Names() {
     console.log(ensDomains)
 
 
-    const contractReadApproved = useContractRead({
-        address: "0x114D4603199df73e7D157787f8778E21fCd13066",
-        abi: [
-            {
-                name: 'isApprovedForAll',
-                inputs: [{ internalType: "address", name: "account", type: "address" }, { internalType: "address", name: "operator", type: "address" }],
-                outputs: [{ internalType: "bool", name: "", type: "bool" }],
-                stateMutability: 'view',
-                type: 'function',
-            },
-        ],
-        functionName: 'isApprovedForAll',
-        args: [(address!), ('0x229C0715e70741F854C299913C2446eb4400e76C')],
-        watch: true,
-        chainId: 5,
-    })  
-    console.log(contractReadApproved.data)
-      
-    useEffect(() => {
-        if (contractReadApproved?.data! && typeof contractReadApproved.data === 'boolean') {
-            setApproved((contractReadApproved?.data!))
-        }
-    },[contractReadApproved?.data!])
-    
-    const prepareContractWriteApproval = usePrepareContractWrite({
-        address: '0x114D4603199df73e7D157787f8778E21fCd13066',
-        abi: [
-            {
-              name: 'setApprovalForAll',
-              inputs: [ {internalType: "address", name: "operator", type: "address"}, { internalType: "bool", name: "approved", type: "bool" } ],
-              outputs: [],
-              stateMutability: 'nonpayable',
-              type: 'function',
-            },
-          ],
-        functionName: 'setApprovalForAll',
-        args: [ ('0x229C0715e70741F854C299913C2446eb4400e76C'), (true) ],
-        chainId: 5,
-        value: BigInt(0),
-    })
-    
-    
-    
-
-    const  contractWriteApproval = useContractWrite(prepareContractWriteApproval.config)
-
-    const waitForApproval = useWaitForTransaction({
-        hash: contractWriteApproval.data?.hash,
-        confirmations: 1,
-        onSuccess() {
-        },
-    })
-
-    const handleApproval = async () => {
-        try {
-            await contractWriteApproval.writeAsync?.()
-        } catch (err) {
-            console.log(err)
-        }    
-    }
-
-
     return (
         <>
             <div className={styles.container}>
                 <div className={styles.wrapper}>
-                <div className={styles.names}>
-                    {
-                        approved
-                        ? <button> Approved </button>
-                        : <button onClick={handleApproval}> Approve</button>
-                    }
-                    
-                    
-                        {ensDomains.map(( ensDomains: ensNames) =>(
-                        <div 
-                            
-                            key={ensDomains.name}
-                        >
-                            <Name
-                                ensDomains={ensDomains}
-                            /> 
+                    <div className={styles.names}>
+                        {/* Render the list of ENS names based on the currentItems array */}
+                        {currentItems.map((ensDomain: ensNames) => (
+                        <div key={ensDomain.name}>
+                            <Name ensDomains={ensDomain} />
                         </div>
+                        ))}
+                    </div>
+                    <div>
+                        {/* Add pagination buttons to navigate between pages */}
+                        {Array.from({ length: totalPages }, (_, index) => index + 1).map((pageNumber) => (
+                        <button
+                            key={pageNumber}
+                            onClick={() => handlePageChange(pageNumber)}
+                            disabled={currentPage === pageNumber}
+                        >
+                            {pageNumber}
+                        </button>
                         ))}
                     </div>
                 </div>
