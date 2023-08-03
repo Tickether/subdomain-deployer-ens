@@ -1,0 +1,61 @@
+.container{
+    background-color: #F4F5F7;
+    height: 90vh;
+    font-family: 'Segoe UI';
+}
+
+.wrapper{
+    display: flex;
+    justify-content: center;
+}
+
+.names{
+    display: flex;
+    flex-direction: column;
+    width: 680px;
+    max-width: 100%;
+    gap: 25px;
+}
+
+.namesTop{
+    display: flex;
+}
+
+.namesDown{
+    background-color: #FFFFFF;
+    display: flex;
+    border-radius: 20px;
+    border: 1px solid #E8E8E8;
+    max-width: 100%;
+    justify-content: center;
+    
+}
+
+.namesChildren{
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+}
+
+.names hr{
+    border: 0.1px solid #E8E8E8;
+    width: 111%;
+    align-self: center;
+  }
+
+  .namesList{
+    display: flex;
+    flex-direction: column;
+  }
+
+  .namesNav{
+    display: flex;
+    height: 6.5vh;
+    align-items: center;
+  }
+
+  .namesSelection{
+    display: flex;
+    height: 6.5vh;
+    align-items: center;
+  }

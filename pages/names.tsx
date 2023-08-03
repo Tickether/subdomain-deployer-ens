@@ -4,6 +4,8 @@ import { labelhash , fromHex} from 'viem'
 import { useEffect, useState } from 'react'
 import { useAccount, useContractRead, useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi'
 import Name from '@/components/names/name'
+import selectSVG from '@/public/assets/icons/select.svg'
+import Image from 'next/image'
 
 console.log(labelhash('geeloko'))
 console.log(fromHex(labelhash('buju'), 'bigint'))
@@ -21,7 +23,6 @@ export interface Parent{
 
 export default function Names() {
 
-    
     const {address, isConnected} = useAccount()
 
     const [ensDomains, setEnsDomains] = useState<ensNames[]>([])
@@ -97,31 +98,51 @@ export default function Names() {
 
     console.log(ensDomains)
 
+    
+
 
     return (
         <>
             <div className={styles.container}>
                 <div className={styles.wrapper}>
                     <div className={styles.names}>
-                        {/* Render the list of ENS names based on the currentItems array */}
-                        {currentItems.map((ensDomain: ensNames) => (
-                        <div key={ensDomain.name}>
-                            <Name ensDomains={ensDomain} />
+                        <div className={styles.namesTop}>
+                            <p>Names</p>
                         </div>
-                        ))}
+                        <div className={styles.namesDown}>
+                            <div className={styles.namesChildren}>
+                                <div className={styles.namesSelection}>
+                                    <div className={styles.namesSort}>
+                                    <Image src={selectSVG} alt='' />
+                                    </div>
+                                    <div className={styles.namesSearch}></div>
+                                </div>
+                                <hr />
+                                {/* Render the list of ENS names based on the currentItems array */}
+                                {currentItems.map((ensDomain: ensNames) => (
+                                <div className={styles.namesList} key={ensDomain.name}>
+                                    <Name ensDomains={ensDomain} />
+                                    <hr />
+                                </div>
+                                ))}
+                                <div className={styles.namesNav}>
+                                    <div>
+                                        {/* Add pagination buttons to navigate between pages */}
+                                        {Array.from({ length: totalPages }, (_, index) => index + 1).map((pageNumber) => (
+                                        <button
+                                            key={pageNumber}
+                                            onClick={() => handlePageChange(pageNumber)}
+                                            disabled={currentPage === pageNumber}
+                                        >
+                                            {pageNumber}
+                                        </button>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div>
-                        {/* Add pagination buttons to navigate between pages */}
-                        {Array.from({ length: totalPages }, (_, index) => index + 1).map((pageNumber) => (
-                        <button
-                            key={pageNumber}
-                            onClick={() => handlePageChange(pageNumber)}
-                            disabled={currentPage === pageNumber}
-                        >
-                            {pageNumber}
-                        </button>
-                        ))}
-                    </div>
+                    
                 </div>
             </div>
         </>

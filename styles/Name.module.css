@@ -1,0 +1,42 @@
+.container{
+    background-color: #F4F5F7;
+    height: 90vh;
+    font-family: 'Segoe UI';
+}
+
+.wrapper{
+    display: flex;
+    justify-content: center;
+}
+
+.name{
+    display: flex;
+    flex-direction: column;
+    width: 680px;
+    max-width: 100%;
+    gap: 25px;
+}
+
+.nameTop{
+    display: flex;
+}
+
+.nameDown{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.nameTabs{
+    display: flex;
+    gap: 20px;
+}
+
+.nameTabOption{
+    background-color: #FFFFFF;
+    display: flex;
+    border-radius: 20px;
+    border: 1px solid #E8E8E8;
+    max-width: 100%;
+    justify-content: center;
+}

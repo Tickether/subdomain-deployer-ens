@@ -1,9 +1,10 @@
-import styles from '@/styles/Home.module.css'
+import styles from '@/styles/Namelist.module.css'
 import { namehash } from 'viem'
 import { useContractRead, useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { ensNames } from '@/pages/names'
+import { differenceInMonths, differenceInYears } from 'date-fns'
 
 interface NameProps{
     ensDomains : ensNames
@@ -17,6 +18,9 @@ export default function Name({ensDomains}: NameProps) {
     const [subsYears, setSubsYears] = useState<number>(1)
     const [extended, setExtend] = useState<boolean>(false)
     const [subNodeFee, setSubNodeFee] = useState<bigint>(BigInt(0))
+    const [monthsDiff, setMonthsDiff] = useState<number | null>(null)
+    const [yearsDiff, setYearsDiff] = useState<number | null>(null);
+    
 
     const ENStoString = ensDomains.name!.toString()
     
@@ -114,41 +118,48 @@ console.log((contractReadSubNodeFee?.data!))
 
     console.log(yearsLeft)
 
+    useEffect(()=>{
+        const GetDiff = async()=>{
+            const timestamp = ensDomains.expiry * 1000;
+            
+            // Create a Date object from the timestamp
+            const expDate = new Date(timestamp);
+    
+            // Get the current date
+            const currentDate = new Date();
+            let mlef = differenceInMonths(expDate, currentDate)
+            let yrlef = differenceInYears(expDate, currentDate)
+            // Calculate the difference in months
+            if (yrlef == 0) {
+                setMonthsDiff(mlef)
+            } else if (yrlef >= 1) {
+                //const remainingMonths = mlef - (yrlef * 12)
+                //setMonthsDiff( remainingMonths)
+                setYearsDiff(yrlef)
+                
+            }
+    
+            
+        }
+        GetDiff()
+    },[])
+
     return (
         <>
         <div className={styles.container}>
             <div className={styles.wrapper}>
-            <div className={styles.search}>
-                    <p onClick={() => 
-                                
-                                    router.push('/[ensName]', `/${ensDomains.name}`)}
-                    >
-                        {ensDomains.name}
-                    </p>
-                    <span>wrapped: {ensDomains.wrapped}</span>
-                    {
-                        extended
-                        ? (
-                            <div>
-                                <div>
-                                <button onClick={handleDecrement}>-</button>
-                                <input 
-                                    readOnly
-                                    type='number' 
-                                    value={subsYears}
-                                />
-                                <button onClick={handleIncrement}>+</button>
-                                </div>
-                                <button onClick={() => setExtend(false)}>cancel</button>
-                                <button onClick={handleExtendExp}>do it ++</button>
-                            </div>
-                        )
-                        : <div></div>
-                    }
-                    
-                    <button disabled={yearsLeft <= 0 || extended} onClick={()=> {extended ? null : setExtend(true)}}>extend</button>
-                    
-            </div>
+                <div 
+                    onClick={() => router.push('/[ensName]', `/${ensDomains.name}`)} 
+                    className={styles.name}
+                >
+                        <div className={styles.nameLeft}>
+                            <p>{ensDomains.name}</p>
+                            <p>{ yearsDiff === null ? `Expires in ${monthsDiff} months` : `Expires in ${yearsDiff} years`}</p>
+                        </div>
+                        <div className={styles.nameRight}>
+                            <span>wrapped</span>
+                        </div>
+                </div>
             </div>
         </div>
         </>
