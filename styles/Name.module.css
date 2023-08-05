@@ -19,6 +19,15 @@
 
 .nameTop{
     display: flex;
+    justify-content: center;
+}
+
+.nameTopChild{
+    display: flex;
+  flex-direction: column;
+  width: 95.5%;
+  font-weight: 600;
+  font-size: 30px;
 }
 
 .nameDown{
@@ -29,14 +38,40 @@
 
 .nameTabs{
     display: flex;
-    gap: 20px;
+    justify-content: center;
+    
+}
+
+.nameTabsChild{
+    display: flex;
+  width: 95.5%;
+  font-weight: 600;
+  font-size: 18px;
+  gap: 20px;
+  cursor: pointer;
+  
+  
+}
+
+.nameTab{
+  
+  color: #9B9BA6;
+}
+
+.nameTab:hover{
+    color: #000;
+}
+
+
+.nameTabActive{
+    color: #0023DD;
 }
 
 .nameTabOption{
-    background-color: #FFFFFF;
+    /*background-color: #FFFFFF;*/
     display: flex;
-    border-radius: 20px;
-    border: 1px solid #E8E8E8;
+    /*border-radius: 20px;*/
+    /*border: 1px solid #E8E8E8;*/
     max-width: 100%;
-    justify-content: center;
+    /*justify-content: center;*/
 }

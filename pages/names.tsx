@@ -107,10 +107,12 @@ export default function Names() {
                 <div className={styles.wrapper}>
                     <div className={styles.names}>
                         <div className={styles.namesTop}>
-                            <p>Names</p>
+                            <div className={styles.namesTopChildren}>
+                                <p>Names</p>
+                            </div>
                         </div>
                         <div className={styles.namesDown}>
-                            <div className={styles.namesChildren}>
+                            <div className={styles.namesDownChildren}>
                                 <div className={styles.namesSelection}>
                                     <div className={styles.namesSort}>
                                     <Image src={selectSVG} alt='' />

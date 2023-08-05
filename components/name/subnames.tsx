@@ -75,51 +75,53 @@ export default function Subnames({ENS} : any) {
     <>
       <div className={styles.container}>
         <div className={styles.wrapper}>
-          <div className={styles.search}>
-          {
-              owner! === nodeData[0]
-              ? (
-                <div className={styles.nameOwner}>
-                  <div className={styles.nameOwnerActiveParentNode}>
-                              {/** some stuff subs & n general info */}
-                              {/**will propably modal // moved to modal*/}
-                              {openModal && <SubEnsFee setOpen ={setOpenModal} ENS ={ENS} />}
-                              
-                              <div>
-                                {/** show list subnames */}
-                                {
-                                  subsEns.length < 1
-                                  ? (
-                                    <div>
-                                      <p>No Subdmains for this ENS yet...</p>
-                                    </div>
-                                  )
-                                  : (
-                                    <div>
-                                      <p>ENS Subdomains</p>
-                                      {
-                                        subsEns.map((subEns : SearchResult)=> (
-                                          <div>
-                                            
-                                            <p>{subEns.name}</p>
-                                            <p>{subEns.wrappedOwner.id}</p>
+          <div className={styles.subnames}>
+            <div className={styles.subnamesChild}>
+              {
+                owner! === nodeData[0]
+                ? (
+                  <div className={styles.nameOwner}>
+                    <div className={styles.nameOwnerActiveParentNode}>
+                                {/** some stuff subs & n general info */}
+                                {/**will propably modal // moved to modal*/}
+                                {openModal && <SubEnsFee setOpen ={setOpenModal} ENS ={ENS} />}
+                                
+                                <div>
+                                  {/** show list subnames */}
+                                  {
+                                    subsEns.length < 1
+                                    ? (
+                                      <div>
+                                        <p>No Subdmains for this ENS yet...</p>
+                                      </div>
+                                    )
+                                    : (
+                                      <div>
+                                        <p>ENS Subdomains</p>
+                                        {
+                                          subsEns.map((subEns : SearchResult)=> (
+                                            <div>
+                                              
+                                              <p>{subEns.name}</p>
+                                              <p>{subEns.wrappedOwner.id}</p>
 
-                                          </div>
-                                        ))
-                                      }
-                                    </div>
-                                  )
-                                }
+                                            </div>
+                                          ))
+                                        }
+                                      </div>
+                                    )
+                                  }
+                                </div>
                               </div>
-                            </div>
-                </div>
-              )
-              : (
-                <div className={styles.nameBuyer}>
-                  {/**plan what to show if buyer most like a sub search and register flow */}
-                </div>
-              )
-            }
+                  </div>
+                )
+                : (
+                  <div className={styles.nameBuyer}>
+                    {/**plan what to show if buyer most like a sub search and register flow */}
+                  </div>
+                )
+              }
+            </div>
           </div>
         </div>
       </div>

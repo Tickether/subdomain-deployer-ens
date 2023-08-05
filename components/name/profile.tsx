@@ -1,5 +1,4 @@
-import styles from '@/styles/Home.module.css'
-import Search from '@/components/searches/search'
+import styles from '@/styles/Profile.module.css'
 
 
 export default function Profile({ENS} : any) {
@@ -7,8 +6,22 @@ export default function Profile({ENS} : any) {
     <>
       <div className={styles.container}>
         <div className={styles.wrapper}>
-          <div className={styles.search}>
+          <div className={styles.profile}>
+            <div className={styles.profileTop}>
+              <div className={styles.profileTopChild}>
 
+              </div>
+            </div>
+            <div className={styles.profileMid}>
+              <div className={styles.profileMidChild}>
+
+              </div>
+            </div>
+            <div className={styles.profileDown}>
+              <div className={styles.profileDownChild}>
+
+              </div>
+            </div>
           </div>
         </div>
       </div>

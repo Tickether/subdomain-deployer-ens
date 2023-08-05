@@ -12,13 +12,21 @@
 .names{
     display: flex;
     flex-direction: column;
-    width: 680px;
+    width: 700px;
     max-width: 100%;
     gap: 25px;
 }
 
 .namesTop{
     display: flex;
+    justify-content: center;
+}
+
+.namesTopChildren{
+  flex-direction: column;
+  width: 95.5%;
+  font-weight: 600;
+  font-size: 30px;
 }
 
 .namesDown{
@@ -27,19 +35,18 @@
     border-radius: 20px;
     border: 1px solid #E8E8E8;
     max-width: 100%;
-    justify-content: center;
-    
+    justify-content: center;  
 }
 
-.namesChildren{
+.namesDownChildren{
     display: flex;
     flex-direction: column;
-    width: 90%;
+    width: 94%;
 }
 
 .names hr{
     border: 0.1px solid #E8E8E8;
-    width: 111%;
+    width: 106.5%;
     align-self: center;
   }
 
@@ -50,12 +57,12 @@
 
   .namesNav{
     display: flex;
-    height: 6.5vh;
+    height: 57px;
     align-items: center;
   }
 
   .namesSelection{
     display: flex;
-    height: 6.5vh;
+    height: 57px;
     align-items: center;
   }

@@ -7,6 +7,7 @@ import { SearchResult } from '@/components/searches/search'
 import SubEnsFee from '@/components/name/subensfee'
 import Profile from '@/components/name/profile'
 import Subnames from '@/components/name/subnames'
+import History from '@/components/name/history'
 
 
 export default function EnsName() {
@@ -54,12 +55,32 @@ export default function EnsName() {
         <div className={styles.wrapper}>
           <div className={styles.name}> 
             <div className={styles.nameTop}>
-                <p>{ENS}</p>
+                <div className={styles.nameTopChild}>
+                  <p>{ENS}</p>
+                </div>
             </div>
             <div className={styles.nameDown}>
               <div className={styles.nameTabs}>
-                <span onClick={()=> setOption('profile')}>Profile</span>
-                <span onClick={()=> setOption('subnames')}>Subnames</span>
+                <div className={styles.nameTabsChild}>
+                  <span 
+                    className={option === 'profile' ? styles.nameTabActive : styles.nameTab}
+                    onClick={()=> setOption('profile')}
+                  >
+                    Profile
+                  </span>
+                  <span 
+                    onClick={()=> setOption('subnames')}
+                    className={option === 'subnames' ? styles.nameTabActive : styles.nameTab}
+                  >
+                    Subnames
+                  </span>
+                  <span 
+                    onClick={()=> setOption('history')}
+                    className={option === 'history' ? styles.nameTabActive : styles.nameTab}
+                  >
+                    History
+                  </span>
+                </div>
               </div>
               <div className={styles.nameTabOption}>
                 {
@@ -72,6 +93,12 @@ export default function EnsName() {
                   /**page options based on upper div */
                   option === 'subnames' && (
                     <Subnames ENS = {ENS}/>
+                  )
+                }
+                {
+                  /**page options based on upper div */
+                  option === 'history' && (
+                    <History ENS = {ENS}/>
                   )
                 }
               </div>

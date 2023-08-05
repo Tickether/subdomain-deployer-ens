@@ -5,6 +5,8 @@ import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { ensNames } from '@/pages/names'
 import { differenceInMonths, differenceInYears } from 'date-fns'
+import Image from 'next/image'
+import nameSVG from '@/public/assets/icons/name.svg'
 
 interface NameProps{
     ensDomains : ensNames
@@ -153,8 +155,13 @@ console.log((contractReadSubNodeFee?.data!))
                     className={styles.name}
                 >
                         <div className={styles.nameLeft}>
-                            <p>{ensDomains.name}</p>
-                            <p>{ yearsDiff === null ? `Expires in ${monthsDiff} months` : `Expires in ${yearsDiff} years`}</p>
+                            <div className={styles.nameLeftImg}>
+                                <Image src={nameSVG} alt='' />
+                            </div>
+                            <div>
+                                <p>{ensDomains.name}</p>
+                                <p>{ yearsDiff === null ? `Expires in ${monthsDiff} months` : `Expires in ${yearsDiff} years`}</p>
+                            </div>
                         </div>
                         <div className={styles.nameRight}>
                             <span>wrapped</span>
