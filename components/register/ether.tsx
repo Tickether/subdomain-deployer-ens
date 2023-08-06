@@ -340,13 +340,13 @@ export default function Ether({rootNodeENS, subLabel, clearOption} : RegisterPro
                         </div>
                         <div className={styles.feeNgas}>
                             <div className={styles.feeNgasTop}>
-                                <div onClick={handleToggle} className={styles.feeNgasTopChild}>
+                                <div className={styles.feeNgasTopChild}>
                                     
                                         <div className={styles.gas}>
                                             <Image src={gasSVG} alt='' />
                                             <span>{gas} Gwei</span>
                                         </div>
-                                        <div className={styles.feeNgasTopToggle}>
+                                        <div onClick={handleToggle} className={styles.feeNgasTopToggle}>
                                             {
                                                 showUSD 
                                                 ?(

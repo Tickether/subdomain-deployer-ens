@@ -253,7 +253,7 @@ export default function Erc20WL({rootNodeENS, subLabel, clearOption} : RegisterP
                         </div>
                         <div className={styles.feeNgas}>
                             <div className={styles.feeNgasTop}>
-                                <div onClick={handleToggle} className={styles.feeNgasTopChild}>
+                                <div className={styles.feeNgasTopChild}>
                                     
                                     <div className={styles.gas}>
                                         <Image src={gasSVG} alt='' />
@@ -263,7 +263,7 @@ export default function Erc20WL({rootNodeENS, subLabel, clearOption} : RegisterP
                                         <div /*onClick={handleToggle}*/>
                                             <Image src={dropSVG} alt='' />
                                         </div>
-                                        <div className={styles.feeNgasTopToggle}>
+                                        <div onClick={handleToggle} className={styles.feeNgasTopToggle}>
                                             
                                             {
                                                 showUSD 

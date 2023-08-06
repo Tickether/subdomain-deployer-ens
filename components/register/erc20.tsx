@@ -235,7 +235,7 @@ export default function Erc20({rootNodeENS, subLabel, clearOption} : RegisterPro
                                         <div /*onClick={handleToggle}*/>
                                             <Image src={dropSVG} alt='' />
                                         </div>
-                                        <div className={styles.feeNgasTopToggle}>
+                                        <div onClick={handleToggle} className={styles.feeNgasTopToggle}>
                                             
                                             {
                                                 showUSD 

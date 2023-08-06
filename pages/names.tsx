@@ -115,7 +115,7 @@ export default function Names() {
                             <div className={styles.namesDownChildren}>
                                 <div className={styles.namesSelection}>
                                     <div className={styles.namesSort}>
-                                    <Image src={selectSVG} alt='' />
+                                        <Image src={selectSVG} alt='' />
                                     </div>
                                     <div className={styles.namesSearch}></div>
                                 </div>
