@@ -184,6 +184,7 @@
 .profileMidChildRight{
     display: flex;
     align-items: center;
+    flex-direction: column;
 }
 
 .profileMidChildRightDrop{
@@ -191,9 +192,29 @@
     color: #FFFFFF;
     background-color: #0023DD;
     align-items: center;
-    gap: 3px;
+    gap: 5px;
     border-radius: 5px;
-    height: 30px;
+    height: 45px;
     justify-content: center;
     padding: 0px 30px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 13px;
+    position: relative;
+}
+
+.profileDownSubChildOption{
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+.profileDownSubChildOptionToggle{
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 8px;
 }

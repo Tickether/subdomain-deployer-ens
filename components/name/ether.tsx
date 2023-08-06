@@ -3,20 +3,40 @@ import { useEffect, useState } from 'react'
 import { NumericFormat } from 'react-number-format'
 import { formatEther, namehash } from 'viem'
 import { useAccount, useContractRead, useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi'
+import drop_blueSVG from '@/public/assets/icons/drop-blue.svg'
+import editSVG from '@/public/assets/icons/edit.svg'
+import Image from 'next/image'
+import EtherModal from './priceModal/ether'
 
 
 
 export default function Ether({ENS} : any) {
     const {address, isConnected} = useAccount()
-    const dec8 = 100000000
-
-    const [newPrices, setNewPrices] = useState<number[]>([0,0,0])
+    
     const [prices, setPrices] = useState([BigInt(0), BigInt(0), BigInt(0)])
     //const [ENS, setENS] = useState<string>('') // for now to prevent erroes will pare in props
     const [parentNodeBalance, setParentNodeBalance] = useState<bigint>(BigInt(0))
     const [activeParentNode, setActiveParentNode] = useState<boolean>(false)
     const [fuseBurned, setFuseBurned] = useState<boolean>(false)
     const [approved, setApproved] = useState<boolean>(false) 
+    const [showUSD, setShowUSD] = useState<boolean>(false)
+    const [priceMenu, setPriceMenu] = useState<boolean>(false)
+    const [openModal, setOpenModal] = useState<boolean>(false)
+    
+
+
+  const handleToggle =  () => {
+    if(showUSD){
+        setShowUSD(false)
+    } else {
+        setShowUSD(true)
+    }
+    
+  }
+
+  const handlePriceToggle =  () => {
+    setPriceMenu(!priceMenu)
+  }
 
 
     const contractReadApproved = useContractRead({
@@ -288,51 +308,100 @@ export default function Ether({ENS} : any) {
     setPrices(prices_)
   },[contractReadThreeUpLetterFee?.data!, contractReadFourFiveLetterFee?.data!, contractReadSixDownLetterFee?.data!])
   console.log(contractReadThreeUpLetterFee?.data!, contractReadFourFiveLetterFee?.data!, contractReadSixDownLetterFee?.data!)
-  console.log(newPrices[0], newPrices[1], newPrices[2])
-
-const prepareContractWriteParentNodeFee = usePrepareContractWrite({
-    address: '0x229C0715e70741F854C299913C2446eb4400e76C',
-    abi: [
-      {
-        name: 'setLetterFees',
-        inputs: [ {internalType: "bytes32", name: "node", type: "bytes32"}, {internalType: "uint256", name: "threeUpLetterFee_", type: "uint256"}, {internalType: "uint256", name: "fourFiveLetterFee_", type: "uint256"}, {internalType: "uint256", name: "sixDownLetterFee_", type: "uint256" } ],
-        outputs: [],
-        stateMutability: 'nonpayable',
-        type: 'function',
-      },
-    ],
-    functionName: 'setLetterFees',
-    args: [ (namehash(ENS)), (BigInt(newPrices[0]*dec8)), (BigInt(newPrices[1]*dec8)), (BigInt(newPrices[2]*dec8)) ],
-    value: BigInt(0),
-    chainId: 5,
-  })
-  const contractWriteParentNodeFee = useContractWrite(prepareContractWriteParentNodeFee.config)
-
-  const waitForSetParentNodeFee = useWaitForTransaction({
-    hash: contractWriteParentNodeFee.data?.hash,
-    confirmations: 2,
-    onSuccess() {
-    },
-  })
-
-  const handleSetParentNodeFee = async () => {
-    try {
-        await contractWriteParentNodeFee.writeAsync?.()
-    } catch (err) {
-        console.log(err)
-    }
-  }
+  //console.log(newPrices[0], newPrices[1], newPrices[2])
   
   
 
-  const regex = /^\d*\.?\d{0,2}$/
+  
     
       return (
         <>
           <div className={styles.container}>
             <div className={styles.wrapper}>
               <div className={styles.name}> 
-                
+              <div className={styles.profileDown}>
+              <div className={styles.profileDownChild}>
+                <div className={styles.profileDownPay}>
+                  <div>
+                    <p>Ethereum</p>
+                    <span></span>
+                  </div>
+                  <div>
+                    <p>USD</p>
+                    <span></span>
+                  </div>
+                </div>
+                <div className={styles.profileDownSubFee}>
+                            <div className={styles.profileDownSub}>
+                                <div className={styles.profileDownSubChild}>
+                                        <div className={styles.profileDownSubChildTitle}>
+                                            <div className={styles.profileDownSubChildFee}>
+                                              <p>Subname Prices</p>
+                                              <div onClick={()=> setOpenModal(true)}><Image src={editSVG} alt='' /></div>
+                                            </div>
+                                            {openModal && <EtherModal ENS ={ENS} />}
+                                            <div className={styles.profileDownSubChildOption}>
+                                              <p>Numbers Only</p>
+                                              <Image src={drop_blueSVG} alt='' />
+                                            </div>
+                                            {/**
+                                            <div onClick={handlePriceToggle} className={styles.profileDownSubChildOptionToggle}>
+                                              <span>Letters & Numbers</span>
+                                              <span>Numbers Only</span>
+                                            </div>
+                                             */}
+                                            
+                                        </div>
+                                        <div onClick={handleToggle} className={styles.profileDownToggle}>
+                                            {
+                                                showUSD 
+                                                ?(
+                                                    <>
+                                                        <div className={styles.profileDownToggleETH}>
+                                                            <span>ETH</span>
+                                                        </div>
+                                                        <div className={styles.profileDownToggleSelectUSD}>
+                                                            <span>USD</span>
+                                                        </div>
+                                                    </>
+                                                )
+                                                :(
+                                                    <>
+                                                        <div className={styles.profileDownToggleSelectETH}><span>ETH</span></div>
+                                                        <div className={styles.profileDownToggleUSD}><span>USD</span></div>
+                                                    </>
+                                                )
+                                            }
+                                        </div>
+                                    
+                                </div>
+                            </div>
+                            <div className={styles.profileDownFee}>
+                                {
+                                    showUSD
+                                    ?( 
+                                        <div className={styles.profileDownFeeChild}>
+                                            <div className={styles.profileDownFees}><span>One Number Fee</span><span>{0} USD</span></div>
+                                            <div className={styles.profileDownFees}><span>Two Number Fee</span><span>{0} USD</span></div>
+                                            <div className={styles.profileDownFees}><span>Three Number Fee</span><span>{0} USD</span></div>
+                                            <div className={styles.profileDownFees}><span>Four Number Fee</span><span>{0} USD</span></div>
+                                            <div className={styles.profileDownFees}><span>Five+ Number Fee</span><span>{0} USD</span></div>
+                                        </div>
+                                    )
+                                    :(
+                                        <div className={styles.profileDownFeeChild}>
+                                            <div className={styles.profileDownFees}><span>One Number Fee</span><span>{0} ETH</span></div>
+                                            <div className={styles.profileDownFees}><span>Two Number Fee</span><span>{0} ETH</span></div>
+                                            <div className={styles.profileDownFees}><span>Three Number Fee</span><span>{0} ETH</span></div>
+                                            <div className={styles.profileDownFees}><span>Four Number Fee</span><span>{0} ETH</span></div>
+                                            <div className={styles.profileDownFees}><span>Five+ Number Fee</span><span>{0} ETH</span></div>
+                                        </div>   
+                                    )
+                                }
+                            </div>
+                        </div>
+              </div>
+            </div>
                     <div className={styles.nameOwner}>
                       {
                         approved 
@@ -341,76 +410,7 @@ const prepareContractWriteParentNodeFee = usePrepareContractWrite({
                             {
                               activeParentNode
                               ? (
-                                <div className={styles.nameOwnerActiveParentNode}>
-                                  
-                                    {/** show setable content for subnames contracy */}
-                                    <div className={styles.search}>
-                    <p>Set Prices in Dollars for your Subdomain or leave as is for current Subdomains Fees</p>
-                              <div className={styles.nameOwnerActiveParentNodeFeeSet}>
-                                  <label htmlFor='three'>Three Letter & below</label>
-                                  <NumericFormat 
-                                    required
-                                    thousandSeparator
-                                    prefix={'$'}
-                                    id='three' 
-                                    name='three'
-                                    placeholder={`$${(Number(prices[0])/dec8).toFixed(2)}`}
-                                    value={(newPrices[0])}
-                                    isAllowed={({value}) =>{
-                                      return regex.test(value)
-                                    }}
-                                    onValueChange={(e) => {
-                                      const updatedPrices = [...newPrices]
-                                      updatedPrices[0] = Number(e.value)
-                                      setNewPrices(updatedPrices)
-                                    }}
-                                    
-                                  />
-                                  <label htmlFor='fourfive'>Four & Five Letter </label>
-                                  <NumericFormat
-                                    required
-                                    thousandSeparator
-                                    prefix={'$'}
-                                    id='fourfive' 
-                                    name='fourfive' 
-                                    placeholder={`$${(Number(prices[1])/dec8).toFixed(2)}`}
-                                    value={(newPrices[1])}
-                                    isAllowed={({value}) =>{
-                                      return regex.test(value)
-                                    }}
-                                    onValueChange={(e) => {
-                                      const updatedPrices = [...newPrices]
-                                      updatedPrices[1] = Number(e.value)
-                                      setNewPrices(updatedPrices)
-                                    }}
-      
-                                  />
-                                  <label htmlFor='six'>Six Letter Up </label>
-                                  <NumericFormat
-                                    required
-                                    thousandSeparator
-                                    prefix={'$'}
-                                    id='six' 
-                                    name='six' 
-                                    placeholder={`$${(Number(prices[2])/dec8).toFixed(2)}`}
-                                    value={(newPrices[2])}
-                                    isAllowed={({value}) =>{
-                                      return regex.test(value)
-                                    }}
-                                    onValueChange={(e) => {
-                                      const updatedPrices = [...newPrices]
-                                      updatedPrices[2] = Number(e.value)
-                                      setNewPrices(updatedPrices)
-                                    }}
-                                    
-                                  />
-                              </div>
-                              
-                              <button onClick={handleSetParentNodeFee}> Set Fees </button>
-                              
-                    </div>
-                                    
-                                </div>
+                                <div></div>
                               )
                               : (
                                 <div className={styles.nameOwnerNoParentNode}>
@@ -446,4 +446,10 @@ const prepareContractWriteParentNodeFee = usePrepareContractWrite({
                                 <button onClick={() => setOpenModal(true)}>set Prices</button>
                                 <button onClick={handleWithdraw}>withdraw</button>
                               </div> 
+*/
+
+
+/*
+
+
 */
