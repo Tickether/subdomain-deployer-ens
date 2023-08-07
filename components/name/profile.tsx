@@ -63,48 +63,48 @@ export default function Profile({ENS} : any) {
                   <div onClick={handlePayToggle} className={styles.profileMidChildRightDrop}>
                     { selectedPayment == 'ether' &&  <p>Ethereum</p>}
                     { selectedPayment == 'erc20' &&  <p>ERC20</p>}
-                    { selectedPayment == 'etherWL' &&  <p>ETH + Allowlist</p>}
-                    { selectedPayment == 'erc20WL' &&  <p>ERC20 + Allowlist</p>}
+                    { selectedPayment == 'etherWL' &&  <p>ETH + WL</p>}
+                    { selectedPayment == 'erc20WL' &&  <p>ERC20 + WL</p>}
                     <Image src={drop_whiteSVG} alt='' />
                   </div>
-                  <div>
-                    { payMenu &&  (
-                      <div className={styles.profileDownSubChildOption}>
-                        <div className={styles.profileDownSubChildOptionToggle}>
-                          <span 
-                            onClick={()=> {
-                              setSelectedPayment('ether'); 
-                              setPayMenu(false);
-                            }}
-                          >Ethereum</span>
-                          <span 
-                            onClick={()=> {
-                              setSelectedPayment('erc20'); 
-                              setPayMenu(false);
-                            }}
-                          >
-                            ERC20
-                          </span>
-                          <span 
-                            onClick={()=> {
-                              setSelectedPayment('etherWL'); 
-                              setPayMenu(false);
-                            }}
-                          >
-                            ETH + Allowlist
-                          </span>
-                          <span 
-                            onClick={()=> {
-                              setSelectedPayment('erc20WL'); 
-                              setPayMenu(false);
-                            }}
-                          >
-                            ERC20 + Allowlist
-                          </span>
-                        </div>
-                      </div>
-                    )}
+                  <div className={styles.dropOverlay} >
+              { payMenu &&  (
+                <div className={styles.profileMidSubChildOption}>
+                  <div className={styles.profileMidSubChildOptionToggle}>
+                    <span 
+                      onClick={()=> {
+                        setSelectedPayment('ether'); 
+                        setPayMenu(false);
+                      }}
+                    >Ethereum</span>
+                    <span 
+                      onClick={()=> {
+                        setSelectedPayment('erc20'); 
+                        setPayMenu(false);
+                      }}
+                    >
+                      ERC20
+                    </span>
+                    <span 
+                      onClick={()=> {
+                        setSelectedPayment('etherWL'); 
+                        setPayMenu(false);
+                      }}
+                    >
+                      ETH + Allowlist
+                    </span>
+                    <span 
+                      onClick={()=> {
+                        setSelectedPayment('erc20WL'); 
+                        setPayMenu(false);
+                      }}
+                    >
+                      ERC20 + Allowlist
+                    </span>
                   </div>
+                </div>
+              )}
+            </div>
                 </div>
               </div>
             </div>

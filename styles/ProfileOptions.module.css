@@ -1,88 +1,8 @@
-
-.container{
-    display: flex;
-    width: 700px;
-    max-width: 100%;
-    font-family: 'Segoe UI';
-}
-
-.wrapper{
-    display: flex;
-    width: 100%;
-}
-
-.profile{
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    gap: 20px;
-}
-
-.profileTop{
-    background-color: #FFFFFF;
-    display: flex;
-    border-radius: 20px;
-    border: 1px solid #E8E8E8;
-    width: 100%;
-    justify-content: center;
-    height: 100px;
-}
-
-.profileMid{
-    background-color: #FFFFFF;
-    display: flex;
-    border-radius: 20px;
-    border: 1px solid #E8E8E8;
-    width: 100%;
-    justify-content: center;
-    height: 100px;
-    
-}
-.profileDown{
-    background-color: #FFFFFF;
-    display: flex;
-    border-radius: 20px;
-    border: 1px solid #E8E8E8;
-    width: 100%;
-    justify-content: center;
-    padding: 30px 0;
-    
-}
-
-
-
-.profileTopChild{
-    display: flex;
-    width: 94%;
-    justify-content: space-between;
-    align-items: center;
-
-}
-
-.profileTopChildLeft{
-    display: flex;
-    font-weight: 700;
-    font-size: xx-large;
-}
-
-.profileTopChildRight{
-    display: flex;
-    flex-direction: column;
-    font-weight: 500;
-}
-
-.profileMidChild{
-    display: flex;
-    width: 94%;
-    justify-content: space-between;
-    align-items: center;
-
-}
-
 .profileDownChild{
     display: flex;
-    width: 94%;
+    width: 640px;
     flex-direction: column;
+    gap: 30px;
 
 }
 
@@ -96,7 +16,7 @@
         width: 100%;
         flex-direction: column;
         align-items: center;
-        color: #9B9BA6;
+
         font-weight: 600;
         font-size: 14px;
 }
@@ -121,11 +41,17 @@
 
 .profileDownSubChildFee{
     display: flex;
-    
+    gap: 5px;
+    align-self: center;
 }
 
 .profileDownSubChildOption{
     display: flex;
+    color: #0023DD;
+    align-items: center;
+    gap: 3px;
+    font-size: small;
+    cursor: pointer;
 }
 
 .profileDownToggle{
@@ -163,22 +89,13 @@
     color: #9B9BA6;
     cursor: pointer;
 }
-
-.profileMidChildLink{
-    display: flex;
-    flex-direction: row;
-    color: #0023DD;
-    font-size: 15px;
-    font-weight: 700;
-    gap: 3px;
-}
-
 .profileDownFee{
     display: flex;
     width: 100%;
     flex-direction: column;
     background-color: #F5F5F5;
     align-items: center;
+    color: #9B9BA6;
 }
 
 .profileDownFeeChild{
@@ -194,29 +111,7 @@
     display: flex;
         justify-content: space-between;
 }
-
-.profileMidChildRight{
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-}
-
-.profileMidChildRightDrop{
-    display: flex;
-    color: #FFFFFF;
-    background-color: #0023DD;
-    align-items: center;
-    gap: 5px;
-    border-radius: 5px;
-    height: 45px;
-    justify-content: center;
-    padding: 0px 30px;
-    cursor: pointer;
-    font-weight: 600;
-    font-size: 13px;
-}
-
-.profileMidSubChildOption{
+.profileDownSubChildOptionDrop{
     top: 100%;
     left: 0;
     width: 100%;
@@ -224,15 +119,67 @@
     border: 1px solid #ccc;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
-.profileMidSubChildOptionToggle{
+.profileDownSubChildOptionToggle{
     display: flex;
     flex-direction: column;
     gap: 8px;
     padding: 8px;
+    color: black;
+    cursor: pointer;
 }
-
 .dropOverlay{
     position: absolute;
     margin-top: 50px;
+
 }
 
+.profileDownPayLeft{
+    display: flex;
+    gap: 5px;
+    align-items: center;
+}
+
+.profileDownPayLeft p{
+    font-size: xx-large;
+    font-weight: 700;
+}
+
+.profileDownPayLeftActive{
+    font-size: 12px;
+    font-weight: 700;
+    padding: 3px 13px;
+    background-color: #F0F6FF;
+    border-radius: 10px;
+    color: #008000;
+}
+
+.profileDownPayLeftInactive{
+    font-size: 12px;
+    font-weight: 700;
+    padding: 3px 13px;
+    background-color: #F0F6FF;
+    border-radius: 10px;
+    color: #C52F1B;
+}
+
+.profileDownPayRight{
+ display: flex;
+}
+
+
+
+.profileDownSubChildFeeTitle{
+    font-weight: 700;
+    font-size: 21px;
+}
+
+.profileDownSubChildFeeIcon{
+    display: flex;
+    align-self: center;
+    cursor: pointer;
+}
+
+.profileDownSubFee{
+    display: flex;
+    gap: 5px;
+}

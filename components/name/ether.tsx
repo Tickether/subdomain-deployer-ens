@@ -1,10 +1,11 @@
-import styles from '@/styles/Home.module.css'
+import styles from '@/styles/ProfileOptions.module.css'
 import { useEffect, useState } from 'react'
 import { NumericFormat } from 'react-number-format'
 import { formatEther, namehash } from 'viem'
 import { useAccount, useContractRead, useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi'
 import drop_blueSVG from '@/public/assets/icons/drop-blue.svg'
 import editSVG from '@/public/assets/icons/edit.svg'
+import withdrawSVG from '@/public/assets/icons/withdraw.svg'
 import Image from 'next/image'
 import EtherModal from './priceModal/ether'
 
@@ -14,7 +15,6 @@ export default function Ether({ENS} : any) {
     const {address, isConnected} = useAccount()
     
     const [prices, setPrices] = useState([BigInt(0), BigInt(0), BigInt(0)])
-    //const [ENS, setENS] = useState<string>('') // for now to prevent erroes will pare in props
     const [parentNodeBalance, setParentNodeBalance] = useState<bigint>(BigInt(0))
     const [activeParentNode, setActiveParentNode] = useState<boolean>(false)
     const [fuseBurned, setFuseBurned] = useState<boolean>(false)
@@ -22,6 +22,7 @@ export default function Ether({ENS} : any) {
     const [showUSD, setShowUSD] = useState<boolean>(false)
     const [priceMenu, setPriceMenu] = useState<boolean>(false)
     const [openModal, setOpenModal] = useState<boolean>(false)
+    const [selectedPrice, setSelectedPrice] = useState<string>('numbers');
     
 
 
@@ -322,13 +323,22 @@ export default function Ether({ENS} : any) {
               <div className={styles.profileDown}>
               <div className={styles.profileDownChild}>
                 <div className={styles.profileDownPay}>
-                  <div>
+                  <div className={styles.profileDownPayLeft}>
                     <p>Ethereum</p>
-                    <span></span>
+                    {
+                      activeParentNode 
+                      ? <span className={styles.profileDownPayLeftActive}>Active</span>
+                      : <span className={styles.profileDownPayLeftInactive}>Inactive</span>
+                    }
                   </div>
-                  <div>
-                    <p>USD</p>
-                    <span></span>
+                  <div className={styles.profileDownPayRight}>
+                    <div>
+                      <p>ETH</p>
+                      <p>USD</p>
+                    </div>
+                    <div>
+                      <Image src={withdrawSVG} alt='' />
+                    </div>
                   </div>
                 </div>
                 <div className={styles.profileDownSubFee}>
@@ -336,20 +346,43 @@ export default function Ether({ENS} : any) {
                                 <div className={styles.profileDownSubChild}>
                                         <div className={styles.profileDownSubChildTitle}>
                                             <div className={styles.profileDownSubChildFee}>
-                                              <p>Subname Prices</p>
-                                              <div onClick={()=> setOpenModal(true)}><Image src={editSVG} alt='' /></div>
+                                              <div className={styles.profileDownSubChildFeeTitle}><p>Subname Prices</p></div>
+                                              <div className={styles.profileDownSubChildFeeIcon} onClick={()=> setOpenModal(true)}><Image src={editSVG} alt='' /></div>
                                             </div>
-                                            {openModal && <EtherModal ENS ={ENS} />}
-                                            <div className={styles.profileDownSubChildOption}>
-                                              <p>Numbers Only</p>
+                                            {openModal && <EtherModal ENS ={ENS} setOpenModal ={setOpenModal} />}
+                                            <div onClick={handlePriceToggle} className={styles.profileDownSubChildOption}>
+                                              { selectedPrice === 'numbers' && <p>Numbers Only</p>}
+                                              { selectedPrice === 'letters' && <p>Letters & Numbers</p>}
                                               <Image src={drop_blueSVG} alt='' />
                                             </div>
-                                            {/**
-                                            <div onClick={handlePriceToggle} className={styles.profileDownSubChildOptionToggle}>
-                                              <span>Letters & Numbers</span>
-                                              <span>Numbers Only</span>
+                                            <div className={styles.dropOverlay}>
+                                              {
+                                                priceMenu && (
+                                                  <div className={styles.profileDownSubChildOptionDrop}>
+                                                    <div className={styles.profileDownSubChildOptionToggle}>
+                                                      <span
+                                                        onClick={()=> {
+                                                          setSelectedPrice('letters'); 
+                                                          setPriceMenu(false);
+                                                        }}
+                                                      >
+                                                        Letters & Numbers
+                                                      </span>
+                                                      <span
+                                                        onClick={()=> {
+                                                          setSelectedPrice('numbers'); 
+                                                          setPriceMenu(false);
+                                                        }}
+                                                      >
+                                                        Numbers Only
+                                                      </span>
+                                                    </div>
+                                                  </div>
+                                                )
+                                              }
                                             </div>
-                                             */}
+                                            
+                                            
                                             
                                         </div>
                                         <div onClick={handleToggle} className={styles.profileDownToggle}>
@@ -376,29 +409,57 @@ export default function Ether({ENS} : any) {
                                     
                                 </div>
                             </div>
-                            <div className={styles.profileDownFee}>
-                                {
-                                    showUSD
-                                    ?( 
-                                        <div className={styles.profileDownFeeChild}>
-                                            <div className={styles.profileDownFees}><span>One Number Fee</span><span>{0} USD</span></div>
-                                            <div className={styles.profileDownFees}><span>Two Number Fee</span><span>{0} USD</span></div>
-                                            <div className={styles.profileDownFees}><span>Three Number Fee</span><span>{0} USD</span></div>
-                                            <div className={styles.profileDownFees}><span>Four Number Fee</span><span>{0} USD</span></div>
-                                            <div className={styles.profileDownFees}><span>Five+ Number Fee</span><span>{0} USD</span></div>
-                                        </div>
-                                    )
-                                    :(
-                                        <div className={styles.profileDownFeeChild}>
-                                            <div className={styles.profileDownFees}><span>One Number Fee</span><span>{0} ETH</span></div>
-                                            <div className={styles.profileDownFees}><span>Two Number Fee</span><span>{0} ETH</span></div>
-                                            <div className={styles.profileDownFees}><span>Three Number Fee</span><span>{0} ETH</span></div>
-                                            <div className={styles.profileDownFees}><span>Four Number Fee</span><span>{0} ETH</span></div>
-                                            <div className={styles.profileDownFees}><span>Five+ Number Fee</span><span>{0} ETH</span></div>
-                                        </div>   
-                                    )
-                                }
-                            </div>
+                            {
+                              selectedPrice === 'numbers' && (
+                                <div className={styles.profileDownFee}>
+                                    {
+                                        showUSD
+                                        ?( 
+                                            <div className={styles.profileDownFeeChild}>
+                                                <div className={styles.profileDownFees}><span>One Number Fee</span><span>{0} USD</span></div>
+                                                <div className={styles.profileDownFees}><span>Two Number Fee</span><span>{0} USD</span></div>
+                                                <div className={styles.profileDownFees}><span>Three Number Fee</span><span>{0} USD</span></div>
+                                                <div className={styles.profileDownFees}><span>Four Number Fee</span><span>{0} USD</span></div>
+                                                <div className={styles.profileDownFees}><span>Five+ Number Fee</span><span>{0} USD</span></div>
+                                            </div>
+                                        )
+                                        :(
+                                            <div className={styles.profileDownFeeChild}>
+                                                <div className={styles.profileDownFees}><span>One Number Fee</span><span>{0} ETH</span></div>
+                                                <div className={styles.profileDownFees}><span>Two Number Fee</span><span>{0} ETH</span></div>
+                                                <div className={styles.profileDownFees}><span>Three Number Fee</span><span>{0} ETH</span></div>
+                                                <div className={styles.profileDownFees}><span>Four Number Fee</span><span>{0} ETH</span></div>
+                                                <div className={styles.profileDownFees}><span>Five+ Number Fee</span><span>{0} ETH</span></div>
+                                            </div>   
+                                        )
+                                    }
+                                </div>
+                              )
+                            }
+                            {
+                              selectedPrice === 'letters' && (
+                                <div className={styles.profileDownFee}>
+                                    {
+                                        showUSD
+                                        ?( 
+                                            <div className={styles.profileDownFeeChild}>
+                                                <div className={styles.profileDownFees}><span>Three- Number Fee</span><span>{0} USD</span></div>
+                                                <div className={styles.profileDownFees}><span>Four/Five Number Fee</span><span>{0} USD</span></div>
+                                                <div className={styles.profileDownFees}><span>Six+ Number Fee</span><span>{0} USD</span></div>
+                                                
+                                            </div>
+                                        )
+                                        :(
+                                            <div className={styles.profileDownFeeChild}>
+                                                <div className={styles.profileDownFees}><span>Three- Number Fee</span><span>{0} ETH</span></div>
+                                                <div className={styles.profileDownFees}><span>Four/Five Number Fee</span><span>{0} ETH</span></div>
+                                                <div className={styles.profileDownFees}><span>Six+ Number Fee</span><span>{0} ETH</span></div>
+                                            </div>   
+                                        )
+                                    }
+                                </div>
+                              )
+                            }
                         </div>
               </div>
             </div>
