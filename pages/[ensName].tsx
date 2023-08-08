@@ -4,10 +4,11 @@ import { useAccount, useContractRead, useContractWrite, usePrepareContractWrite,
 import {formatEther, namehash} from 'viem'
 import axios from 'axios'
 import { SearchResult } from '@/components/searches/search'
-import SubEnsFee from '@/components/name/subensfee'
 import Profile from '@/components/name/profile/profile'
 import Subnames from '@/components/name/subnames/subnames'
 import History from '@/components/name/history'
+import ensSVG from '@/public/assets/icons/ens.svg'
+import Image from 'next/image'
 
 
 export default function EnsName() {
@@ -57,6 +58,7 @@ export default function EnsName() {
             <div className={styles.nameTop}>
                 <div className={styles.nameTopChild}>
                   <p>{ENS}</p>
+                  <Image src={ensSVG} alt='' />
                 </div>
             </div>
             <div className={styles.nameDown}>

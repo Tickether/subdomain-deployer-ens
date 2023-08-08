@@ -24,10 +24,10 @@
 
 .nameTopChild{
     display: flex;
-  flex-direction: column;
   width: 95.5%;
   font-weight: 700;
   font-size: 30px;
+  gap: 5px;
 }
 
 .nameDown{
