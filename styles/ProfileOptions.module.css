@@ -37,6 +37,7 @@
 .profileDownSubChildTitle{
     display: flex;
     flex-direction: column;
+    gap: 3px;
 }
 
 .profileDownSubChildFee{
@@ -122,8 +123,6 @@
 .profileDownSubChildOptionToggle{
     display: flex;
     flex-direction: column;
-    gap: 8px;
-    padding: 8px;
     color: black;
     cursor: pointer;
 }
@@ -163,7 +162,8 @@
 }
 
 .profileDownPayRight{
- display: flex;
+    display: flex;
+    gap: 6px;
 }
 
 
@@ -183,3 +183,16 @@
     display: flex;
     gap: 5px;
 }
+
+.profileDownSubChildOptionToggleSpan{
+    padding: 6px 11px;
+}
+
+.profileDownSubChildOptionToggleSpan:hover{
+    background-color: #9B9BA6;
+}
+
+.profileDownPayRightWithdraw{
+    cursor: pointer;
+}
+

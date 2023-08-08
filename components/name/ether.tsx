@@ -332,11 +332,11 @@ export default function Ether({ENS} : any) {
                     }
                   </div>
                   <div className={styles.profileDownPayRight}>
-                    <div>
+                    <div className={styles.profileDownPayRightBalance}>
                       <p>ETH</p>
                       <p>USD</p>
                     </div>
-                    <div>
+                    <div className={styles.profileDownPayRightWithdraw}>
                       <Image src={withdrawSVG} alt='' />
                     </div>
                   </div>
@@ -360,22 +360,26 @@ export default function Ether({ENS} : any) {
                                                 priceMenu && (
                                                   <div className={styles.profileDownSubChildOptionDrop}>
                                                     <div className={styles.profileDownSubChildOptionToggle}>
-                                                      <span
-                                                        onClick={()=> {
-                                                          setSelectedPrice('letters'); 
-                                                          setPriceMenu(false);
-                                                        }}
-                                                      >
-                                                        Letters & Numbers
-                                                      </span>
-                                                      <span
-                                                        onClick={()=> {
-                                                          setSelectedPrice('numbers'); 
-                                                          setPriceMenu(false);
-                                                        }}
-                                                      >
-                                                        Numbers Only
-                                                      </span>
+                                                      <div className={styles.profileDownSubChildOptionToggleSpan}>
+                                                        <span
+                                                          onClick={()=> {
+                                                            setSelectedPrice('letters'); 
+                                                            setPriceMenu(false);
+                                                          }}
+                                                        >
+                                                          Letters & Numbers
+                                                        </span>
+                                                      </div>
+                                                      <div className={styles.profileDownSubChildOptionToggleSpan}>
+                                                        <span
+                                                          onClick={()=> {
+                                                            setSelectedPrice('numbers'); 
+                                                            setPriceMenu(false);
+                                                          }}
+                                                        >
+                                                          Numbers Only
+                                                        </span>
+                                                      </div>
                                                     </div>
                                                   </div>
                                                 )

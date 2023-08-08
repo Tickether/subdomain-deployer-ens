@@ -171,6 +171,7 @@
     font-size: 15px;
     font-weight: 700;
     gap: 3px;
+    cursor: pointer;
 }
 
 .profileDownFee{
@@ -227,12 +228,25 @@
 .profileMidSubChildOptionToggle{
     display: flex;
     flex-direction: column;
-    gap: 8px;
-    padding: 8px;
+    
 }
 
 .dropOverlay{
     position: absolute;
     margin-top: 50px;
+}
+
+.profileMidSubChildOptionToggle span{
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.profileMidSubChildOptionToggleSpan{
+    padding: 6px 11px;
+}
+.profileMidSubChildOptionToggleSpan:hover{
+    background-color: #9B9BA6;
+    
 }
 

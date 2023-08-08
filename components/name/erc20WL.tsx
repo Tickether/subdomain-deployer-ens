@@ -4,6 +4,7 @@ import editSVG from '@/public/assets/icons/edit.svg'
 import Image from 'next/image'
 import { useState } from 'react'
 import EtherModal from './priceModal/ether'
+import withdrawSVG from '@/public/assets/icons/withdraw.svg'
 
 
 export default function Erc20WL({ENS} : any) {
@@ -11,6 +12,8 @@ export default function Erc20WL({ENS} : any) {
     const [priceMenu, setPriceMenu] = useState<boolean>(false)
     const [openModal, setOpenModal] = useState<boolean>(false)
     const [selectedPrice, setSelectedPrice] = useState<string>('numbers');
+    const [activeParentNode, setActiveParentNode] = useState<boolean>(false)
+    
 
 
   const handleToggle =  () => {
@@ -32,13 +35,22 @@ export default function Erc20WL({ENS} : any) {
             <div className={styles.profileDown}>
               <div className={styles.profileDownChild}>
                 <div className={styles.profileDownPay}>
-                  <div>
+                <div className={styles.profileDownPayLeft}>
                     <p>ERC20 + Allowlist</p>
-                    <span></span>
+                    {
+                      activeParentNode 
+                      ? <span className={styles.profileDownPayLeftActive}>Active</span>
+                      : <span className={styles.profileDownPayLeftInactive}>Inactive</span>
+                    }
                   </div>
-                  <div>
-                    <p>USD</p>
-                    <span></span>
+                  <div className={styles.profileDownPayRight}>
+                    <div className={styles.profileDownPayRightBalance}>
+                      <p>ETH</p>
+                      <p>USD</p>
+                    </div>
+                    <div className={styles.profileDownPayRightWithdraw}>
+                      <Image src={withdrawSVG} alt='' />
+                    </div>
                   </div>
                 </div>
                 <div className={styles.profileDownSubFee}>
@@ -46,10 +58,10 @@ export default function Erc20WL({ENS} : any) {
                                 <div className={styles.profileDownSubChild}>
                                         <div className={styles.profileDownSubChildTitle}>
                                             <div className={styles.profileDownSubChildFee}>
-                                              <p>Subname Prices</p>
-                                              <div onClick={()=> setOpenModal(true)}><Image src={editSVG} alt='' /></div>
+                                              <div className={styles.profileDownSubChildFeeTitle}><p>Subname Prices</p></div>
+                                              <div className={styles.profileDownSubChildFeeIcon} onClick={()=> setOpenModal(true)}><Image src={editSVG} alt='' /></div>
                                             </div>
-                                            {openModal && <EtherModal ENS ={ENS} />}
+                                            {openModal && <EtherModal ENS ={ENS} setOpenModal ={setOpenModal} />}
                                             <div onClick={handlePriceToggle} className={styles.profileDownSubChildOption}>
                                               { selectedPrice === 'numbers' && <p>Numbers Only</p>}
                                               { selectedPrice === 'letters' && <p>Letters & Numbers</p>}
@@ -58,24 +70,28 @@ export default function Erc20WL({ENS} : any) {
                                             <div className={styles.dropOverlay}>
                                               {
                                                 priceMenu && (
-                                                  <div className={styles.profileDownSubChildOption}>
+                                                  <div className={styles.profileDownSubChildOptionDrop}>
                                                     <div className={styles.profileDownSubChildOptionToggle}>
-                                                      <span
-                                                        onClick={()=> {
-                                                          setSelectedPrice('letters'); 
-                                                          setPriceMenu(false);
-                                                        }}
-                                                      >
-                                                        Letters & Numbers
-                                                      </span>
-                                                      <span
-                                                        onClick={()=> {
-                                                          setSelectedPrice('numbers'); 
-                                                          setPriceMenu(false);
-                                                        }}
-                                                      >
-                                                        Numbers Only
-                                                      </span>
+                                                      <div className={styles.profileDownSubChildOptionToggleSpan}>
+                                                        <span
+                                                          onClick={()=> {
+                                                            setSelectedPrice('letters'); 
+                                                            setPriceMenu(false);
+                                                          }}
+                                                        >
+                                                          Letters & Numbers
+                                                        </span>
+                                                      </div>
+                                                      <div className={styles.profileDownSubChildOptionToggleSpan}>
+                                                        <span
+                                                          onClick={()=> {
+                                                            setSelectedPrice('numbers'); 
+                                                            setPriceMenu(false);
+                                                          }}
+                                                        >
+                                                          Numbers Only
+                                                        </span>
+                                                      </div>
                                                     </div>
                                                   </div>
                                                 )
