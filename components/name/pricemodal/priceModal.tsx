@@ -9,7 +9,7 @@ import Image from 'next/image'
 
 
 
-export default function EtherModal({ENS, setOpenModal} : any) {
+export default function PriceModal({ENS, setOpenModal} : any) {
     const dec8 = 100000000
 
     const [newPrices, setNewPrices] = useState<number[]>([0,0,0])

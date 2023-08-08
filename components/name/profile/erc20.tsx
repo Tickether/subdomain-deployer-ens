@@ -3,18 +3,18 @@ import drop_blueSVG from '@/public/assets/icons/drop-blue.svg'
 import editSVG from '@/public/assets/icons/edit.svg'
 import Image from 'next/image'
 import { useState } from 'react'
-import EtherModal from './priceModal/ether'
+import PriceModal from '../pricemodal/priceModal'
 import withdrawSVG from '@/public/assets/icons/withdraw.svg'
 
 
-export default function Erc20WL({ENS} : any) {
+export default function Erc20({ENS} : any) {
+
     const [showUSD, setShowUSD] = useState<boolean>(false)
     const [priceMenu, setPriceMenu] = useState<boolean>(false)
     const [openModal, setOpenModal] = useState<boolean>(false)
     const [selectedPrice, setSelectedPrice] = useState<string>('numbers');
     const [activeParentNode, setActiveParentNode] = useState<boolean>(false)
     
-
 
   const handleToggle =  () => {
     if(showUSD){
@@ -30,13 +30,13 @@ export default function Erc20WL({ENS} : any) {
   }
     return (
         <>
-        <div className={styles.container}>
-            <div className={styles.wrapper}>
-            <div className={styles.profileDown}>
+            <div className={styles.container}>
+                <div className={styles.wrapper}>
+                <div className={styles.profileDown}>
               <div className={styles.profileDownChild}>
                 <div className={styles.profileDownPay}>
                 <div className={styles.profileDownPayLeft}>
-                    <p>ERC20 + Allowlist</p>
+                    <p>ERC20</p>
                     {
                       activeParentNode 
                       ? <span className={styles.profileDownPayLeftActive}>Active</span>
@@ -57,15 +57,15 @@ export default function Erc20WL({ENS} : any) {
                             <div className={styles.profileDownSub}>
                                 <div className={styles.profileDownSubChild}>
                                         <div className={styles.profileDownSubChildTitle}>
-                                            <div className={styles.profileDownSubChildFee}>
+                                            <div  className={styles.profileDownSubChildFee}>
                                               <div className={styles.profileDownSubChildFeeTitle}><p>Subname Prices</p></div>
                                               <div className={styles.profileDownSubChildFeeIcon} onClick={()=> setOpenModal(true)}><Image src={editSVG} alt='' /></div>
                                             </div>
-                                            {openModal && <EtherModal ENS ={ENS} setOpenModal ={setOpenModal} />}
+                                            {openModal && <PriceModal ENS ={ENS} setOpenModal ={setOpenModal} />}
                                             <div onClick={handlePriceToggle} className={styles.profileDownSubChildOption}>
-                                              { selectedPrice === 'numbers' && <p>Numbers Only</p>}
-                                              { selectedPrice === 'letters' && <p>Letters & Numbers</p>}
-                                              <Image src={drop_blueSVG} alt='' />
+                                                { selectedPrice === 'numbers' && <p>Numbers Only</p>}
+                                                { selectedPrice === 'letters' && <p>Letters & Numbers</p>}
+                                                <Image src={drop_blueSVG} alt='' />
                                             </div>
                                             <div className={styles.dropOverlay}>
                                               {
@@ -176,9 +176,9 @@ export default function Erc20WL({ENS} : any) {
                             }
                         </div>
               </div>
-            </div>                
             </div>
-        </div>
+                </div>
+            </div>
         </>
     )
 }

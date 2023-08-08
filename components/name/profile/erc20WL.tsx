@@ -3,17 +3,17 @@ import drop_blueSVG from '@/public/assets/icons/drop-blue.svg'
 import editSVG from '@/public/assets/icons/edit.svg'
 import Image from 'next/image'
 import { useState } from 'react'
-import EtherModal from './priceModal/ether'
+import PriceModal from '../pricemodal/priceModal'
 import withdrawSVG from '@/public/assets/icons/withdraw.svg'
 
 
-export default function EtherWL({ENS} : any) {
-
+export default function Erc20WL({ENS} : any) {
     const [showUSD, setShowUSD] = useState<boolean>(false)
     const [priceMenu, setPriceMenu] = useState<boolean>(false)
     const [openModal, setOpenModal] = useState<boolean>(false)
     const [selectedPrice, setSelectedPrice] = useState<string>('numbers');
     const [activeParentNode, setActiveParentNode] = useState<boolean>(false)
+    
 
 
   const handleToggle =  () => {
@@ -35,8 +35,8 @@ export default function EtherWL({ENS} : any) {
             <div className={styles.profileDown}>
               <div className={styles.profileDownChild}>
                 <div className={styles.profileDownPay}>
-                  <div className={styles.profileDownPayLeft}>
-                    <p>Ethereum + Allowlist</p>
+                <div className={styles.profileDownPayLeft}>
+                    <p>ERC20 + Allowlist</p>
                     {
                       activeParentNode 
                       ? <span className={styles.profileDownPayLeftActive}>Active</span>
@@ -61,7 +61,7 @@ export default function EtherWL({ENS} : any) {
                                               <div className={styles.profileDownSubChildFeeTitle}><p>Subname Prices</p></div>
                                               <div className={styles.profileDownSubChildFeeIcon} onClick={()=> setOpenModal(true)}><Image src={editSVG} alt='' /></div>
                                             </div>
-                                            {openModal && <EtherModal ENS ={ENS} setOpenModal ={setOpenModal}/>}
+                                            {openModal && <PriceModal ENS ={ENS} setOpenModal ={setOpenModal} />}
                                             <div onClick={handlePriceToggle} className={styles.profileDownSubChildOption}>
                                               { selectedPrice === 'numbers' && <p>Numbers Only</p>}
                                               { selectedPrice === 'letters' && <p>Letters & Numbers</p>}
@@ -176,7 +176,7 @@ export default function EtherWL({ENS} : any) {
                             }
                         </div>
               </div>
-            </div>
+            </div>                
             </div>
         </div>
         </>

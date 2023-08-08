@@ -7,7 +7,7 @@ import drop_blueSVG from '@/public/assets/icons/drop-blue.svg'
 import editSVG from '@/public/assets/icons/edit.svg'
 import withdrawSVG from '@/public/assets/icons/withdraw.svg'
 import Image from 'next/image'
-import EtherModal from './priceModal/ether'
+import PriceModal from '../pricemodal/priceModal'
 
 
 
@@ -349,7 +349,7 @@ export default function Ether({ENS} : any) {
                                               <div className={styles.profileDownSubChildFeeTitle}><p>Subname Prices</p></div>
                                               <div className={styles.profileDownSubChildFeeIcon} onClick={()=> setOpenModal(true)}><Image src={editSVG} alt='' /></div>
                                             </div>
-                                            {openModal && <EtherModal ENS ={ENS} setOpenModal ={setOpenModal} />}
+                                            {openModal && <PriceModal ENS ={ENS} setOpenModal ={setOpenModal} />}
                                             <div onClick={handlePriceToggle} className={styles.profileDownSubChildOption}>
                                               { selectedPrice === 'numbers' && <p>Numbers Only</p>}
                                               { selectedPrice === 'letters' && <p>Letters & Numbers</p>}

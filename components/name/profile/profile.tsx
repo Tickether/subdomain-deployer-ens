@@ -5,10 +5,10 @@ import linkSVG from '@/public/assets/icons/link.svg'
 import drop_blueSVG from '@/public/assets/icons/drop-blue.svg'
 import drop_whiteSVG from '@/public/assets/icons/drop-white.svg'
 import Image from 'next/image'
-import Ether from './ether'
-import EtherWL from './etherWL'
-import Erc20 from './erc20'
-import Erc20WL from './erc20WL'
+import Ether from '../profile/ether'
+import EtherWL from '../profile/etherWL'
+import Erc20 from '../profile/erc20'
+import Erc20WL from '../profile/erc20WL'
 
 
 

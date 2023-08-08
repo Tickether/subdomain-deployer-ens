@@ -5,8 +5,8 @@ import {formatEther, namehash} from 'viem'
 import axios from 'axios'
 import { SearchResult } from '@/components/searches/search'
 import SubEnsFee from '@/components/name/subensfee'
-import Profile from '@/components/name/profile'
-import Subnames from '@/components/name/subnames'
+import Profile from '@/components/name/profile/profile'
+import Subnames from '@/components/name/subnames/subnames'
 import History from '@/components/name/history'
 
 

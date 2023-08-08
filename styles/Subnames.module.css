@@ -1,7 +1,7 @@
 
 .container{
     display: flex;
-    width: 700px;
+
     max-width: 100%;
     font-family: 'Segoe UI';
 }
@@ -12,17 +12,92 @@
 }
 
 .subnames{
+    display: flex;
+    flex-direction: column;
+    width: 700px;
+    max-width: 100%;
+    gap: 20px;
+}
+
+.subnamesTop{
     background-color: #FFFFFF;
     display: flex;
     border-radius: 20px;
     border: 1px solid #E8E8E8;
     width: 100%;
     justify-content: center;
-    
+    height: 100px;
 }
 
-.subnamesChild{
+.subnamesTopChild{
     display: flex;
     width: 94%;
-
+    justify-content: space-between;
+    align-items: center;
 }
+
+.subnamesDown{
+    background-color: #FFFFFF;
+    display: flex;
+    border-radius: 20px;
+    border: 1px solid #E8E8E8;
+    width: 100%;
+    justify-content: center;
+}
+
+.subnamesDownChild{
+    display: flex;
+    flex-direction: column;
+    width: 94%;
+}
+
+.subnames hr{
+    border: 0.1px solid #E8E8E8;
+    width: 106.5%;
+    align-self: center;
+}
+
+.subnamesDownNav{
+    display: flex;
+    height: 57px;
+    align-items: center;
+  }
+
+  .subnamesDownSelection{
+    display: flex;
+    height: 57px;
+    align-items: center;
+  }
+
+  .subnamesList{
+    display: flex;
+    flex-direction: column;
+  }
+
+  .subnamesTopLink{
+    display: flex;
+    gap: 5px;
+    color: #0023DD;
+    font-weight: 600;
+  }
+
+  .subnamesTopRightReserve{
+    display: flex;
+    color: #FFFFFF;
+    background-color: #0023DD;
+    align-items: center;
+    gap: 5px;
+    border-radius: 5px;
+    height: 45px;
+    justify-content: center;
+    padding: 0px 30px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 13px;
+  }
+
+  .subnamesTopRight{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+  }
