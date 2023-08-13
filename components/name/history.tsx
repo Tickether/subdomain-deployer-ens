@@ -1,7 +1,10 @@
+import { ENS } from '@/pages/[ensName]'
 import styles from '@/styles/History.module.css'
 
-
-export default function History({ENS} : any) {
+interface ENSprop {
+  ENS: ENS,
+}
+export default function History({ENS} : ENSprop) {
   return (
     <>
       <div className={styles.container}>

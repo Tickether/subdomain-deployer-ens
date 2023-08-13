@@ -41,28 +41,63 @@
 .namesDownChildren{
     display: flex;
     flex-direction: column;
-    width: 94%;
+    width: 100%;
+    justify-content: center;
 }
 
-.names hr{
+.namesSelectionChild hr{
+    border: 0.1px solid #E8E8E8;
+    width: 100%;
+    align-self: center;
+  }
+
+  .namesList hr{
     border: 0.1px solid #E8E8E8;
     width: 106.5%;
     align-self: center;
   }
 
+  .namesListHover{
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    cursor: pointer;
+
+  }
+
+  .namesListHover:hover{
+    background-color: #E8E8E8;
+  }
+
   .namesList{
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    width: 94%;
   }
 
   .namesNav{
     display: flex;
     height: 57px;
     align-items: center;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .namesNavChild{
+    display: flex;
+    width: 94%;
   }
 
   .namesSelection{
     display: flex;
     height: 57px;
     align-items: center;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .namesSelectionChild{
+    display: flex;
+    width: 94%;
   }

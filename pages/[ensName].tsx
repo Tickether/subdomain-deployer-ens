@@ -10,12 +10,20 @@ import History from '@/components/name/history'
 import ensSVG from '@/public/assets/icons/ens.svg'
 import Image from 'next/image'
 
+export interface ENS{
+  name : string,
+  owner : string,
+}
 
 export default function EnsName() {
 
   const {isConnected} = useAccount()
 
-  const [ENS, setENS] = useState<string>('')
+  const ensDefault = {
+    name: '',
+    owner: '',
+  };
+  const [ENS, setENS] = useState<ENS>(ensDefault)
   const [option, setOption] = useState<string>('profile')
 
   //ParentNodeBalance
@@ -42,8 +50,38 @@ export default function EnsName() {
   
     
   useEffect(()=>{
-    setENS(window.location.pathname.split('/')[1])
+
+  
+    
+     const getENS = async () => {
+      //get owner info
+      const query = `query { domain(id: "${namehash(window.location.pathname.split('/')[1])}") {wrappedOwner {id} owner{id}}}`
+      const response = await axios.post('https://api.thegraph.com/subgraphs/name/ensdomains/ensgoerli', {
+        query
+      })
+      const owner = response.data.data.domain.owner.id
+      const wrappedOwner = response.data.data.domain.wrappedOwner.id
+      const nameWrapper = '0x114D4603199df73e7D157787f8778E21fCd13066'
+      if (owner === nameWrapper.toLowerCase()){
+        const ensData = {
+          name: window.location.pathname.split('/')[1],
+          owner: wrappedOwner,
+        };
+        setENS(ensData)
+
+      } else {
+        const ensData = {
+          name: window.location.pathname.split('/')[1],
+          owner: owner,
+        };
+        setENS(ensData)
+      }
+    }
+    getENS()
+    
   },[])
+
+  
 
   console.log(ENS)
 
@@ -57,7 +95,7 @@ export default function EnsName() {
           <div className={styles.name}> 
             <div className={styles.nameTop}>
                 <div className={styles.nameTopChild}>
-                  <p>{ENS}</p>
+                  <p>{ENS.name}</p>
                   <Image src={ensSVG} alt='' />
                 </div>
             </div>

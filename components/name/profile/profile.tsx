@@ -9,10 +9,15 @@ import Ether from '../profile/ether'
 import EtherWL from '../profile/etherWL'
 import Erc20 from '../profile/erc20'
 import Erc20WL from '../profile/erc20WL'
+import { ENS } from '@/pages/[ensName]'
 
 
+interface ENSprop {
+  ENS: ENS,
+}
 
-export default function Profile({ENS} : any) {
+
+export default function Profile({ENS} : ENSprop) {
 
   const [showUSD, setShowUSD] = useState<boolean>(false)
   const [payMenu, setPayMenu] = useState<boolean>(false)

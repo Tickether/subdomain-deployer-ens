@@ -9,6 +9,7 @@ import plus_whiteSVG from '@/public/assets/icons/plus-white.svg'
 import Image from 'next/image'
 import selectSVG from '@/public/assets/icons/select.svg'
 import Subname from './subname'
+import { ENS } from '@/pages/[ensName]'
 
 export interface SubName{
   name: string,
@@ -20,8 +21,11 @@ export interface Owner{
   id: string,
 }
 
+interface ENSprop {
+  ENS: ENS,
+}
 
-export default function Subnames({ENS} : any) {
+export default function Subnames({ENS} : ENSprop) {
     const {address, isConnected} = useAccount()
 
     const [owner, setOwner] = useState<string>('0x0000000000000000000000000000000000000000')
@@ -63,7 +67,7 @@ export default function Subnames({ENS} : any) {
         },    
     ],
     functionName: 'getData',
-    args: [(namehash(ENS))],
+    args: [(namehash(ENS.name))],
     chainId: 5,
     watch: true,
   })
@@ -83,9 +87,9 @@ export default function Subnames({ENS} : any) {
 
   useEffect(()=>{
     const handleShowSubEns = async () => {
-      if (ENS.length >= 1) {
+      if (ENS.name.length >= 1) {
         try {
-          const query = `query {domains(where:{parent: "${namehash(ENS)}"}) { name expiryDate wrappedOwner{id} }}`
+          const query = `query {domains(where:{parent: "${namehash(ENS.name)}"}) { name expiryDate wrappedOwner{id} }}`
           const response = await axios.post('https://api.thegraph.com/subgraphs/name/ensdomains/ensgoerli', {
             query
           })

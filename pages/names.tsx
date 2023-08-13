@@ -114,21 +114,25 @@ export default function Names() {
                         <div className={styles.namesDown}>
                             <div className={styles.namesDownChildren}>
                                 <div className={styles.namesSelection}>
-                                    <div className={styles.namesSort}>
-                                        <Image src={selectSVG} alt='' />
+                                    <div className={styles.namesSelectionChild}>
+                                        <div className={styles.namesSort}>
+                                            <Image src={selectSVG} alt='' />
+                                        </div>
+                                        <div className={styles.namesSearch}></div>
                                     </div>
-                                    <div className={styles.namesSearch}></div>
                                 </div>
                                 <hr />
                                 {/* Render the list of ENS names based on the currentItems array */}
                                 {currentItems.map((ensDomain: ensNames) => (
-                                <div className={styles.namesList} key={ensDomain.name}>
-                                    <Name ensDomains={ensDomain} />
-                                    <hr />
+                                <div className={styles.namesListHover}>
+                                    <div className={styles.namesList} key={ensDomain.name}>
+                                        <Name ensDomains={ensDomain} />
+                                        <hr />
+                                    </div>
                                 </div>
                                 ))}
                                 <div className={styles.namesNav}>
-                                    <div>
+                                    <div className={styles.namesNavChild}>
                                         {/* Add pagination buttons to navigate between pages */}
                                         {Array.from({ length: totalPages }, (_, index) => index + 1).map((pageNumber) => (
                                         <button
