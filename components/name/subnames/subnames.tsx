@@ -28,7 +28,7 @@ interface ENSprop {
 export default function Subnames({ENS} : ENSprop) {
     const {address, isConnected} = useAccount()
 
-    const [owner, setOwner] = useState<string>('0x0000000000000000000000000000000000000000')
+    const [owner, setOwner] = useState<string>('0x000000000000000000000000000000000000dead')
     const [nodeData, setNodeData] = useState<any>([])
     const [subsEns, setSubsEns] = useState([])
     const [openModal, setOpenModal] = useState<boolean>(false)

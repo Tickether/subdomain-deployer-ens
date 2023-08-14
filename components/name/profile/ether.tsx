@@ -1,7 +1,7 @@
 import styles from '@/styles/ProfileOptions.module.css'
 import { useEffect, useState } from 'react'
 import { NumericFormat } from 'react-number-format'
-import { formatEther, namehash } from 'viem'
+import { formatEther, labelhash, namehash, encodeAbiParameters, parseAbiParameters } from 'viem'
 import { useAccount, useContractRead, useContractReads, useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi'
 import drop_blueSVG from '@/public/assets/icons/drop-blue.svg'
 import editSVG from '@/public/assets/icons/edit.svg'
@@ -9,6 +9,7 @@ import withdrawSVG from '@/public/assets/icons/withdraw.svg'
 import Image from 'next/image'
 import PriceModal from '../pricemodal/priceModal'
 import { ENS } from '@/pages/[ensName]'
+
 
 interface ENSprop {
   ENS: ENS,
@@ -62,6 +63,10 @@ export default function Ether({ENS} : ENSprop) {
     const [selectedPrice, setSelectedPrice] = useState<string>('numbers');
     const [etherPrice, setEtherPrice] = useState<number>(0)
     const [roundData, setRoundData] = useState<bigint[] | null>(null)
+    const [name, setName] = useState<string>('')
+    const [encode, setEncode] = useState<string | null>(null)
+    
+
     
 
 
@@ -189,31 +194,88 @@ useEffect(() => {
     }
 },[checkConditions.data!])
 console.log(conditions)
-/*
+
+console.log((BigInt(labelhash(ENS.name.substring(0, ENS.name.lastIndexOf('.eth'))))))
+
+const contractReadName = useContractRead({
+  address: "0x114D4603199df73e7D157787f8778E21fCd13066",
+  abi: [
+      {
+          name: 'names',
+          inputs: [{ internalType: "bytes32", name: "node", type: "bytes32" }],
+          outputs: [{ internalType: "bytes", name: "", type: "bytes" }],
+          stateMutability: 'view',
+          type: 'function',
+      },    
+  ],
+  functionName: 'names',
+  args: [(namehash(ENS.name))],
+  chainId: 5,
+  watch: true,
+})
+function truncateAndPad(inputString: string) {
+  const targetLength = 65
+  const zeroIndex = inputString.indexOf('0');
+  let truncatedString;
+
+  if (zeroIndex !== -1) {
+    truncatedString = inputString.substring(0, zeroIndex + 1);
+  } else {
+    truncatedString = inputString;
+  }
+
+  const remainingCharacters = targetLength - truncatedString.length;
+  
+  if (remainingCharacters > 0) {
+    const padding = '0'.repeat(remainingCharacters);
+    return truncatedString + padding;
+  } else {
+    return truncatedString;
+  }
+}
+useEffect(() => {
+  if (contractReadName?.data! && typeof contractReadName.data === 'string') {
+    
+    setName(truncateAndPad((contractReadName?.data!).slice(3)))
+  }
+},[contractReadName?.data!])
+console.log((contractReadName?.data!))
+
+
+
+
+useEffect (()=>{
+  const encodedData = `0x0000000000000000000000000000000000000000000000000000000000000080000000000000000000000000${address?.toLowerCase().slice(2)}0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000d7a4f6473f32ac2af804b3686ae8f1932bc35750000000000000000000000000000000000000000000000000000000000000000${name}`
+  setEncode(encodedData)
+},[name])
+
+console.log(encode)
+console.log(namehash('shhhh.eth'))
+console.log(ENS.expiry)
+console.log(address?.toLowerCase())
+console.log((BigInt(labelhash(ENS.name.substring(0, ENS.name.lastIndexOf('.eth'))))))
+
 const prepareContractWriteWrap = usePrepareContractWrite({
   address: '0x57f1887a8BF19b14fC0dF6Fd9B2acc9Af147eA85',
   abi: [
       {
         name: 'safeTransferFrom',
-        inputs: [ {internalType: "address", name: "from", type: "address"}, {internalType: "to", name: "operator", type: "address"}, {internalType: "uint256", name: "tokenId", type: "uint256"},{ internalType: "bytes32", name: "_data", type: "bytes32" } ],
+        inputs: [ {internalType: "address", name: "from", type: "address"}, {internalType: "address", name: "to", type: "address"}, {internalType: "uint256", name: "tokenId", type: "uint256"},{ internalType: "bytes", name: "_data", type: "bytes" } ],
         outputs: [],
         stateMutability: 'nonpayable',
         type: 'function',
       },
     ],
   functionName: 'safeTransferFrom',
-  args: [ (address!), ('0x114D4603199df73e7D157787f8778E21fCd13066'), (1), ('') ],
+  args: [ (address!), ('0x114D4603199df73e7D157787f8778E21fCd13066'), ((BigInt(labelhash(ENS.name.substring(0, ENS.name.lastIndexOf('.eth')))))), (encode) ],
   chainId: 5,
   value: BigInt(0),
 })
 
-
-
-
 const  contractWriteWrap = useContractWrite(prepareContractWriteWrap.config)
 
 const waitForWrap = useWaitForTransaction({
-  hash: contractWrite0Wrap.data?.hash,
+  hash: contractWriteWrap.data?.hash,
   confirmations: 1,
   onSuccess() {
   },
@@ -263,7 +325,7 @@ const handleCantUnwrap = async () => {
       console.log(err)
   }    
 }
-*/
+
     
       const prepareContractWriteApproval = usePrepareContractWrite({
           address: '0x114D4603199df73e7D157787f8778E21fCd13066',
@@ -301,55 +363,6 @@ const handleCantUnwrap = async () => {
               console.log(err)
           }    
       }
-      /*
-      const contractReadActiveParentNode = useContractRead({
-        address: "0xDb4E489A6476ad51d32BA9F7F629aB491a16ECEC",
-        abi: [
-          {
-              name: 'parentNodeActive',
-              inputs: [{ internalType: "bytes32", name: "", type: "bytes32" }],
-              outputs: [{ internalType: "bool", name: "", type: "bool" }],
-              stateMutability: 'view',
-              type: 'function',
-          },    
-        ],
-        functionName: 'parentNodeActive',
-        args: [(namehash(ENS))], //get from main div
-        chainId: 5,
-        watch: true,
-      })
-      useEffect(() => {
-        if (contractReadActiveParentNode?.data! && typeof contractReadActiveParentNode.data === 'boolean' ) {
-            setActiveParentNode((contractReadActiveParentNode?.data!))
-        }
-      },[contractReadActiveParentNode?.data!])
-
-      //check if cannot unwrap is burnt need to allow subdomains esp for 2LD .eth domains
-  const contractReadFuseBurned = useContractRead({
-    address: "0x114D4603199df73e7D157787f8778E21fCd13066",
-    abi: [
-        {
-            name: 'allFusesBurned',
-            inputs: [{ internalType: "bytes32", name: "node", type: "bytes32" }, { internalType: "uint32", name: "fuseMask", type: "uint32" }],
-            outputs: [{ internalType: "bool", name: "", type: "bool" }],
-            stateMutability: 'view',
-            type: 'function',
-        },    
-    ],
-    functionName: 'allFusesBurned',
-    args: [(namehash(ENS)), (1)],
-    chainId: 5,
-    watch: true,
-  })
-  
-  useEffect(() => {
-    if (contractReadFuseBurned?.data! && typeof contractReadFuseBurned.data === 'boolean' ) {
-      setFuseBurned(contractReadFuseBurned?.data!)
-    }
-  },[contractReadFuseBurned?.data!])
-  console.log((contractReadFuseBurned?.data!))
-
-  */
 
   const prepareContractWriteParentNode = usePrepareContractWrite({
     address: '0xDb4E489A6476ad51d32BA9F7F629aB491a16ECEC',
@@ -383,34 +396,7 @@ const handleCantUnwrap = async () => {
         console.log(err)
     }
   }
-  /*
-  
 
-  const contractReadActiveParentNodeSubMode = useContractRead({
-    address: "0xDb4E489A6476ad51d32BA9F7F629aB491a16ECEC",
-    abi: [
-      {
-          name: 'parentNodeCanSubActive',
-          inputs: [{ internalType: "bytes32", name: "", type: "bytes32" }],
-          outputs: [{ internalType: "bool", name: "", type: "bool" }],
-          stateMutability: 'view',
-          type: 'function',
-      },    
-    ],
-    functionName: 'parentNodeCanSubActive',
-    args: [(namehash(ENS))], //get from main div
-    chainId: 5,
-    watch: true,
-  })
-  useEffect(() => {
-    if (contractReadActiveParentNodeSubMode?.data! && typeof contractReadActiveParentNodeSubMode.data === 'boolean' ) {
-        setActiveParentNodeSubMode((contractReadActiveParentNodeSubMode?.data!))
-    }
-  },[contractReadActiveParentNodeSubMode?.data!])
-
-  
-
-*/
 
 const prepareContractWriteParentNodeSubMode = usePrepareContractWrite({
 address: '0xDb4E489A6476ad51d32BA9F7F629aB491a16ECEC',
@@ -738,10 +724,10 @@ const getEther = (usd : string) =>{
                         </div>
                         <div className={styles.profileDownPayRight}>
                           <div className={styles.profileDownPayRightBalance}>
-                            <p>ETH</p>
+                            <p>{formatEther(parentNodeBalance)} ETH</p>
                             <p>USD</p>
                           </div>
-                          <div className={styles.profileDownPayRightWithdraw}>
+                          <div onClick={handleWithdraw} className={styles.profileDownPayRightWithdraw}>
                             <Image src={withdrawSVG} alt='' />
                           </div>
                         </div>
@@ -879,11 +865,11 @@ const getEther = (usd : string) =>{
                       <div>
                         <div>                            
                             <span>Please wrapped your domain to enable domain mangement dashboard</span>
-                            <button disabled={conditions.Wrapped} onClick={handleApproval}>wrap ENS</button>                 
+                            <button disabled={conditions.Wrapped} onClick={handleWrap}>wrap ENS</button>                 
                         </div>
                         <div>                          
                             <span>In order to rent out subnames you must permanently wrap your domain!</span>
-                            <button disabled={conditions.CantUnwrap} onClick={handleSetParentNode}>Burn Wrap Fuse!</button>            
+                            <button disabled={conditions.CantUnwrap} onClick={handleCantUnwrap}>Burn Wrap Fuse!</button>            
                         </div>
                       </div>
                       <div>
@@ -929,17 +915,6 @@ const getEther = (usd : string) =>{
         </>
       )
 }
-/*
-
-<div>
-                                <span>baolance{formatEther(parentNodeBalance)}</span>
-                                <button onClick={() => setOpenModal(true)}>set Prices</button>
-                                <button onClick={handleWithdraw}>withdraw</button>
-                              </div> 
-*/
 
 
-/*
 
-
-*/

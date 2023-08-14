@@ -13,6 +13,7 @@ import Image from 'next/image'
 export interface ENS{
   name : string,
   owner : string,
+  expiry : number
 }
 
 export default function EnsName() {
@@ -22,6 +23,7 @@ export default function EnsName() {
   const ensDefault = {
     name: '',
     owner: '',
+    expiry: 0,
   };
   const [ENS, setENS] = useState<ENS>(ensDefault)
   const [option, setOption] = useState<string>('profile')
@@ -55,17 +57,19 @@ export default function EnsName() {
     
      const getENS = async () => {
       //get owner info
-      const query = `query { domain(id: "${namehash(window.location.pathname.split('/')[1])}") {wrappedOwner {id} owner{id}}}`
+      const query = `query { domain(id: "${namehash(window.location.pathname.split('/')[1])}") {expiryDate wrappedOwner {id} owner{id}}}`
       const response = await axios.post('https://api.thegraph.com/subgraphs/name/ensdomains/ensgoerli', {
         query
       })
       const owner = response.data.data.domain.owner.id
-      const wrappedOwner = response.data.data.domain.wrappedOwner.id
+      const expiry = response.data.data.domain.expiryDate
       const nameWrapper = '0x114D4603199df73e7D157787f8778E21fCd13066'
       if (owner === nameWrapper.toLowerCase()){
+        const wrappedOwner = response.data.data.domain.wrappedOwner.id
         const ensData = {
           name: window.location.pathname.split('/')[1],
           owner: wrappedOwner,
+          expiry: expiry,
         };
         setENS(ensData)
 
@@ -73,6 +77,7 @@ export default function EnsName() {
         const ensData = {
           name: window.location.pathname.split('/')[1],
           owner: owner,
+          expiry: expiry,
         };
         setENS(ensData)
       }

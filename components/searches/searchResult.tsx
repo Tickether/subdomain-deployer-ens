@@ -40,7 +40,7 @@ export default function SearchResult({searchresult, /*canSubdomain,*/ subEnsBox,
     const {address, isConnected} = useAccount()
 
     //const [prices, setPrices] = useState<any[]>([[BigInt(0), BigInt(0), BigInt(0)]])
-    const [owner, setOwner] = useState<string>('0x0000000000000000000000000000000000000000');
+    const [owner, setOwner] = useState<string>('0x000000000000000000000000000000000000dead');
     //const [activeParentNode, setActiveParentNode] = useState<boolean>(false)
     //const [approved, setApproved] = useState<boolean>(false)
     //const [wrapped, setWrapped] = useState<boolean>(false)
