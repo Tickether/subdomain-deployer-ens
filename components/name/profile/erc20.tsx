@@ -5,11 +5,24 @@ import Image from 'next/image'
 import { useState } from 'react'
 import PriceModal from '../pricemodal/priceModal'
 import withdrawSVG from '@/public/assets/icons/withdraw.svg'
+import { Prices } from './ether'
 
 
 export default function Erc20({ENS} : any) {
 
-    const [showUSD, setShowUSD] = useState<boolean>(false)
+    
+  const PricesDefault = {
+    threeUpLetterFee: ('0.00'),
+    fourFiveLetterFee: ('0.00'),
+    sixDownLetterFee: ('0.00'),
+    oneNumberFee: ('0.00'),
+    twoNumberFee: ('0.00'),
+    threeNumberFee: ('0.00'),
+    fourNumberFee: ('0.00'),
+    fiveUpNumberFee:('0.00'),
+  };
+  const [prices, setPrices] = useState<Prices>(PricesDefault)
+  const [showUSD, setShowUSD] = useState<boolean>(false)
     const [priceMenu, setPriceMenu] = useState<boolean>(false)
     const [openModal, setOpenModal] = useState<boolean>(false)
     const [selectedPrice, setSelectedPrice] = useState<string>('numbers');
@@ -61,7 +74,7 @@ export default function Erc20({ENS} : any) {
                                               <div className={styles.profileDownSubChildFeeTitle}><p>Subname Prices</p></div>
                                               <div className={styles.profileDownSubChildFeeIcon} onClick={()=> setOpenModal(true)}><Image src={editSVG} alt='' /></div>
                                             </div>
-                                            {openModal && <PriceModal ENS ={ENS} setOpenModal ={setOpenModal} />}
+                                            {openModal && <PriceModal ENS ={ENS} setOpenModal ={setOpenModal} prices ={prices} />}
                                             <div onClick={handlePriceToggle} className={styles.profileDownSubChildOption}>
                                                 { selectedPrice === 'numbers' && <p>Numbers Only</p>}
                                                 { selectedPrice === 'letters' && <p>Letters & Numbers</p>}
