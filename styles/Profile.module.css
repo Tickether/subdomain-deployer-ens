@@ -239,11 +239,12 @@
 .profileMidSubChildOptionToggle span{
     font-size: 14px;
     font-weight: 600;
-    cursor: pointer;
+    
 }
 
 .profileMidSubChildOptionToggleSpan{
     padding: 6px 11px;
+    cursor: pointer;
 }
 .profileMidSubChildOptionToggleSpan:hover{
     background-color: #9B9BA6;

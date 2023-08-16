@@ -150,6 +150,7 @@
     background-color: #F0F6FF;
     border-radius: 10px;
     color: #008000;
+    cursor: pointer;
 }
 
 .profileDownPayLeftInactive{
@@ -159,6 +160,7 @@
     background-color: #F0F6FF;
     border-radius: 10px;
     color: #C52F1B;
+    cursor: pointer;
 }
 
 .profileDownPayRight{

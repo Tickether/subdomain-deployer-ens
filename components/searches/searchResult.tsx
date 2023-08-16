@@ -249,12 +249,12 @@ export default function SearchResult({searchresult, /*canSubdomain,*/ subEnsBox,
                     },
                 ],
                 functionName: 'isApprovedForAll',
-                args: [(owner!), ('0x229C0715e70741F854C299913C2446eb4400e76C')],
+                args: [(owner!), ('0xDb4E489A6476ad51d32BA9F7F629aB491a16ECEC')],
                 chainId: 5,
             },
             //contract 1b check if name is enabled on SubENS contract
             {
-                address: "0x229C0715e70741F854C299913C2446eb4400e76C",
+                address: "0xDb4E489A6476ad51d32BA9F7F629aB491a16ECEC",
                 abi: [
                     {
                         name: 'parentNodeActive',
@@ -270,7 +270,7 @@ export default function SearchResult({searchresult, /*canSubdomain,*/ subEnsBox,
             },
             //contract 1c check if CanSub name is enabled on SubENS contract
             {
-                address: "0x229C0715e70741F854C299913C2446eb4400e76C",
+                address: "0xDb4E489A6476ad51d32BA9F7F629aB491a16ECEC",
                 abi: [
                     {
                         name: 'parentNodeCanSubActive',

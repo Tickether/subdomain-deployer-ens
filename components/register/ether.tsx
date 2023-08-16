@@ -110,7 +110,7 @@ export default function Ether({rootNodeENS, subLabel, clearOption} : RegisterPro
     
     // check node price
     const contractReadSubNodeFee = useContractRead({
-        address: "0x229C0715e70741F854C299913C2446eb4400e76C",
+        address: "0xDb4E489A6476ad51d32BA9F7F629aB491a16ECEC",
         abi: [
             {
                 name: 'getLetterFees',
@@ -200,7 +200,7 @@ export default function Ether({rootNodeENS, subLabel, clearOption} : RegisterPro
                 
                 
                 const gasUsed = await publicClient.estimateContractGas({
-                    address: '0x229C0715e70741F854C299913C2446eb4400e76C',
+                    address: '0xDb4E489A6476ad51d32BA9F7F629aB491a16ECEC',
                     abi: [
                         {
                             name: 'setSubDomain',
@@ -237,7 +237,7 @@ export default function Ether({rootNodeENS, subLabel, clearOption} : RegisterPro
     },[gasFee, subNodeFee])
 
     const { config } = usePrepareContractWrite({
-        address: '0x229C0715e70741F854C299913C2446eb4400e76C',
+        address: '0xDb4E489A6476ad51d32BA9F7F629aB491a16ECEC',
         abi: [
             {
               name: 'setSubDomain',

@@ -15,7 +15,7 @@ interface ENSprop {
   ENS: ENS,
 }
 
-interface Prices {
+export interface Prices {
   threeUpLetterFee: string,
   fourFiveLetterFee: string,
   sixDownLetterFee: string,
@@ -718,8 +718,8 @@ const getEther = (usd : string) =>{
                           <p>Ethereum</p>
                           {
                             conditions.CanSubActiveNode 
-                            ? <span className={styles.profileDownPayLeftActive}>Active</span>
-                            : <span className={styles.profileDownPayLeftInactive}>Inactive</span>
+                            ? <span onClick={handleSetParentNodeSubMode} className={styles.profileDownPayLeftActive}>Active</span>
+                            : <span onClick={handleSetParentNodeSubMode} className={styles.profileDownPayLeftInactive}>Inactive</span>
                           }
                         </div>
                         <div className={styles.profileDownPayRight}>
@@ -740,7 +740,7 @@ const getEther = (usd : string) =>{
                                                     <div className={styles.profileDownSubChildFeeTitle}><p>Subname Prices</p></div>
                                                     <div className={styles.profileDownSubChildFeeIcon} onClick={()=> setOpenModal(true)}><Image src={editSVG} alt='' /></div>
                                                   </div>
-                                                  {openModal && <PriceModal ENS ={ENS} setOpenModal ={setOpenModal} />}
+                                                  {openModal && <PriceModal ENS ={ENS} setOpenModal ={setOpenModal} prices ={prices} />}
                                                   <div onClick={handlePriceToggle} className={styles.profileDownSubChildOption}>
                                                     { selectedPrice === 'numbers' && <p>Numbers Only</p>}
                                                     { selectedPrice === 'letters' && <p>Letters & Numbers</p>}
@@ -886,30 +886,6 @@ const getEther = (usd : string) =>{
                   </div>
                 )
               }
-              
-                  {/** 
-                    <div>
-                      {
-                        true//approved 
-                        ? (
-                          <div>
-                            {
-                              true//activeParentNode
-                              ? (
-                                <div></div>
-                              )
-                              : (
-                                
-                              )
-                            }
-                          </div>
-                        )
-                        : (
-                          
-                        )
-                      }
-                    </div>
-                  */}
             </div>
           </div>
         </>

@@ -6,22 +6,28 @@ import { useContractWrite, usePrepareContractWrite, useWaitForTransaction } from
 import drop_blueSVG from '@/public/assets/icons/drop-blue.svg'
 import closeSVG from '@/public/assets/icons/close.svg'
 import Image from 'next/image'
+import { ENS } from '@/pages/[ensName]'
+import { Prices } from '../profile/ether'
 
+interface PriceModelProps{
+  ENS: ENS
+  setOpenModal: (openModal : boolean) => void
+  prices: Prices
+}
 
-
-export default function PriceModal({ENS, setOpenModal} : any) {
+export default function PriceModal({ENS, setOpenModal, prices} : PriceModelProps) {
     const dec8 = 100000000
 
-    const [newPrices, setNewPrices] = useState<number[]>([0,0,0])
+    const [newLetterPrices, setNewLetterPrices] = useState<number[]>([0,0,0])
+    const [newNumberPrices, setNewNumberPrices] = useState<number[]>([0,0,0,0,0])
     const [priceMenu, setPriceMenu] = useState<boolean>(false)
-    //const [openModal, setOpenModal] = useState<boolean>(false)
     const [selectedPrice, setSelectedPrice] = useState<string>('numbers');
     
 
 
 
-    const prepareContractWriteParentNodeFee = usePrepareContractWrite({
-        address: '0x229C0715e70741F854C299913C2446eb4400e76C',
+    const prepareContractWriteParentNodeLetterFee = usePrepareContractWrite({
+        address: '0xDb4E489A6476ad51d32BA9F7F629aB491a16ECEC',
         abi: [
           {
             name: 'setLetterFees',
@@ -32,22 +38,55 @@ export default function PriceModal({ENS, setOpenModal} : any) {
           },
         ],
         functionName: 'setLetterFees',
-        args: [ (namehash(ENS)), (BigInt(newPrices[0]*dec8)), (BigInt(newPrices[1]*dec8)), (BigInt(newPrices[2]*dec8)) ],
+        args: [ (namehash(ENS.name)), (BigInt(newLetterPrices[0]*dec8)), (BigInt(newLetterPrices[1]*dec8)), (BigInt(newLetterPrices[2]*dec8)) ],
         value: BigInt(0),
         chainId: 5,
       })
-      const contractWriteParentNodeFee = useContractWrite(prepareContractWriteParentNodeFee.config)
+      const contractWriteParentNodeLetterFee = useContractWrite(prepareContractWriteParentNodeLetterFee.config)
     
-      const waitForSetParentNodeFee = useWaitForTransaction({
-        hash: contractWriteParentNodeFee.data?.hash,
+      const waitForSetParentNodeLetterFee = useWaitForTransaction({
+        hash: contractWriteParentNodeLetterFee.data?.hash,
         confirmations: 2,
         onSuccess() {
         },
       })
     
-      const handleSetParentNodeFee = async () => {
+      const handleSetParentNodeLetterFee = async () => {
         try {
-            await contractWriteParentNodeFee.writeAsync?.()
+            await contractWriteParentNodeLetterFee.writeAsync?.()
+        } catch (err) {
+            console.log(err)
+        }
+      }
+
+      const prepareContractWriteParentNodeNumberFee = usePrepareContractWrite({
+        address: '0xDb4E489A6476ad51d32BA9F7F629aB491a16ECEC',
+        abi: [
+          {
+            name: 'setNumberFees',
+            inputs: [ {internalType: "bytes32", name: "node", type: "bytes32"}, {internalType: "uint256", name: "oneNumberFee_", type: "uint256"}, {internalType: "uint256", name: "twoNumberFee_", type: "uint256"}, {internalType: "uint256", name: "threeNumberFee_", type: "uint256" }, {internalType: "uint256", name: "fourNumberFee_", type: "uint256" }, {internalType: "uint256", name: "fiveUpNumberFee_", type: "uint256" } ],
+            outputs: [],
+            stateMutability: 'nonpayable',
+            type: 'function',
+          },
+        ],
+        functionName: 'setNumberFees',
+        args: [ (namehash(ENS.name)), (BigInt(newNumberPrices[0]*dec8)), (BigInt(newNumberPrices[1]*dec8)), (BigInt(newNumberPrices[2]*dec8)), (BigInt(newNumberPrices[3]*dec8)), (BigInt(newNumberPrices[4]*dec8)) ],
+        value: BigInt(0),
+        chainId: 5,
+      })
+      const contractWriteParentNodeNumberFee = useContractWrite(prepareContractWriteParentNodeNumberFee.config)
+    
+      const waitForSetParentNodeNumberFee = useWaitForTransaction({
+        hash: contractWriteParentNodeNumberFee.data?.hash,
+        confirmations: 2,
+        onSuccess() {
+        },
+      })
+    
+      const handleSetParentNodeNumberFee = async () => {
+        try {
+            await contractWriteParentNodeNumberFee.writeAsync?.()
         } catch (err) {
             console.log(err)
         }
@@ -77,24 +116,28 @@ export default function PriceModal({ENS, setOpenModal} : any) {
               <div className={styles.dropOverlay}>
                 {
                   priceMenu && (
-                    <div className={styles.profileDownSubChildOption}>
-                      <div className={styles.profileDownSubChildOptionToggle}>
-                        <span
+                    <div className={styles.priceModalTopOptionDrop}>
+                      <div className={styles.priceModalTopOptionDropToggle}>
+                        <div //profileDownSubChildOptionToggleSpan
                           onClick={()=> {
                             setSelectedPrice('letters'); 
                             setPriceMenu(false);
                           }}
+                          className={styles.priceModalTopOptionDropToggleSpan}
                         >
-                          Letters & Numbers
-                        </span>
-                        <span
+                          <span>Letters & Numbers</span>
+                        </div>
+                        
+                        <div 
                           onClick={()=> {
                             setSelectedPrice('numbers'); 
                             setPriceMenu(false);
                           }}
+                          className={styles.priceModalTopOptionDropToggleSpan}
                         >
-                          Numbers Only
-                        </span>
+                          <span>Numbers Only</span>
+                        </div>
+                        
                       </div>
                     </div>
                   )
@@ -106,64 +149,64 @@ export default function PriceModal({ENS, setOpenModal} : any) {
                 selectedPrice === 'letters' && (
                   <div className={styles.priceModalMidChild}>
                     <div className={styles.priceModalMidChildInput}>
-                      <label htmlFor='three'>Three Letter & below</label>
+                      <label htmlFor='three'>Three Letters & below</label>
                       <NumericFormat 
                         required
                         thousandSeparator
                         prefix={'$'}
-                        id='three' 
-                        name='three'
-                        placeholder={`$${(Number(newPrices[0])/dec8).toFixed(2)}`}
-                        value={(newPrices[0])}
+                        id='threedown' 
+                        name='threedown'
+                        placeholder={`$${prices.threeUpLetterFee}`}
+                        value={`$${prices.threeUpLetterFee}`}
                         isAllowed={({value}) =>{
                           return regex.test(value)
                         }}
                         onValueChange={(e) => {
-                          const updatedPrices = [...newPrices]
+                          const updatedPrices = [...newLetterPrices]
                           updatedPrices[0] = Number(e.value)
-                          setNewPrices(updatedPrices)
+                          setNewLetterPrices(updatedPrices)
                         }}
                         
                       />
                     </div>
                     <div className={styles.priceModalMidChildInput}>
-                      <label htmlFor='fourfive'>Four & Five Letter </label>
+                      <label htmlFor='fourfive'>Four & Five Letters </label>
                       <NumericFormat
                         required
                         thousandSeparator
                         prefix={'$'}
                         id='fourfive' 
                         name='fourfive' 
-                        placeholder={`$${(Number(newPrices[1])/dec8).toFixed(2)}`}
-                        value={(newPrices[1])}
+                        placeholder={`$${prices.fourFiveLetterFee}`}
+                        value={`$${prices.fourFiveLetterFee}`}//{`$${(Number(prices[0])/dec8).toFixed(2)}`}
                         isAllowed={({value}) =>{
                           return regex.test(value)
                         }}
                         onValueChange={(e) => {
-                          const updatedPrices = [...newPrices]
+                          const updatedPrices = [...newLetterPrices]
                           updatedPrices[1] = Number(e.value)
-                          setNewPrices(updatedPrices)
+                          setNewLetterPrices(updatedPrices)
                         }}
 
                       />
                     </div>
                     <div className={styles.priceModalMidChildInput}>
-                      <label htmlFor='six'>Six Letter Up </label>
+                      <label htmlFor='six'>Six Letters Up </label>
                       <NumericFormat
                         required
                         thousandSeparator
                         prefix={'$'}
-                        id='six' 
+                        id='sixup' 
                         name='six' 
-                        placeholder={`$${(Number(newPrices[2])/dec8).toFixed(2)}`}
-                        value={(newPrices[2])}
+                        placeholder={`$${prices.sixDownLetterFee}`}
+                        value={`$${prices.sixDownLetterFee}`}
                         isAllowed={({value}) =>{
                           return regex.test(value)
                         }}
                         onValueChange={(e) => {
-                          const updatedPrices = [...newPrices]
+                          const updatedPrices = [...newLetterPrices]
                           updatedPrices[2] = Number(e.value)
-                          setNewPrices(updatedPrices)
+                          setNewLetterPrices(updatedPrices)
                         }}
                         
                       />
@@ -175,107 +218,107 @@ export default function PriceModal({ENS, setOpenModal} : any) {
                 selectedPrice === 'numbers' && (
                   <div className={styles.priceModalMidChild}>
                     <div className={styles.priceModalMidChildInput}>
-                      <label htmlFor='three'>Three Letter & below</label>
+                      <label htmlFor='three'>One Number</label>
                       <NumericFormat 
                         required
                         thousandSeparator
                         prefix={'$'}
-                        id='three' 
-                        name='three'
-                        placeholder={`$${(Number(newPrices[0])/dec8).toFixed(2)}`}
-                        value={(newPrices[0])}
+                        id='one' 
+                        name='one'
+                        placeholder={`$${prices.oneNumberFee}`}
+                        value={`$${prices.oneNumberFee}`}
                         isAllowed={({value}) =>{
                           return regex.test(value)
                         }}
                         onValueChange={(e) => {
-                          const updatedPrices = [...newPrices]
+                          const updatedPrices = [...newNumberPrices]
                           updatedPrices[0] = Number(e.value)
-                          setNewPrices(updatedPrices)
+                          setNewNumberPrices(updatedPrices)
                         }}
                         
                       />
                     </div>
                     <div className={styles.priceModalMidChildInput}>
-                      <label htmlFor='fourfive'>Four & Five Letter </label>
+                      <label htmlFor='fourfive'>Two Number</label>
                       <NumericFormat
                         required
                         thousandSeparator
                         prefix={'$'}
-                        id='fourfive' 
-                        name='fourfive' 
-                        placeholder={`$${(Number(newPrices[1])/dec8).toFixed(2)}`}
-                        value={(newPrices[1])}
+                        id='two' 
+                        name='two' 
+                        placeholder={`$${prices.twoNumberFee}`}
+                        value={`$${prices.twoNumberFee}`}
                         isAllowed={({value}) =>{
                           return regex.test(value)
                         }}
                         onValueChange={(e) => {
-                          const updatedPrices = [...newPrices]
+                          const updatedPrices = [...newNumberPrices]
                           updatedPrices[1] = Number(e.value)
-                          setNewPrices(updatedPrices)
+                          setNewNumberPrices(updatedPrices)
                         }}
 
                       />
                     </div>
                     <div className={styles.priceModalMidChildInput}>
-                      <label htmlFor='six'>Six Letter Up </label>
+                      <label htmlFor='six'>Three Number</label>
                       <NumericFormat
                         required
                         thousandSeparator
                         prefix={'$'}
-                        id='six' 
-                        name='six' 
-                        placeholder={`$${(Number(newPrices[2])/dec8).toFixed(2)}`}
-                        value={(newPrices[2])}
+                        id='three' 
+                        name='three' 
+                        placeholder={`$${prices.threeNumberFee}`}
+                        value={`$${prices.threeNumberFee}`}
                         isAllowed={({value}) =>{
                           return regex.test(value)
                         }}
                         onValueChange={(e) => {
-                          const updatedPrices = [...newPrices]
+                          const updatedPrices = [...newNumberPrices]
                           updatedPrices[2] = Number(e.value)
-                          setNewPrices(updatedPrices)
+                          setNewNumberPrices(updatedPrices)
                         }}
                         
                       />
                     </div>
                     <div className={styles.priceModalMidChildInput}>
-                      <label htmlFor='six'>Six Letter Up </label>
+                      <label htmlFor='four'>Four Number</label>
                       <NumericFormat
                         required
                         thousandSeparator
                         prefix={'$'}
-                        id='six' 
-                        name='six' 
-                        placeholder={`$${(Number(newPrices[2])/dec8).toFixed(2)}`}
-                        value={(newPrices[2])}
+                        id='four' 
+                        name='four' 
+                        placeholder={`$${prices.fourNumberFee}`}
+                        value={`$${prices.fourNumberFee}`}
                         isAllowed={({value}) =>{
                           return regex.test(value)
                         }}
                         onValueChange={(e) => {
-                          const updatedPrices = [...newPrices]
-                          updatedPrices[2] = Number(e.value)
-                          setNewPrices(updatedPrices)
+                          const updatedPrices = [...newNumberPrices]
+                          updatedPrices[3] = Number(e.value)
+                          setNewNumberPrices(updatedPrices)
                         }}
                         
                       />
                     </div>
                     <div className={styles.priceModalMidChildInput}>
-                      <label htmlFor='six'>Six Letter Up </label>
+                      <label htmlFor='five'>Five Number Up </label>
                       <NumericFormat
                         className={styles.priceModalMidChildInput}
                         required
                         thousandSeparator
                         prefix={'$'}
-                        id='six' 
-                        name='six' 
-                        placeholder={`$${(Number(newPrices[2])/dec8).toFixed(2)}`}
-                        value={(newPrices[2])}
+                        id='five' 
+                        name='five' 
+                        placeholder={`$${prices.fiveUpNumberFee}`}
+                        value={`$${prices.fiveUpNumberFee}`}
                         isAllowed={({value}) =>{
                           return regex.test(value)
                         }}
                         onValueChange={(e) => {
-                          const updatedPrices = [...newPrices]
-                          updatedPrices[2] = Number(e.value)
-                          setNewPrices(updatedPrices)
+                          const updatedPrices = [...newNumberPrices]
+                          updatedPrices[4] = Number(e.value)
+                          setNewNumberPrices(updatedPrices)
                         }}
                         
                       />
@@ -286,7 +329,8 @@ export default function PriceModal({ENS, setOpenModal} : any) {
             </div>
             <div className={styles.priceModalDown}>
               <div>
-                <button onClick={handleSetParentNodeFee}> Confirm </button>
+                { selectedPrice === 'numbers' && <button onClick={handleSetParentNodeNumberFee}> Confirm </button>}
+                { selectedPrice === 'letters' && <button onClick={handleSetParentNodeLetterFee}> Confirm </button>}
               </div>
             </div> 
           </div>
