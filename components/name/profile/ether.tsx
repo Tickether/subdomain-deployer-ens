@@ -1,11 +1,12 @@
 import styles from '@/styles/ProfileOptions.module.css'
 import { useEffect, useState } from 'react'
-import { NumericFormat } from 'react-number-format'
-import { formatEther, labelhash, namehash, encodeAbiParameters, parseAbiParameters } from 'viem'
+import { formatEther, labelhash, namehash } from 'viem'
 import { useAccount, useContractRead, useContractReads, useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi'
 import drop_blueSVG from '@/public/assets/icons/drop-blue.svg'
 import editSVG from '@/public/assets/icons/edit.svg'
 import withdrawSVG from '@/public/assets/icons/withdraw.svg'
+import toggle_onSVG from '@/public/assets/icons/toggle-on.svg'
+import toggle_offSVG from '@/public/assets/icons/toggle-off.svg'
 import Image from 'next/image'
 import PriceModal from '../pricemodal/priceModal'
 import { ENS } from '@/pages/[ensName]'
@@ -32,6 +33,11 @@ interface Conditions {
   Approved: boolean,
   ActiveNode: boolean,
   CanSubActiveNode: boolean,
+}
+
+interface Hovered {
+  toggleID: number,
+  isHovered: boolean,
 }
 
 export default function Ether({ENS} : ENSprop) {
@@ -65,6 +71,27 @@ export default function Ether({ENS} : ENSprop) {
     const [roundData, setRoundData] = useState<bigint[] | null>(null)
     const [name, setName] = useState<string>('')
     const [encode, setEncode] = useState<string | null>(null)
+    const hoverDefault = {
+      toggleID: 0,
+      isHovered: false,
+    };
+    const [hovered, setHovered] = useState<Hovered>(hoverDefault);
+
+  const handleHover = (id : number) => {
+    const hoverData = {
+      toggleID: id,
+      isHovered: true,
+    };
+    setHovered(hoverData);
+  };
+
+  const handleMouseLeave = (id : number) => {
+    const hoverData = {
+      toggleID: id,
+      isHovered: false,
+    };
+    setHovered(hoverData);
+  };
     
 
     
@@ -862,24 +889,98 @@ const getEther = (usd : string) =>{
                 :(
                   <div className={styles.profileDown}>
                     <div className={styles.profileDownChild}>
-                      <div>
-                        <div>                            
-                            <span>Please wrapped your domain to enable domain mangement dashboard</span>
-                            <button disabled={conditions.Wrapped} onClick={handleWrap}>wrap ENS</button>                 
-                        </div>
-                        <div>                          
-                            <span>In order to rent out subnames you must permanently wrap your domain!</span>
-                            <button disabled={conditions.CantUnwrap} onClick={handleCantUnwrap}>Burn Wrap Fuse!</button>            
-                        </div>
+                      <div className={styles.profileDownInfo}>
+                        <p>Complete the following steps to enable fully enable Dashboard</p>
                       </div>
-                      <div>
-                        <div>                            
-                            <span>Please approve to enable domain mangement dashboard</span>
-                            <button disabled={conditions.Approved} onClick={handleApproval}>approve</button>                 
+                      <div className={styles.profileDownSteps}>
+                        <div className={styles.profileDownStep}>  
+                          <div className={conditions.Approved ? styles.profileDownStepLeft : styles.profileDownStepLeftInactive}><span>1</span></div>
+                          <div className={styles.profileDownStepMid}><p>Approve ENS</p><span>Please approve to enable domain mangement dashboard</span></div>
+                          <div className={styles.profileDownStepRight}>
+                            {
+                              conditions.Approved
+                              ?(
+                                <div><Image src={toggle_onSVG} alt='' /></div>
+                              )
+                              : (
+                                <div 
+                                  className={styles.profileDownStepRightToggleInactive} 
+                                  onClick={handleApproval}
+                                  onMouseEnter={() => handleHover(1)}
+                                  onMouseLeave={() => handleMouseLeave(1)}
+                                >
+                                  {hovered.toggleID == 1 && hovered.isHovered ? <Image src={toggle_onSVG} alt='' /> :<Image src={toggle_offSVG} alt='' /> }
+                                </div>
+                              )
+                            }
+                          </div>                               
                         </div>
-                        <div>                          
-                            <span>Parent Node is not set! Dont worry click below to init</span>
-                            <button disabled={conditions.ActiveNode} onClick={handleSetParentNode}>Set Parent Node</button>            
+                        <div className={styles.profileDownStep}> 
+                          <div className={conditions.Wrapped ? styles.profileDownStepLeft : styles.profileDownStepLeftInactive}><span>2</span></div>
+                          <div className={styles.profileDownStepMid}><p>Wrap ENS domain</p><span>Please wrapped your domain to enable domain mangement dashboard</span></div>
+                          <div className={styles.profileDownStepRight}>
+                            {
+                              conditions.Wrapped
+                              ?(
+                                <div><Image src={toggle_onSVG} alt='' /></div>
+                              )
+                              : (
+                                <div 
+                                  className={styles.profileDownStepRightToggleInactive} 
+                                  onClick={handleWrap}
+                                  onMouseEnter={() => handleHover(2)}
+                                  onMouseLeave={() => handleMouseLeave(2)}
+                                >
+                                  {hovered.toggleID == 2 && hovered.isHovered  ? <Image src={toggle_onSVG} alt='' /> :<Image src={toggle_offSVG} alt='' /> }
+                                </div>
+                              )
+                            }
+                          </div>                                      
+                        </div>
+                        <div className={styles.profileDownStep}>
+                          <div className={conditions.CantUnwrap ? styles.profileDownStepLeft : styles.profileDownStepLeftInactive}><span>3</span></div>
+                          <div className={styles.profileDownStepMid}><p>Burn Cannot Unwrap Fuse</p><span>In order to rent out subnames you must permanently wrap your domain!</span></div>
+                          <div className={styles.profileDownStepRight}>
+                            {
+                              conditions.CantUnwrap
+                              ?(
+                                <div><Image src={toggle_onSVG} alt='' /></div>
+                              )
+                              : (
+                                <div  
+                                  className={styles.profileDownStepRightToggleInactive} 
+                                  onClick={handleCantUnwrap} 
+                                  onMouseEnter={() => handleHover(3)}
+                                  onMouseLeave={() => handleMouseLeave(3)}
+                                >
+                                  {hovered.toggleID == 3 && hovered.isHovered  ? <Image src={toggle_onSVG} alt='' /> :<Image src={toggle_offSVG} alt='' /> }
+                                  
+                                </div>
+                              )
+                            }
+                          </div>                                
+                        </div>
+                        <div className={styles.profileDownStep}>   
+                          <div className={conditions.ActiveNode ? styles.profileDownStepLeft : styles.profileDownStepLeftInactive}><span>4</span></div>
+                          <div className={styles.profileDownStepMid}><p>Initilaze ENS</p><span>Parent Node is not set! Dont worry click below to init</span></div>
+                          <div className={styles.profileDownStepRight}>
+                            {
+                              conditions.ActiveNode
+                              ?(
+                                <div><Image src={toggle_onSVG} alt='' /></div>
+                              )
+                              : (
+                                <div 
+                                  className={styles.profileDownStepRightToggleInactive} 
+                                  onClick={handleSetParentNode}
+                                  onMouseEnter={() => handleHover(4)}
+                                  onMouseLeave={() => handleMouseLeave(4)}
+                                >
+                                    {hovered.toggleID == 4 && hovered.isHovered  ? <Image src={toggle_onSVG} alt='' /> :<Image src={toggle_offSVG} alt='' /> }
+                                </div>
+                              )
+                            }
+                          </div>                            
                         </div>
                       </div>
                     </div>

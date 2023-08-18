@@ -198,3 +198,66 @@
     cursor: pointer;
 }
 
+.profileDownSteps{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.profileDownStep{
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    height: 7vh;
+}
+
+.profileDownStepLeft{
+    display: flex;
+    background-color: #D9D9D9;
+    color: #767676;
+    flex: 1.2;
+    height: 90%;
+    justify-content: center;
+    align-items: center;
+    border-radius: 1000px;
+    font-weight: 600;
+    font-size: xx-large;
+}
+.profileDownStepLeftInactive{
+    display: flex;
+    background-color: #C6CEF8;
+    color: #0023DD;
+    flex: 1.2;
+    height: 90%;
+    justify-content: center;
+    align-items: center;
+    border-radius: 1000px;
+    font-weight: 600;
+    font-size: xx-large;
+}
+
+
+.profileDownStepMid{
+    display: flex;
+    flex-direction: column;
+    align-content: flex-start;
+    flex: 9;
+}
+
+.profileDownStepMid span{
+    font-weight: 700;
+    font-size: 14px;
+    color: #0023DD;
+}
+.profileDownStepMid p{
+    font-weight: 400;
+    font-size: 18px;
+}
+.profileDownStepRight{
+    display: flex;
+    flex: 1.5;
+}
+
+.profileDownStepRightToggleInactive{
+    cursor: pointer;
+}
