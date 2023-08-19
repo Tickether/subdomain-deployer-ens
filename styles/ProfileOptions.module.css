@@ -138,10 +138,37 @@
     align-items: center;
 }
 
+.profileDownPayLeftWL{
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.profileDownPayLeftWL p{
+    font-size: xx-large;
+    font-weight: 700;
+}
+
 .profileDownPayLeft p{
     font-size: xx-large;
     font-weight: 700;
 }
+
+.profileDownPayWL{
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    cursor: pointer;
+    max-width: max-content;
+}
+
+.profileDownPayWLSpan{
+    display: flex;
+    color: #0023DD;
+    font-weight: 700;
+    font-size: 15px;
+}
+
 
 .profileDownPayLeftActive{
     font-size: 12px;
@@ -260,4 +287,18 @@
 
 .profileDownStepRightToggleInactive{
     cursor: pointer;
+}
+
+
+.profileDownToggleParent{
+    display: flex;
+    align-items: center;
+    gap: 3px;
+}
+
+
+.profileDownToggleArea{
+    display: flex;
+    gap: 15px;
+    align-items: center;
 }
