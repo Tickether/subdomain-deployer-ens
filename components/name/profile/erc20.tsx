@@ -13,6 +13,7 @@ import { Prices } from './ether'
 import { ENS } from '@/pages/[ensName]'
 import { useAccount, useContractRead, useContractReads, useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi'
 import { labelhash, namehash } from 'viem'
+import AddressModal from '../addressmodal/addressModal'
 
 interface ENSprop {
   ENS: ENS,
@@ -58,6 +59,7 @@ export default function Erc20({ENS} : ENSprop) {
   const [showUSD, setShowUSD] = useState<boolean>(false)
     const [priceMenu, setPriceMenu] = useState<boolean>(false)
     const [openModal, setOpenModal] = useState<boolean>(false)
+    const [openAddressModal, setOpenAddressModal] = useState<boolean>(false) 
     const [selectedPrice, setSelectedPrice] = useState<string>('numbers');
     const [etherPrice, setEtherPrice] = useState<number>(0)
     const [roundData, setRoundData] = useState<bigint[] | null>(null)
@@ -752,6 +754,7 @@ const getEther = (usd : string) =>{
                                               <div className={styles.profileDownSubChildFeeIcon} onClick={()=> setOpenModal(true)}><Image src={editSVG} alt='' /></div>
                                             </div>
                                             {openModal && <PriceModal ENS ={ENS} setOpenModal ={setOpenModal} prices ={prices} />}
+                                            {openAddressModal && <AddressModal ENS ={ENS} setOpenAddressModal ={setOpenAddressModal} />}
                                             <div onClick={handlePriceToggle} className={styles.profileDownSubChildOption}>
                                                 { selectedPrice === 'numbers' && <p>Numbers Only</p>}
                                                 { selectedPrice === 'letters' && <p>Letters & Numbers</p>}
@@ -790,7 +793,7 @@ const getEther = (usd : string) =>{
                                             
                                         </div>
                                         <div className={styles.profileDownToggleArea}>
-                                          <div><Image src={addSVG} alt='' /></div>
+                                          <div onClick={()=> setOpenAddressModal(true)}><Image src={addSVG} alt='' /></div>
                                           <div className={styles.profileDownToggleParent}>
                                           <div /*onClick={handleToggle}*/>
                                             <Image src={dropSVG} alt='' />

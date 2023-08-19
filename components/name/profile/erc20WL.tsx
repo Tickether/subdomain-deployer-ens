@@ -14,6 +14,8 @@ import { Prices } from './ether'
 import { ENS } from '@/pages/[ensName]'
 import { useAccount, useContractRead, useContractReads, useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi'
 import { labelhash, namehash } from 'viem'
+import AddressModal from '../addressmodal/addressModal'
+import AllowlistModal from '../allowlistmodal/allowlistModal'
 
 
 interface ENSprop {
@@ -62,6 +64,8 @@ export default function Erc20WL({ENS} : ENSprop) {
   const [showUSD, setShowUSD] = useState<boolean>(false)
     const [priceMenu, setPriceMenu] = useState<boolean>(false)
     const [openModal, setOpenModal] = useState<boolean>(false)
+    const [openAddressModal, setOpenAddressModal] = useState<boolean>(false) 
+    const [openAllowlistModal, setOpenAllowlistModal] = useState<boolean>(false) 
     const [selectedPrice, setSelectedPrice] = useState<string>('numbers');
     const [etherPrice, setEtherPrice] = useState<number>(0)
     const [roundData, setRoundData] = useState<bigint[] | null>(null)
@@ -739,7 +743,7 @@ const getEther = (usd : string) =>{
                         : <span onClick={handleSetParentNodeSubMode} className={styles.profileDownPayLeftInactive}>Inactive</span>
                       }
                     </div>
-                    <div className={styles.profileDownPayWL}>
+                    <div onClick={()=> setOpenAllowlistModal(true)} className={styles.profileDownPayWL}>
                         <div className={styles.profileDownPayWLSpan}><span>Allowlist Setup</span></div>
                         <div className={styles.profileDownPayWLImg}><Image src={setting_wlSVG} alt='' /></div>
                     </div>
@@ -763,6 +767,8 @@ const getEther = (usd : string) =>{
                                               <div className={styles.profileDownSubChildFeeIcon} onClick={()=> setOpenModal(true)}><Image src={editSVG} alt='' /></div>
                                             </div>
                                             {openModal && <PriceModal ENS ={ENS} setOpenModal ={setOpenModal} prices ={prices} />}
+                                            {openAddressModal && <AddressModal ENS ={ENS} setOpenAddressModal ={setOpenAddressModal} />}
+                                            {openAllowlistModal && <AllowlistModal ENS ={ENS} setOpenAllowlistModal ={setOpenAllowlistModal} />}
                                             <div onClick={handlePriceToggle} className={styles.profileDownSubChildOption}>
                                               { selectedPrice === 'numbers' && <p>Numbers Only</p>}
                                               { selectedPrice === 'letters' && <p>Letters & Numbers</p>}
@@ -801,7 +807,7 @@ const getEther = (usd : string) =>{
                                             
                                         </div>
                                         <div className={styles.profileDownToggleArea}>
-                                          <div>
+                                          <div onClick={()=> setOpenAddressModal(true)}>
                                             <Image src={addSVG} alt='' />
                                           </div>
                                           <div className={styles.profileDownToggleParent}>
