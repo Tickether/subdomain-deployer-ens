@@ -67,6 +67,8 @@ export default function Erc20WL({ENS} : ENSprop) {
     const [openAddressModal, setOpenAddressModal] = useState<boolean>(false) 
     const [openAllowlistModal, setOpenAllowlistModal] = useState<boolean>(false) 
     const [selectedPrice, setSelectedPrice] = useState<string>('numbers');
+    const [contractMenu, setContractMenu] = useState<boolean>(false)
+    const [selectedContract, setSelectedContract] = useState<string>('');
     const [etherPrice, setEtherPrice] = useState<number>(0)
     const [roundData, setRoundData] = useState<bigint[] | null>(null)
     const [ERC20List, setERC20List] = useState<string[] | null>(null)
@@ -108,6 +110,11 @@ export default function Erc20WL({ENS} : ENSprop) {
   const handlePriceToggle =  () => {
     setPriceMenu(!priceMenu)
   }
+
+  const handleContractToggle =  () => {
+    setContractMenu(!contractMenu)
+  }
+
 
   //order of logic cos i forgot
   //check if approved for use 
@@ -162,12 +169,12 @@ export default function Erc20WL({ENS} : ENSprop) {
                 },
             ],
             functionName: 'isApprovedForAll',
-            args: [(ENS.owner!), ('0x1ec8E1e27AFf429Ee7db3A1B06b627c83A12192F')],
+            args: [(ENS.owner!), ('0x5c7d14e3d9a9b5778D8d51A0f209dCae2648c406')],
             chainId: 5,
         },
         //contract 1b check if name is enabled on SubENS contract
         {
-            address: "0x1ec8E1e27AFf429Ee7db3A1B06b627c83A12192F",
+            address: "0x5c7d14e3d9a9b5778D8d51A0f209dCae2648c406",
             abi: [
                 {
                     name: 'parentNodeActive',
@@ -183,18 +190,18 @@ export default function Erc20WL({ENS} : ENSprop) {
         },
         //contract 1c check if CanSub name is enabled on SubENS contract
         {
-            address: "0x1ec8E1e27AFf429Ee7db3A1B06b627c83A12192F",
+            address: "0x5c7d14e3d9a9b5778D8d51A0f209dCae2648c406",
             abi: [
                 {
                     name: 'parentNodeCanSubActive',
-                    inputs: [{ internalType: "bytes32", name: "", type: "bytes32" }],
+                    inputs: [{ internalType: "bytes32", name: "", type: "bytes32" }, {internalType: "address", name: "erc20Contract", type: "address"}],
                     outputs: [{ internalType: "bool", name: "", type: "bool" }],
                     stateMutability: 'view',
                     type: 'function',
                 },    
             ],
             functionName: 'parentNodeCanSubActive',
-            args: [(namehash(ENS.name))],
+            args: [(namehash(ENS.name)), (selectedContract)],
             chainId: 5,
         },
     ],
@@ -366,7 +373,7 @@ const handleCantUnwrap = async () => {
               },
             ],
           functionName: 'setApprovalForAll',
-          args: [ ('0x1ec8E1e27AFf429Ee7db3A1B06b627c83A12192F'), (true) ],
+          args: [ ('0x5c7d14e3d9a9b5778D8d51A0f209dCae2648c406'), (true) ],
           chainId: 5,
           value: BigInt(0),
       })
@@ -392,7 +399,7 @@ const handleCantUnwrap = async () => {
       }
 
   const prepareContractWriteParentNode = usePrepareContractWrite({
-    address: '0x1ec8E1e27AFf429Ee7db3A1B06b627c83A12192F',
+    address: '0x5c7d14e3d9a9b5778D8d51A0f209dCae2648c406',
     abi: [
       {
         name: 'setBaseEns',
@@ -426,18 +433,18 @@ const handleCantUnwrap = async () => {
 
 
 const prepareContractWriteParentNodeSubMode = usePrepareContractWrite({
-address: '0x1ec8E1e27AFf429Ee7db3A1B06b627c83A12192F',
+address: '0x5c7d14e3d9a9b5778D8d51A0f209dCae2648c406',
 abi: [
   {
     name: 'flipBaseEnsSubMode',
-    inputs: [ {internalType: "bytes32", name: "node", type: "bytes32"} ],
+    inputs: [ {internalType: "bytes32", name: "node", type: "bytes32"}, {internalType: "address", name: "erc20Contract", type: "address"} ],
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function',
   },
 ],
 functionName: 'flipBaseEnsSubMode',
-args: [ (namehash(ENS.name)) ],
+args: [ (namehash(ENS.name)), (selectedContract) ],
 value: BigInt(0),
 chainId: 5,
 })
@@ -461,18 +468,18 @@ try {
 
 //read balance and withdraw
   const contractReadParentNodeBalance = useContractRead({
-    address: "0x1ec8E1e27AFf429Ee7db3A1B06b627c83A12192F",
+    address: "0x5c7d14e3d9a9b5778D8d51A0f209dCae2648c406",
     abi: [
         {
             name: 'parentNodeBalance',
-            inputs: [{ internalType: "bytes32", name: "node", type: "bytes32" }],
+            inputs: [{ internalType: "bytes32", name: "node", type: "bytes32" }, {internalType: "address", name: "erc20Contract", type: "address"}],
             outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
             stateMutability: 'view',
             type: 'function',
         },    
     ],
     functionName: 'parentNodeBalance',
-    args: [(namehash(ENS.name))],
+    args: [(namehash(ENS.name)), (selectedContract)],
     chainId: 5,
     watch: true,
   })
@@ -487,18 +494,18 @@ try {
 
 //read balance and withdraw
   const prepareContractWriteWithdraw = usePrepareContractWrite({
-    address: '0x1ec8E1e27AFf429Ee7db3A1B06b627c83A12192F',
+    address: '0x5c7d14e3d9a9b5778D8d51A0f209dCae2648c406',
     abi: [
         {
           name: 'withdrawNodeBalance',
-          inputs: [ {internalType: "bytes32", name: "node", type: "bytes32"} ],
+          inputs: [ {internalType: "bytes32", name: "node", type: "bytes32"}, {internalType: "address", name: "erc20Contract", type: "address"} ],
           outputs: [],
           stateMutability: 'nonpayable',
           type: 'function',
         },
       ],
     functionName: 'withdrawNodeBalance',
-    args: [ (namehash(ENS.name)) ],
+    args: [ (namehash(ENS.name)), (selectedContract) ],
     chainId: 5,
     value: BigInt(0),
   })
@@ -528,130 +535,130 @@ try {
     contracts: [
         //contract 0 check if name is wrapped on nameWrapper
         {
-          address: "0x1ec8E1e27AFf429Ee7db3A1B06b627c83A12192F",
+          address: "0x5c7d14e3d9a9b5778D8d51A0f209dCae2648c406",
           abi: [
               {
                   name: 'threeUpLetterFee',
-                  inputs: [{ internalType: "bytes32", name: "node", type: "bytes32" }],
+                  inputs: [{ internalType: "bytes32", name: "node", type: "bytes32" }, {internalType: "address", name: "erc20Contract", type: "address"}],
                   outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
                   stateMutability: 'view',
                   type: 'function',
               },    
           ],
           functionName: 'threeUpLetterFee',
-          args: [(namehash(ENS.name))],
+          args: [(namehash(ENS.name)), (selectedContract)],
           chainId: 5,
         },
         //contract 1a check if SubENS contract is approved on nameWrapper
         {
-          address: "0x1ec8E1e27AFf429Ee7db3A1B06b627c83A12192F",
+          address: "0x5c7d14e3d9a9b5778D8d51A0f209dCae2648c406",
           abi: [
               {
                   name: 'fourFiveLetterFee',
-                  inputs: [{ internalType: "bytes32", name: "node", type: "bytes32" }],
+                  inputs: [{ internalType: "bytes32", name: "node", type: "bytes32" }, {internalType: "address", name: "erc20Contract", type: "address"}],
                   outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
                   stateMutability: 'view',
                   type: 'function',
               },    
           ],
           functionName: 'fourFiveLetterFee',
-          args: [(namehash(ENS.name))],
+          args: [(namehash(ENS.name)), (selectedContract)],
           chainId: 5,
         },
         //contract 1b check if name is enabled on SubENS contract
         {
-          address: "0x1ec8E1e27AFf429Ee7db3A1B06b627c83A12192F",
+          address: "0x5c7d14e3d9a9b5778D8d51A0f209dCae2648c406",
           abi: [
               {
                   name: 'sixDownLetterFee',
-                  inputs: [{ internalType: "bytes32", name: "node", type: "bytes32" }],
+                  inputs: [{ internalType: "bytes32", name: "node", type: "bytes32" }, {internalType: "address", name: "erc20Contract", type: "address"}],
                   outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
                   stateMutability: 'view',
                   type: 'function',
               },    
           ],
           functionName: 'sixDownLetterFee',
-          args: [(namehash(ENS.name))],
+          args: [(namehash(ENS.name)), (selectedContract)],
           chainId: 5,
         },
         //contract 1c check if CanSub name is enabled on SubENS contract
         {
-          address: "0x1ec8E1e27AFf429Ee7db3A1B06b627c83A12192F",
+          address: "0x5c7d14e3d9a9b5778D8d51A0f209dCae2648c406",
           abi: [
               {
                   name: 'oneNumberFee',
-                  inputs: [{ internalType: "bytes32", name: "node", type: "bytes32" }],
+                  inputs: [{ internalType: "bytes32", name: "node", type: "bytes32" }, {internalType: "address", name: "erc20Contract", type: "address"}],
                   outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
                   stateMutability: 'view',
                   type: 'function',
               },    
           ],
           functionName: 'oneNumberFee',
-          args: [(namehash(ENS.name))],
+          args: [(namehash(ENS.name)), (selectedContract)],
           chainId: 5,
         },
         //contract 2a check if SubENSERC20 contract is approved on nameWrapper
         {
-          address: "0x1ec8E1e27AFf429Ee7db3A1B06b627c83A12192F",
+          address: "0x5c7d14e3d9a9b5778D8d51A0f209dCae2648c406",
           abi: [
               {
                   name: 'twoNumberFee',
-                  inputs: [{ internalType: "bytes32", name: "node", type: "bytes32" }],
+                  inputs: [{ internalType: "bytes32", name: "node", type: "bytes32" }, {internalType: "address", name: "erc20Contract", type: "address"}],
                   outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
                   stateMutability: 'view',
                   type: 'function',
               },    
           ],
           functionName: 'twoNumberFee',
-          args: [(namehash(ENS.name))],
+          args: [(namehash(ENS.name)), (selectedContract)],
           chainId: 5,
         },
         //contract 2b check if name is enabled on SubENSERC20 contract
         {
-          address: "0x1ec8E1e27AFf429Ee7db3A1B06b627c83A12192F",
+          address: "0x5c7d14e3d9a9b5778D8d51A0f209dCae2648c406",
           abi: [
               {
                   name: 'threeNumberFee',
-                  inputs: [{ internalType: "bytes32", name: "node", type: "bytes32" }],
+                  inputs: [{ internalType: "bytes32", name: "node", type: "bytes32" }, {internalType: "address", name: "erc20Contract", type: "address"}],
                   outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
                   stateMutability: 'view',
                   type: 'function',
               },    
           ],
           functionName: 'threeNumberFee',
-          args: [(namehash(ENS.name))],
+          args: [(namehash(ENS.name)), (selectedContract)],
           chainId: 5,
         },
         //contract 2c check if CanSub name is enabled on SubENSERC20 contract
         {
-          address: "0x1ec8E1e27AFf429Ee7db3A1B06b627c83A12192F",
+          address: "0x5c7d14e3d9a9b5778D8d51A0f209dCae2648c406",
           abi: [
               {
                   name: 'fourNumberFee',
-                  inputs: [{ internalType: "bytes32", name: "node", type: "bytes32" }],
+                  inputs: [{ internalType: "bytes32", name: "node", type: "bytes32" }, {internalType: "address", name: "erc20Contract", type: "address"}],
                   outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
                   stateMutability: 'view',
                   type: 'function',
               },    
           ],
           functionName: 'fourNumberFee',
-          args: [(namehash(ENS.name))],
+          args: [(namehash(ENS.name)), (selectedContract)],
           chainId: 5,
         },
         //contract 3a check if SubENSWL contract is approved on nameWrapper
         {
-          address: "0x1ec8E1e27AFf429Ee7db3A1B06b627c83A12192F",
+          address: "0x5c7d14e3d9a9b5778D8d51A0f209dCae2648c406",
           abi: [
               {
                   name: 'fiveUpNumberFee',
-                  inputs: [{ internalType: "bytes32", name: "node", type: "bytes32" }],
+                  inputs: [{ internalType: "bytes32", name: "node", type: "bytes32" }, {internalType: "address", name: "erc20Contract", type: "address"}],
                   outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
                   stateMutability: 'view',
                   type: 'function',
               },    
           ],
           functionName: 'fiveUpNumberFee',
-          args: [(namehash(ENS.name))],
+          args: [(namehash(ENS.name)), (selectedContract)],
           chainId: 5,
         },
     ],
@@ -728,7 +735,7 @@ const getEther = (usd : string) =>{
 
 // get erc20 list
 const contractReadERC20List = useContractRead({
-  address: "0x1ec8E1e27AFf429Ee7db3A1B06b627c83A12192F",
+  address: "0x5c7d14e3d9a9b5778D8d51A0f209dCae2648c406",
   abi: [
       {
           name: 'listERC20',
@@ -740,7 +747,8 @@ const contractReadERC20List = useContractRead({
       },    
   ],
   functionName: 'listERC20',
-  chainId: 1,
+  args: [(namehash(ENS.name))],
+  chainId: 5,
   watch: true,
 })
 useEffect(() => {
@@ -790,8 +798,8 @@ useEffect(() => {
                                               <div className={styles.profileDownSubChildFeeTitle}><p>Subname Prices</p></div>
                                               <div className={styles.profileDownSubChildFeeIcon} onClick={()=> setOpenModal(true)}><Image src={editSVG} alt='' /></div>
                                             </div>
-                                            {openModal && <PriceModalERC20 ENS ={ENS} setOpenModal ={setOpenModal} prices ={prices} ERC20List={ERC20List} contract='0x1ec8E1e27AFf429Ee7db3A1B06b627c83A12192F'/>}
-                                            {openAddressModal && <AddressModal ENS ={ENS} setOpenAddressModal ={setOpenAddressModal} contract='0x1ec8E1e27AFf429Ee7db3A1B06b627c83A12192F'/>}
+                                            {openModal && <PriceModalERC20 ENS ={ENS} setOpenModal ={setOpenModal} prices ={prices} ERC20List={ERC20List} contract='0x5c7d14e3d9a9b5778D8d51A0f209dCae2648c406'/>}
+                                            {openAddressModal && <AddressModal ENS ={ENS} setOpenAddressModal ={setOpenAddressModal} contract='0x5c7d14e3d9a9b5778D8d51A0f209dCae2648c406'/>}
                                             {openAllowlistModal && <AllowlistModal ENS ={ENS} setOpenAllowlistModal ={setOpenAllowlistModal} />}
                                             <div onClick={handlePriceToggle} className={styles.profileDownSubChildOption}>
                                               { selectedPrice === 'numbers' && <p>Numbers Only</p>}
@@ -835,8 +843,31 @@ useEffect(() => {
                                             <Image src={addSVG} alt='' />
                                           </div>
                                           <div className={styles.profileDownToggleParent}>
-                                          <div /*onClick={handleToggle}*/>
+                                          <div onClick={handleContractToggle}>
                                               <Image src={dropSVG} alt='' />
+                                          </div>
+                                          <div className={styles.contractDropOverlay}>
+                                            {
+                                              contractMenu && (
+                                                <div className={styles.priceModalTopOptionDrop}>
+                                                  <div className={styles.priceModalTopOptionDropToggle}>
+                                                    
+                                                    {ERC20List?.map((ERC20Contract: string) => (
+                                                      <div
+                                                        onClick={()=> {
+                                                          setSelectedContract(ERC20Contract); 
+                                                          setContractMenu(false);
+                                                        }}
+                                                        className={styles.priceModalTopOptionDropToggleSpan}
+                                                      >
+                                                        <span>Get name of token here</span> 
+                                                        <span>{ERC20Contract}</span>
+                                                      </div>
+                                                    ))}
+                                                  </div>
+                                                </div>
+                                              )
+                                            }
                                           </div>
                                           <div onClick={handleToggle} className={styles.profileDownToggle}>
                                               {
