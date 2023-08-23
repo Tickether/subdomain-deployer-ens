@@ -307,3 +307,26 @@
     position: absolute;
     margin-top: 50px;   
 }
+
+.profileDownOptionToggleSpan{
+    padding: 6px 11px;
+}
+
+.profileDownOptionToggleSpan:hover{
+    background-color: #9B9BA6;
+}
+
+.profileDownOptionDrop{
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.profileDownOptionToggle{
+    display: flex;
+    flex-direction: column;
+    color: black;
+    cursor: pointer;
+}

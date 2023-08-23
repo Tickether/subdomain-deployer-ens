@@ -2,9 +2,9 @@ import { ENS } from '@/pages/[ensName]'
 import styles from '@/styles/AddressModal.module.css'
 import closeSVG from '@/public/assets/icons/close.svg'
 import Image from 'next/image'
-import { useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi'
+import { useContractWrite, usePrepareContractWrite, useWaitForTransaction, useToken } from 'wagmi'
 import { isAddress, namehash } from 'viem'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import wlSVG from '@/public/assets/icons/wl.svg'
 import nowlSVG from '@/public/assets/icons/nowl.svg'
 
@@ -19,6 +19,8 @@ export default function AddressModal({ENS, setOpenAddressModal, contract} : Addr
 
   const [ERC20, setERC20] = useState<string>('');
   const [valid, setValid] = useState<boolean | null>(null);
+  const [tokenName, setTokenName] = useState<string| null>(null);
+  const [tokenSymbol, setTokenSymbol] = useState<string | null>(null);
   
 
   const prepareContractWriteAddERC20 = usePrepareContractWrite({
@@ -33,7 +35,7 @@ export default function AddressModal({ENS, setOpenAddressModal, contract} : Addr
       },
     ],
     functionName: 'addERC20',
-    args: [ (namehash(ENS.name)), (contract), ],
+    args: [ (namehash(ENS.name)), (ERC20), ],
     value: BigInt(0),
     chainId: 5,
   })
@@ -53,16 +55,29 @@ export default function AddressModal({ENS, setOpenAddressModal, contract} : Addr
         console.log(err)
     }
   }
-
+/*
   const checkValidAddress = async (e : string) => {
     setValid(isAddress(e)) 
   }
-
+*/
   const handlePaste = async () => {
     const clipboardText = await navigator.clipboard.readText();
     setERC20(clipboardText);
-    checkValidAddress(clipboardText)
   };
+
+  const getToken = useToken({
+    address: `0x${ERC20.slice(2)}`,
+    chainId: 5,
+  })
+  console.log(getToken?.data!)
+  useEffect(() =>{
+    if (getToken?.data!) {
+      setValid(true)
+      setTokenName(getToken?.data!.name)
+      setTokenSymbol(getToken?.data!.symbol)
+      //checkValidAddress(clipboardText)
+    }
+  },[getToken?.data!])
 
   
 
@@ -92,38 +107,27 @@ export default function AddressModal({ENS, setOpenAddressModal, contract} : Addr
                     <button onClick={handlePaste}>as</button>
                   </div>
                   <div className={styles.addressModalMidChildWarning}>
+                    
                     {
-                      valid === null && (
-                        <div className={styles.validnull}>
-                            <div>
-                                <Image src={wlSVG} alt='' />
-                            </div>
-                            <div className={styles.allowlistedInfoText}>
-                                <span>Please Enter a valid ERC20 token address</span>
-                            </div>
-                        </div>
-                      )
-                    }
-                    {
-                      valid == true && (
+                      valid && (
                         <div className={styles.valid}>
                             <div>
                                 <Image src={wlSVG} alt='' />
                             </div>
                             <div className={styles.allowlistedInfoText}>
-                                <p>Address is valid</p>
+                                <p>{tokenName}/{tokenSymbol} is valid ERC20 Address</p>
                             </div>
                         </div>
                       )
                     }
                     {
-                      valid == false && (
+                      !valid  && (
                         <div className={styles.invalid}>
                             <div>
                                 <Image src={nowlSVG} alt='' />
                             </div>
                             <div className={styles.allowlistedInfoText}>
-                                <p>Not a valid address</p>
+                                <p>Not a valid address, Please Enter a valid ERC20 token address</p>
                             </div>
                         </div>
                       )
@@ -133,7 +137,7 @@ export default function AddressModal({ENS, setOpenAddressModal, contract} : Addr
               </div>
               <div className={styles.addressModalDown}>
                 <div>
-                <button onClick={handleAddERC20}> Confirm </button>
+                <button disabled={!valid} onClick={handleAddERC20}> Confirm </button>
                 </div>
               </div>
             </div>

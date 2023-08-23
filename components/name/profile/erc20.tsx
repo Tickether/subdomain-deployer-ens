@@ -10,10 +10,11 @@ import dropSVG from '@/public/assets/icons/drop.svg'
 import addSVG from '@/public/assets/icons/add.svg'
 import { Prices } from './ether'
 import { ENS } from '@/pages/[ensName]'
-import { useAccount, useContractRead, useContractReads, useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi'
+import { useAccount, useContractRead, useContractReads, useContractWrite, usePrepareContractWrite, useWaitForTransaction, useToken } from 'wagmi'
 import { labelhash, namehash } from 'viem'
 import AddressModal from '../addressmodal/addressModal'
 import PriceModalERC20 from '../pricemodal/priceModalERC20'
+import ERC20Contract from './erc20Contract'
 
 interface ENSprop {
   ENS: ENS,
@@ -31,6 +32,7 @@ interface Hovered {
   toggleID: number,
   isHovered: boolean,
 }
+
 
 export default function Erc20({ENS} : ENSprop) {
   const {address, isConnected} = useAccount()
@@ -55,6 +57,7 @@ export default function Erc20({ENS} : ENSprop) {
     CanSubActiveNode: false,
   };
   const [conditions, setConditions] = useState<Conditions>(conditionsDefault)
+
   const [parentNodeBalance, setParentNodeBalance] = useState<bigint>(BigInt(0))
   const [showUSD, setShowUSD] = useState<boolean>(false)
     const [priceMenu, setPriceMenu] = useState<boolean>(false)
@@ -63,11 +66,15 @@ export default function Erc20({ENS} : ENSprop) {
     const [selectedPrice, setSelectedPrice] = useState<string>('numbers');
     const [contractMenu, setContractMenu] = useState<boolean>(false)
     const [selectedContract, setSelectedContract] = useState<string>('');
+    //const [tokenName, setTokenName] = useState<string| null>(null);
+    const [tokenSymbol, setTokenSymbol] = useState<string | null>(null);
     const [etherPrice, setEtherPrice] = useState<number>(0)
     const [roundData, setRoundData] = useState<bigint[] | null>(null)
     const [ERC20List, setERC20List] = useState<string[] | null>(null)
     const [name, setName] = useState<string>('')
     const [encode, setEncode] = useState<string | null>(null)
+    
+    
     const hoverDefault = {
       toggleID: 0,
       isHovered: false,
@@ -749,9 +756,15 @@ useEffect(() => {
     setERC20List(contractReadERC20List?.data as string[])
   }
 },[contractReadERC20List?.data!])
+console.log(contractReadERC20List?.data!)
+console.log((namehash(ENS.name)))
 
 
-
+const handleContractSelect =(ERC20Contract: string, ERC20Symbol: string)=>{
+  setSelectedContract(ERC20Contract); 
+  setTokenSymbol(ERC20Symbol)
+  setContractMenu(false); 
+}
     return (
         <>
             <div className={styles.container}>
@@ -800,25 +813,23 @@ useEffect(() => {
                                                 priceMenu && (
                                                   <div className={styles.profileDownSubChildOptionDrop}>
                                                     <div className={styles.profileDownSubChildOptionToggle}>
-                                                      <div className={styles.profileDownSubChildOptionToggleSpan}>
-                                                        <span
-                                                          onClick={()=> {
-                                                            setSelectedPrice('letters'); 
-                                                            setPriceMenu(false);
-                                                          }}
-                                                        >
-                                                          Letters & Numbers
-                                                        </span>
+                                                      <div 
+                                                        onClick={()=> {
+                                                          setSelectedPrice('letters'); 
+                                                          setPriceMenu(false);
+                                                        }}
+                                                        className={styles.profileDownSubChildOptionToggleSpan}
+                                                      >
+                                                        <span>Letters & Numbers</span>
                                                       </div>
-                                                      <div className={styles.profileDownSubChildOptionToggleSpan}>
-                                                        <span
-                                                          onClick={()=> {
-                                                            setSelectedPrice('numbers'); 
-                                                            setPriceMenu(false);
-                                                          }}
-                                                        >
-                                                          Numbers Only
-                                                        </span>
+                                                      <div 
+                                                        onClick={()=> {
+                                                          setSelectedPrice('numbers'); 
+                                                          setPriceMenu(false);
+                                                        }}
+                                                        className={styles.profileDownSubChildOptionToggleSpan}
+                                                      >
+                                                        <span>Numbers Only</span>
                                                       </div>
                                                     </div>
                                                   </div>
@@ -836,20 +847,14 @@ useEffect(() => {
                                           <div className={styles.contractDropOverlay}>
                                             {
                                               contractMenu && (
-                                                <div className={styles.priceModalTopOptionDrop}>
-                                                  <div className={styles.priceModalTopOptionDropToggle}>
+                                                <div className={styles.profileDownOptionDrop}>
+                                                  <div className={styles.profileDownOptionToggle}>
                                                     
-                                                    {ERC20List?.map((ERC20Contract: string) => (
-                                                      <div
-                                                        onClick={()=> {
-                                                          setSelectedContract(ERC20Contract); 
-                                                          setContractMenu(false);
-                                                        }}
-                                                        className={styles.priceModalTopOptionDropToggleSpan}
-                                                      >
-                                                        <span>Get name of token here</span> 
-                                                        <span>{ERC20Contract}</span>
-                                                      </div>
+                                                    {ERC20List?.map((erc20Contract: string) => (
+                                                      <ERC20Contract 
+                                                        erc20Contract={erc20Contract}
+                                                        selectERC20 = {handleContractSelect}
+                                                      />
                                                     ))}
                                                   </div>
                                                 </div>
@@ -862,7 +867,7 @@ useEffect(() => {
                                                 ?(
                                                     <>
                                                         <div className={styles.profileDownToggleETH}>
-                                                            <span>ETH</span>
+                                                            <span>{tokenSymbol}</span>
                                                         </div>
                                                         <div className={styles.profileDownToggleSelectUSD}>
                                                             <span>USD</span>
@@ -871,7 +876,7 @@ useEffect(() => {
                                                 )
                                                 :(
                                                     <>
-                                                        <div className={styles.profileDownToggleSelectETH}><span>ETH</span></div>
+                                                        <div className={styles.profileDownToggleSelectETH}><span>{ selectedContract =='' ? 'ERC20' : tokenSymbol}</span></div>
                                                         <div className={styles.profileDownToggleUSD}><span>USD</span></div>
                                                     </>
                                                 )
@@ -898,11 +903,11 @@ useEffect(() => {
                                         )
                                         :(
                                             <div className={styles.profileDownFeeChild}>
-                                                <div className={styles.profileDownFees}><span>One Number Fee</span><span>{0} ETH</span></div>
-                                                <div className={styles.profileDownFees}><span>Two Number Fee</span><span>{0} ETH</span></div>
-                                                <div className={styles.profileDownFees}><span>Three Number Fee</span><span>{0} ETH</span></div>
-                                                <div className={styles.profileDownFees}><span>Four Number Fee</span><span>{0} ETH</span></div>
-                                                <div className={styles.profileDownFees}><span>Five+ Number Fee</span><span>{0} ETH</span></div>
+                                                <div className={styles.profileDownFees}><span>One Number Fee</span><span>{0} {tokenSymbol}</span></div>
+                                                <div className={styles.profileDownFees}><span>Two Number Fee</span><span>{0} {tokenSymbol}</span></div>
+                                                <div className={styles.profileDownFees}><span>Three Number Fee</span><span>{0} {tokenSymbol}</span></div>
+                                                <div className={styles.profileDownFees}><span>Four Number Fee</span><span>{0} {tokenSymbol}</span></div>
+                                                <div className={styles.profileDownFees}><span>Five+ Number Fee</span><span>{0} {tokenSymbol}</span></div>
                                             </div>   
                                         )
                                     }
@@ -924,9 +929,9 @@ useEffect(() => {
                                         )
                                         :(
                                             <div className={styles.profileDownFeeChild}>
-                                                <div className={styles.profileDownFees}><span>Three- Number Fee</span><span>{0} ETH</span></div>
-                                                <div className={styles.profileDownFees}><span>Four/Five Number Fee</span><span>{0} ETH</span></div>
-                                                <div className={styles.profileDownFees}><span>Six+ Number Fee</span><span>{0} ETH</span></div>
+                                                <div className={styles.profileDownFees}><span>Three- Number Fee</span><span>{0} {tokenSymbol}</span></div>
+                                                <div className={styles.profileDownFees}><span>Four/Five Number Fee</span><span>{0} {tokenSymbol}</span></div>
+                                                <div className={styles.profileDownFees}><span>Six+ Number Fee</span><span>{0} {tokenSymbol}</span></div>
                                             </div>   
                                         )
                                     }
@@ -1043,3 +1048,18 @@ useEffect(() => {
         </>
     )
 }
+
+/**
+                                                      <div
+                                                        onClick={()=> {
+                                                          setSelectedContract(ERC20Contract); 
+                                                          setContractMenu(false);
+                                                        }}
+                                                        className={styles.profileDownOptionToggleSpan}
+                                                      >
+                                                        <span>{tokenName}</span>
+                                                        <span>{ERC20Contract}</span>
+                                                      </div>
+                                                       */
+
+                                                      //erc20Contract
