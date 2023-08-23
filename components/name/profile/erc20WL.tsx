@@ -773,7 +773,7 @@ const handleContractSelect =(ERC20Contract: string, ERC20Symbol: string)=>{
         <div className={styles.container}>
             <div className={styles.wrapper}>
             {
-              true
+              conditions.Wrapped && conditions.CantUnwrap && conditions.Approved && conditions.ActiveNode
               ? (
                 <div className={styles.profileDown}>
               <div className={styles.profileDownChild}>
