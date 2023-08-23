@@ -7,6 +7,7 @@ import { isAddress, namehash } from 'viem'
 import { useEffect, useState } from 'react'
 import wlSVG from '@/public/assets/icons/wl.svg'
 import nowlSVG from '@/public/assets/icons/nowl.svg'
+import clearSVG from '@/public/assets/icons/clear.svg'
 
 
 interface AddressModalProps{
@@ -79,7 +80,9 @@ export default function AddressModal({ENS, setOpenAddressModal, contract} : Addr
     }
   },[getToken?.data!])
 
-  
+  const handleClearInput = () => {
+    setERC20('')
+  };  
 
   return (
     <>
@@ -104,7 +107,14 @@ export default function AddressModal({ENS, setOpenAddressModal, contract} : Addr
                       value={ERC20}
                       
                     />
-                    <button onClick={handlePaste}>as</button>
+                    {
+                    ERC20.length >= 1 && (
+                      <div onClick={handleClearInput} className={styles.clear}>
+                        <Image  src={clearSVG} alt='' />
+                      </div>
+                    )
+                    }
+                    <button onClick={handlePaste}>paste</button>
                   </div>
                   <div className={styles.addressModalMidChildWarning}>
                     

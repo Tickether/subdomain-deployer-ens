@@ -8,6 +8,8 @@ import closeSVG from '@/public/assets/icons/close.svg'
 import Image from 'next/image'
 import { ENS } from '@/pages/[ensName]'
 import { Prices } from '../profile/ether'
+import ERC20Contract from '../profile/erc20Contract'
+import dropSVG from '@/public/assets/icons/drop.svg'
 
 interface PriceModelProps{
   ENS: ENS
@@ -23,7 +25,10 @@ export default function PriceModalERC20({ENS, setOpenModal, prices, ERC20List, c
     const [newLetterPrices, setNewLetterPrices] = useState<number[]>([0,0,0])
     const [newNumberPrices, setNewNumberPrices] = useState<number[]>([0,0,0,0,0])
     const [priceMenu, setPriceMenu] = useState<boolean>(false)
-    const [selectedPrice, setSelectedPrice] = useState<string>('numbers');
+    const [selectedPrice, setSelectedPrice] = useState<string>('numbers')
+    const [contractMenu, setContractMenu] = useState<boolean>(false)
+    const [selectedContract, setSelectedContract] = useState<string>('')
+    const [tokenSymbol, setTokenSymbol] = useState<string | null>(null);
     
 
 
@@ -40,7 +45,7 @@ export default function PriceModalERC20({ENS, setOpenModal, prices, ERC20List, c
           },
         ],
         functionName: 'setLetterFeesERC20',
-        args: [ (namehash(ENS.name)), (BigInt(newLetterPrices[0]*dec8)), (BigInt(newLetterPrices[1]*dec8)), (BigInt(newLetterPrices[2]*dec8)) ],
+        args: [ (namehash(ENS.name)), (selectedContract), (BigInt(newLetterPrices[0]*dec8)), (BigInt(newLetterPrices[1]*dec8)), (BigInt(newLetterPrices[2]*dec8)) ],
         value: BigInt(0),
         chainId: 5,
       })
@@ -73,7 +78,7 @@ export default function PriceModalERC20({ENS, setOpenModal, prices, ERC20List, c
           },
         ],
         functionName: 'setNumberFeesERC20',
-        args: [ (namehash(ENS.name)), (BigInt(newNumberPrices[0]*dec8)), (BigInt(newNumberPrices[1]*dec8)), (BigInt(newNumberPrices[2]*dec8)), (BigInt(newNumberPrices[3]*dec8)), (BigInt(newNumberPrices[4]*dec8)) ],
+        args: [ (namehash(ENS.name)), (selectedContract), (BigInt(newNumberPrices[0]*dec8)), (BigInt(newNumberPrices[1]*dec8)), (BigInt(newNumberPrices[2]*dec8)), (BigInt(newNumberPrices[3]*dec8)), (BigInt(newNumberPrices[4]*dec8)) ],
         value: BigInt(0),
         chainId: 5,
       })
@@ -98,6 +103,17 @@ export default function PriceModalERC20({ENS, setOpenModal, prices, ERC20List, c
       const handlePriceToggle =  () => {
         setPriceMenu(!priceMenu)
       }
+
+      const handleContractToggle =  () => {
+        setContractMenu(!contractMenu)
+      }
+
+      const handleContractSelect =(ERC20Contract: string, ERC20Symbol: string)=>{
+        setSelectedContract(ERC20Contract); 
+        setTokenSymbol(ERC20Symbol)
+        setContractMenu(false); 
+      }
+
   return (
     <>
       <div className={styles.container}>
@@ -140,6 +156,26 @@ export default function PriceModalERC20({ENS, setOpenModal, prices, ERC20List, c
                           <span>Numbers Only</span>
                         </div>
                         
+                      </div>
+                    </div>
+                  )
+                }
+              </div>
+              <div onClick={handleContractToggle}>
+                <span>Select an ERC20 Token: {selectedContract =='' ? 'ERC20' : tokenSymbol}</span><Image src={dropSVG} alt='' />
+              </div>
+              <div className={styles.dropOverlay}>
+                {
+                  contractMenu && (
+                    <div className={styles.priceModalTopOptionDrop}>
+                      <div className={styles.priceModalTopOptionDropToggle}>
+                        
+                        {ERC20List?.map((erc20Contract: string) => (
+                          <ERC20Contract 
+                            erc20Contract={erc20Contract}
+                            selectERC20 = {handleContractSelect}
+                          />
+                        ))}
                       </div>
                     </div>
                   )
@@ -331,8 +367,8 @@ export default function PriceModalERC20({ENS, setOpenModal, prices, ERC20List, c
             </div>
             <div className={styles.priceModalDown}>
               <div>
-                { selectedPrice === 'numbers' && <button onClick={handleSetParentNodeNumberFee}> Confirm </button>}
-                { selectedPrice === 'letters' && <button onClick={handleSetParentNodeLetterFee}> Confirm </button>}
+                { selectedPrice === 'numbers' && <button disabled={selectedContract==''} onClick={handleSetParentNodeNumberFee}> Confirm </button>}
+                { selectedPrice === 'letters' && <button disabled={selectedContract==''} onClick={handleSetParentNodeLetterFee}> Confirm </button>}
               </div>
             </div> 
           </div>
