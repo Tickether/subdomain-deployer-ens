@@ -812,7 +812,7 @@ const handleContractSelect =(ERC20Contract: string, ERC20Symbol: string)=>{
                                             </div>
                                             {openModal && <PriceModalERC20 ENS ={ENS} setOpenModal ={setOpenModal} prices ={prices} ERC20List={ERC20List} contract='0x5c7d14e3d9a9b5778D8d51A0f209dCae2648c406'/>}
                                             {openAddressModal && <AddressModal ENS ={ENS} setOpenAddressModal ={setOpenAddressModal} contract='0x5c7d14e3d9a9b5778D8d51A0f209dCae2648c406'/>}
-                                            {openAllowlistModal && <AllowlistModal ENS ={ENS} setOpenAllowlistModal ={setOpenAllowlistModal} />}
+                                            {openAllowlistModal && <AllowlistModal ENS ={ENS} setOpenAllowlistModal ={setOpenAllowlistModal} contract='0x5c7d14e3d9a9b5778D8d51A0f209dCae2648c406'/>}
                                             <div onClick={handlePriceToggle} className={styles.profileDownSubChildOption}>
                                               { selectedPrice === 'numbers' && <p>Numbers Only</p>}
                                               { selectedPrice === 'letters' && <p>Letters & Numbers</p>}

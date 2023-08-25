@@ -61,6 +61,13 @@ export default function AddressModal({ENS, setOpenAddressModal, contract} : Addr
     setValid(isAddress(e)) 
   }
 */
+
+/*
+  const handlePaste = async () => {
+    const clipboardText = await readText();
+    setERC20(clipboardText);
+  };
+*/
   const handlePaste = async () => {
     const clipboardText = await navigator.clipboard.readText();
     setERC20(clipboardText);
@@ -105,7 +112,7 @@ export default function AddressModal({ENS, setOpenAddressModal, contract} : Addr
                       required
                       placeholder='0x000000000000000000000000000000000000dEaD'
                       value={ERC20}
-                      
+                      onPaste={handlePaste}
                     />
                     {
                     ERC20.length >= 1 && (

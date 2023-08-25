@@ -779,8 +779,8 @@ const handleContractSelect =(ERC20Contract: string, ERC20Symbol: string)=>{
                     <p>ERC20</p>
                     {
                       conditions.CanSubActiveNode 
-                      ? <span className={styles.profileDownPayLeftActive}>Active</span>
-                      : <span className={styles.profileDownPayLeftInactive}>Inactive</span>
+                      ? <span onClick={handleSetParentNodeSubMode} className={styles.profileDownPayLeftActive}>Active</span>
+                      : <span onClick={handleSetParentNodeSubMode} className={styles.profileDownPayLeftInactive}>Inactive</span>
                     }
                   </div>
                   <div className={styles.profileDownPayRight}>

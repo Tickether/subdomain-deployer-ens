@@ -13,9 +13,10 @@ interface PriceModelProps{
   ENS: ENS
   setOpenModal: (openModal : boolean) => void
   prices: Prices
+  contract : string
 }
 
-export default function PriceModal({ENS, setOpenModal, prices} : PriceModelProps) {
+export default function PriceModal({ENS, setOpenModal, prices, contract} : PriceModelProps) {
     const dec8 = 100000000
 
     const [newLetterPrices, setNewLetterPrices] = useState<number[]>([0,0,0])
@@ -27,7 +28,7 @@ export default function PriceModal({ENS, setOpenModal, prices} : PriceModelProps
 
 
     const prepareContractWriteParentNodeLetterFee = usePrepareContractWrite({
-        address: '0xDb4E489A6476ad51d32BA9F7F629aB491a16ECEC',
+        address: `0x${contract.slice(2)}`,
         abi: [
           {
             name: 'setLetterFees',
@@ -60,7 +61,7 @@ export default function PriceModal({ENS, setOpenModal, prices} : PriceModelProps
       }
 
       const prepareContractWriteParentNodeNumberFee = usePrepareContractWrite({
-        address: '0xDb4E489A6476ad51d32BA9F7F629aB491a16ECEC',
+        address: `0x${contract.slice(2)}`,
         abi: [
           {
             name: 'setNumberFees',

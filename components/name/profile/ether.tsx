@@ -767,7 +767,7 @@ const getEther = (usd : string) =>{
                                                     <div className={styles.profileDownSubChildFeeTitle}><p>Subname Prices</p></div>
                                                     <div className={styles.profileDownSubChildFeeIcon} onClick={()=> setOpenModal(true)}><Image src={editSVG} alt='' /></div>
                                                   </div>
-                                                  {openModal && <PriceModal ENS ={ENS} setOpenModal ={setOpenModal} prices ={prices} />}
+                                                  {openModal && <PriceModal ENS ={ENS} setOpenModal ={setOpenModal} prices ={prices} contract='0xDb4E489A6476ad51d32BA9F7F629aB491a16ECEC'/>}
                                                   <div onClick={handlePriceToggle} className={styles.profileDownSubChildOption}>
                                                     { selectedPrice === 'numbers' && <p>Numbers Only</p>}
                                                     { selectedPrice === 'letters' && <p>Letters & Numbers</p>}
