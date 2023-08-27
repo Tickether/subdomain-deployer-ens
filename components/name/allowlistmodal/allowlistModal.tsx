@@ -4,7 +4,7 @@ import closeSVG from '@/public/assets/icons/close.svg'
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import drop_blueSVG from '@/public/assets/icons/drop-blue.svg'
-import { erc20ABI, useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi'
+import { useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi'
 import { bytesToHex, namehash } from 'viem'
 import { Network, Alchemy } from 'alchemy-sdk'
 import { MerkleTree } from 'merkletreejs'
@@ -34,7 +34,7 @@ export default function AllowlistModal({ENS, setOpenAllowlistModal, contract} : 
   const [valid, setValid] = useState<boolean | null>(null);
   const [holders, setHolders] = useState<string[]>([])
   const [isLoadingHolders, setLoadingHolders] = useState<boolean>(false)
-  const [rootHash, setRootHash] = useState<undefined | Buffer>(undefined)
+  const [rootHash, setRootHash] = useState<undefined | string>(undefined)
  
   
   const handleAllowlistModeToggle =  () => {
@@ -54,7 +54,7 @@ export default function AllowlistModal({ENS, setOpenAllowlistModal, contract} : 
       },
     ],
     functionName: 'updateBaseEnsMerkle',
-    args: [ (namehash(ENS.name)), (bytesToHex(rootHash!)),  (subsLimit) ],
+    args: [ (namehash(ENS.name)), (rootHash),  (subsLimit) ],
     value: BigInt(0),
     chainId: 5,
   })
@@ -122,13 +122,13 @@ export default function AllowlistModal({ENS, setOpenAllowlistModal, contract} : 
       let leafNodes = holders.map(addr => keccak256((addr)));
       let merkleTree = new MerkleTree(leafNodes, keccak256, {sortPairs: true});
       const root = merkleTree.getRoot();
-      setRootHash(root)
+      setRootHash(bytesToHex(root))
       setLoadingHolders(true)
     }
   },[holders])
   console.log(holders)
   console.log(rootHash)
-  console.log(bytesToHex(rootHash!))
+  //console.log(bytesToHex(rootHash!))
 
 
 

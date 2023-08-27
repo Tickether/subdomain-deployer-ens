@@ -59,7 +59,7 @@
 
   .errorMsg {
    display: flex;
-   justify-content: end;
+   justify-content: flex-end;
    background-color: #fee8a536;
    color: #EEC443;
    width: fit-content;
@@ -71,7 +71,7 @@
 
   .errorMsgParent {
     display: flex;
-    justify-content: end;
+    justify-content: flex-end;
     padding: 0px 15px;
    }
 
