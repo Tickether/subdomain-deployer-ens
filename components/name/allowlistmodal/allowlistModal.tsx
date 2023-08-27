@@ -5,7 +5,7 @@ import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import drop_blueSVG from '@/public/assets/icons/drop-blue.svg'
 import { erc20ABI, useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi'
-import { namehash } from 'viem'
+import { bytesToHex, namehash } from 'viem'
 import { Network, Alchemy } from 'alchemy-sdk'
 import { MerkleTree } from 'merkletreejs'
 import keccak256 from 'keccak256'
@@ -40,7 +40,7 @@ export default function AllowlistModal({ENS, setOpenAllowlistModal, contract} : 
   const handleAllowlistModeToggle =  () => {
     setAllowlistModeMenu(!allowlistModeMenu)
   }
-
+ 
   
   const prepareContractWriteAllowlist = usePrepareContractWrite({
     address: `0x${contract.slice(2)}`,
@@ -54,7 +54,7 @@ export default function AllowlistModal({ENS, setOpenAllowlistModal, contract} : 
       },
     ],
     functionName: 'updateBaseEnsMerkle',
-    args: [ (namehash(ENS.name)), ([0x00]),  (1) ],
+    args: [ (namehash(ENS.name)), (bytesToHex(rootHash!)),  (subsLimit) ],
     value: BigInt(0),
     chainId: 5,
   })
@@ -97,7 +97,7 @@ export default function AllowlistModal({ENS, setOpenAllowlistModal, contract} : 
         try {
           setLoadingHolders(true)
           // Print total NFT collection returned in the response:
-          const res = (await alchemy.nft.getOwnersForContract(ERC721)).owners  //0x74ecb5f64363bd663abd3ef08df75dd22d853bfc //ERC721 //0xD3D9ddd0CF0A5F0BFB8f7fcEAe075DF687eAEBaB
+          const res = (await alchemy.nft.getOwnersForContract(ERC721)).owners
           if (res.length >= 1) {
             setHolders(res)
             setValid(true)
@@ -128,6 +128,7 @@ export default function AllowlistModal({ENS, setOpenAllowlistModal, contract} : 
   },[holders])
   console.log(holders)
   console.log(rootHash)
+  console.log(bytesToHex(rootHash!))
 
 
 
