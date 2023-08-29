@@ -4,7 +4,7 @@ import closeSVG from '@/public/assets/icons/close.svg'
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import drop_blueSVG from '@/public/assets/icons/drop-blue.svg'
-import { useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi'
+import { useAccount, useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi'
 import { bytesToHex, namehash } from 'viem'
 import { Network, Alchemy } from 'alchemy-sdk'
 import { MerkleTree } from 'merkletreejs'
@@ -27,6 +27,9 @@ interface AllowlistModalProps{
   
   
 export default function AllowlistModal({ENS, setOpenAllowlistModal, contract} : AllowlistModalProps) {
+
+  const {address} = useAccount()
+
   const [allowlistModeMenu, setAllowlistModeMenu] = useState<boolean>(false)
   const [selectedAllowlistMode, setSelectedAllowlistMode] = useState<string>('holders')
   const [subsLimit, setSubsLimit] = useState<number>(1)
@@ -64,14 +67,71 @@ export default function AllowlistModal({ENS, setOpenAllowlistModal, contract} : 
     hash: contractWriteAllowlist.data?.hash,
     confirmations: 2,
     onSuccess() {
+      //handleSetAllowlistOffChain()
     },
   })
 
-  const handleSetAllowlist = async () => {
+  const handleSetAllowlistOnChain = async () => {
     try {
-        await contractWriteAllowlist.writeAsync?.()
+      console.log('clicked?')
+      await contractWriteAllowlist.writeAsync?.()
+        
     } catch (err) {
         console.log(err)
+    }
+  }
+
+  const handleSetAllowlistOffChain = async () => {
+    try {
+      console.log('clicked?')
+      const res = await fetch('api/allowlist/route', {
+        method: 'POST',
+        headers: {
+          'Content-type': 'application/json'
+        },
+        body: JSON.stringify({
+          address,
+          selectedAllowlistMode,
+          rootHash,
+          holders,
+        })
+      })
+      const po = await res.json()
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  const handleGetAllowlist = async () => {
+    try {
+      const res = await fetch('api/allowlist/', {
+        method: 'GET',
+        headers: {
+          'Contemt-type': 'application/json'
+        },
+        body: JSON.stringify({
+          address,
+        })
+      }) 
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  const handleUpdateAllowlist = async () => {
+    try {
+      const res = await fetch('api/allowlist', {
+        method: 'UPDATE',
+        headers: {
+          'Contemt-type': 'application/json'
+        },
+        body: JSON.stringify({
+          address,
+          selectedAllowlistMode,
+          rootHash,
+          holders,
+        })
+      }) 
+    } catch (error) {
+      console.log(error)
     }
   }
   
@@ -246,7 +306,7 @@ export default function AllowlistModal({ENS, setOpenAllowlistModal, contract} : 
               </div>
               <div className={styles.allowlistModalDown}>
                 <div>
-                  { selectedAllowlistMode === 'holders' && <button disabled={ERC721 == '' || rootHash == undefined || isLoadingHolders} onClick={handleSetAllowlist}> Confirm </button>}
+                  { selectedAllowlistMode === 'holders' && <button disabled={ERC721 == ''} onClick={handleSetAllowlistOffChain}> Confirm </button>}
                   { selectedAllowlistMode === 'persnoal' && <button> Confirm </button>}
                 </div>
               </div>
