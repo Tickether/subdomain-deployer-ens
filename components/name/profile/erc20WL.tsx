@@ -541,14 +541,14 @@ try {
           address: "0x5c7d14e3d9a9b5778D8d51A0f209dCae2648c406",
           abi: [
               {
-                  name: 'threeUpLetterFee',
+                  name: 'threeUpLetterFeeERC20',
                   inputs: [{ internalType: "bytes32", name: "node", type: "bytes32" }, {internalType: "address", name: "erc20Contract", type: "address"}],
                   outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
                   stateMutability: 'view',
                   type: 'function',
               },    
           ],
-          functionName: 'threeUpLetterFee',
+          functionName: 'threeUpLetterFeeERC20',
           args: [(namehash(ENS.name)), (selectedContract)],
           chainId: 5,
         },
@@ -557,14 +557,14 @@ try {
           address: "0x5c7d14e3d9a9b5778D8d51A0f209dCae2648c406",
           abi: [
               {
-                  name: 'fourFiveLetterFee',
+                  name: 'fourFiveLetterFeeERC20',
                   inputs: [{ internalType: "bytes32", name: "node", type: "bytes32" }, {internalType: "address", name: "erc20Contract", type: "address"}],
                   outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
                   stateMutability: 'view',
                   type: 'function',
               },    
           ],
-          functionName: 'fourFiveLetterFee',
+          functionName: 'fourFiveLetterFeeERC20',
           args: [(namehash(ENS.name)), (selectedContract)],
           chainId: 5,
         },
@@ -573,14 +573,14 @@ try {
           address: "0x5c7d14e3d9a9b5778D8d51A0f209dCae2648c406",
           abi: [
               {
-                  name: 'sixDownLetterFee',
+                  name: 'sixDownLetterFeeERC20',
                   inputs: [{ internalType: "bytes32", name: "node", type: "bytes32" }, {internalType: "address", name: "erc20Contract", type: "address"}],
                   outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
                   stateMutability: 'view',
                   type: 'function',
               },    
           ],
-          functionName: 'sixDownLetterFee',
+          functionName: 'sixDownLetterFeeERC20',
           args: [(namehash(ENS.name)), (selectedContract)],
           chainId: 5,
         },
@@ -589,14 +589,14 @@ try {
           address: "0x5c7d14e3d9a9b5778D8d51A0f209dCae2648c406",
           abi: [
               {
-                  name: 'oneNumberFee',
+                  name: 'oneNumberFeeERC20',
                   inputs: [{ internalType: "bytes32", name: "node", type: "bytes32" }, {internalType: "address", name: "erc20Contract", type: "address"}],
                   outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
                   stateMutability: 'view',
                   type: 'function',
               },    
           ],
-          functionName: 'oneNumberFee',
+          functionName: 'oneNumberFeeERC20',
           args: [(namehash(ENS.name)), (selectedContract)],
           chainId: 5,
         },
@@ -605,14 +605,14 @@ try {
           address: "0x5c7d14e3d9a9b5778D8d51A0f209dCae2648c406",
           abi: [
               {
-                  name: 'twoNumberFee',
+                  name: 'twoNumberFeeERC20',
                   inputs: [{ internalType: "bytes32", name: "node", type: "bytes32" }, {internalType: "address", name: "erc20Contract", type: "address"}],
                   outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
                   stateMutability: 'view',
                   type: 'function',
               },    
           ],
-          functionName: 'twoNumberFee',
+          functionName: 'twoNumberFeeERC20',
           args: [(namehash(ENS.name)), (selectedContract)],
           chainId: 5,
         },
@@ -621,14 +621,14 @@ try {
           address: "0x5c7d14e3d9a9b5778D8d51A0f209dCae2648c406",
           abi: [
               {
-                  name: 'threeNumberFee',
+                  name: 'threeNumberFeeERC20',
                   inputs: [{ internalType: "bytes32", name: "node", type: "bytes32" }, {internalType: "address", name: "erc20Contract", type: "address"}],
                   outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
                   stateMutability: 'view',
                   type: 'function',
               },    
           ],
-          functionName: 'threeNumberFee',
+          functionName: 'threeNumberFeeERC20',
           args: [(namehash(ENS.name)), (selectedContract)],
           chainId: 5,
         },
@@ -637,14 +637,14 @@ try {
           address: "0x5c7d14e3d9a9b5778D8d51A0f209dCae2648c406",
           abi: [
               {
-                  name: 'fourNumberFee',
+                  name: 'fourNumberFeeERC20',
                   inputs: [{ internalType: "bytes32", name: "node", type: "bytes32" }, {internalType: "address", name: "erc20Contract", type: "address"}],
                   outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
                   stateMutability: 'view',
                   type: 'function',
               },    
           ],
-          functionName: 'fourNumberFee',
+          functionName: 'fourNumberFeeERC20',
           args: [(namehash(ENS.name)), (selectedContract)],
           chainId: 5,
         },
@@ -653,14 +653,14 @@ try {
           address: "0x5c7d14e3d9a9b5778D8d51A0f209dCae2648c406",
           abi: [
               {
-                  name: 'fiveUpNumberFee',
+                  name: 'fiveUpNumberFeeERC20',
                   inputs: [{ internalType: "bytes32", name: "node", type: "bytes32" }, {internalType: "address", name: "erc20Contract", type: "address"}],
                   outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
                   stateMutability: 'view',
                   type: 'function',
               },    
           ],
-          functionName: 'fiveUpNumberFee',
+          functionName: 'fiveUpNumberFeeERC20',
           args: [(namehash(ENS.name)), (selectedContract)],
           chainId: 5,
         },
@@ -677,14 +677,14 @@ try {
             //
             const dec8 = 100000000
             const pricesData: Prices = {
-              threeUpLetterFee: (Number(ThreeUpLetterFee)/dec8).toFixed(2),
-              fourFiveLetterFee: (Number(FourFiveLetterFee)/dec8).toFixed(2),
-              sixDownLetterFee: (Number(SixDownLetterFee)/dec8).toFixed(2),
-              oneNumberFee: (Number(OneNumberFee)/dec8).toFixed(2),
-              twoNumberFee: (Number(TwoNumberFee)/dec8).toFixed(2),
-              threeNumberFee: (Number(ThreeNumberFee)/dec8).toFixed(2),
-              fourNumberFee: (Number(FourNumberFee)/dec8).toFixed(2),
-              fiveUpNumberFee: (Number(FiveUpNumberFee)/dec8).toFixed(2),
+              threeUpLetterFee: (Number(ThreeUpLetterFee)).toFixed(2),
+              fourFiveLetterFee: (Number(FourFiveLetterFee)).toFixed(2),
+              sixDownLetterFee: (Number(SixDownLetterFee)).toFixed(2),
+              oneNumberFee: (Number(OneNumberFee)).toFixed(2),
+              twoNumberFee: (Number(TwoNumberFee)).toFixed(2),
+              threeNumberFee: (Number(ThreeNumberFee)).toFixed(2),
+              fourNumberFee: (Number(FourNumberFee)).toFixed(2),
+              fiveUpNumberFee: (Number(FiveUpNumberFee)).toFixed(2),
             };
             setPrices(pricesData)
     }
@@ -917,11 +917,11 @@ const handleContractSelect =(ERC20Contract: string, ERC20Symbol: string)=>{
                                         )
                                         :(
                                             <div className={styles.profileDownFeeChild}>
-                                                <div className={styles.profileDownFees}><span>One Number Fee</span><span>{0} {tokenSymbol}</span></div>
-                                                <div className={styles.profileDownFees}><span>Two Number Fee</span><span>{0} {tokenSymbol}</span></div>
-                                                <div className={styles.profileDownFees}><span>Three Number Fee</span><span>{0} {tokenSymbol}</span></div>
-                                                <div className={styles.profileDownFees}><span>Four Number Fee</span><span>{0} {tokenSymbol}</span></div>
-                                                <div className={styles.profileDownFees}><span>Five+ Number Fee</span><span>{0} {tokenSymbol}</span></div>
+                                                <div className={styles.profileDownFees}><span>One Number Fee</span><span>{prices.oneNumberFee} {tokenSymbol}</span></div>
+                                                <div className={styles.profileDownFees}><span>Two Number Fee</span><span>{prices.twoNumberFee} {tokenSymbol}</span></div>
+                                                <div className={styles.profileDownFees}><span>Three Number Fee</span><span>{prices.threeNumberFee} {tokenSymbol}</span></div>
+                                                <div className={styles.profileDownFees}><span>Four Number Fee</span><span>{prices.fourNumberFee} {tokenSymbol}</span></div>
+                                                <div className={styles.profileDownFees}><span>Five+ Number Fee</span><span>{prices.fiveUpNumberFee} {tokenSymbol}</span></div>
                                             </div>   
                                         )
                                     }
@@ -935,17 +935,17 @@ const handleContractSelect =(ERC20Contract: string, ERC20Symbol: string)=>{
                                         showUSD
                                         ?( 
                                             <div className={styles.profileDownFeeChild}>
-                                                <div className={styles.profileDownFees}><span>Three- Number Fee</span><span>{0} USD</span></div>
-                                                <div className={styles.profileDownFees}><span>Four/Five Number Fee</span><span>{0} USD</span></div>
-                                                <div className={styles.profileDownFees}><span>Six+ Number Fee</span><span>{0} USD</span></div>
+                                                <div className={styles.profileDownFees}><span>Three- Letter Fee</span><span>{0} USD</span></div>
+                                                <div className={styles.profileDownFees}><span>Four/Five Letter Fee</span><span>{0} USD</span></div>
+                                                <div className={styles.profileDownFees}><span>Six+ Letter Fee</span><span>{0} USD</span></div>
                                                 
                                             </div>
                                         )
                                         :(
                                             <div className={styles.profileDownFeeChild}>
-                                                <div className={styles.profileDownFees}><span>Three- Number Fee</span><span>{0} {tokenSymbol}</span></div>
-                                                <div className={styles.profileDownFees}><span>Four/Five Number Fee</span><span>{0} {tokenSymbol}</span></div>
-                                                <div className={styles.profileDownFees}><span>Six+ Number Fee</span><span>{0} {tokenSymbol}</span></div>
+                                                <div className={styles.profileDownFees}><span>Three- Letter Fee</span><span>{prices.threeUpLetterFee} {tokenSymbol}</span></div>
+                                                <div className={styles.profileDownFees}><span>Four/Five Letter Fee</span><span>{prices.fourFiveLetterFee} {tokenSymbol}</span></div>
+                                                <div className={styles.profileDownFees}><span>Six+ Letter Fee</span><span>{prices.sixDownLetterFee} {tokenSymbol}</span></div>
                                             </div>   
                                         )
                                     }

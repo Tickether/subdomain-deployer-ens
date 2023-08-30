@@ -20,7 +20,11 @@ interface AllowlistModalProps{
   }
 
 
-  
+interface OffChainHolders {
+  mode: string,
+  merkle: string,
+  allowlist: string[]
+}
   
  
   
@@ -38,6 +42,7 @@ export default function AllowlistModal({ENS, setOpenAllowlistModal, contract} : 
   const [holders, setHolders] = useState<string[]>([])
   const [isLoadingHolders, setLoadingHolders] = useState<boolean>(false)
   const [rootHash, setRootHash] = useState<undefined | string>(undefined)
+  const [offChainHolders, setOffChainHolders] = useState<OffChainHolders | null >(null)
  
   
   const handleAllowlistModeToggle =  () => {
@@ -67,7 +72,12 @@ export default function AllowlistModal({ENS, setOpenAllowlistModal, contract} : 
     hash: contractWriteAllowlist.data?.hash,
     confirmations: 2,
     onSuccess() {
-      //handleSetAllowlistOffChain()
+      //if null off chain else update
+      if (offChainHolders === null) {
+        handleSetAllowlistOffChain()
+      } else {
+        handleUpdateAllowlist() 
+      }
     },
   })
 
@@ -81,10 +91,68 @@ export default function AllowlistModal({ENS, setOpenAllowlistModal, contract} : 
     }
   }
 
+  useEffect(()=>{
+    const handleGetAllowlist = async () => {
+      try {
+        const res = await fetch('api/allowlist/get', {
+          method: 'POST',
+          headers: {
+            'Content-type': 'application/json'
+          },
+          body: JSON.stringify({
+            address,
+          })
+        }) 
+        const data = await res.json()
+        console.log(data)
+        if (data) {
+          const offChainDefault : OffChainHolders = {
+            mode: (data.address),
+            merkle: (data.merkle),
+            allowlist: (data.allowlist),
+          };
+          
+          setOffChainHolders(offChainDefault)
+        }
+        
+        return data
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    handleGetAllowlist()
+  })
+  
+  
+  console.log(offChainHolders)
+  
+  
+
+  //console.log(handleGetAllowlist())
+
+  // new off chain old update
+  const handleUpdateAllowlist = async () => {
+    try {
+      const res = await fetch('api/allowlist/update', {
+        method: 'POST',
+        headers: {
+          'Content-type': 'application/json'
+        },
+        body: JSON.stringify({
+          address,
+          selectedAllowlistMode,
+          rootHash,
+          holders,
+        })
+      }) 
+    } catch (error) {
+      console.log(error)
+    }
+  }
   const handleSetAllowlistOffChain = async () => {
     try {
       console.log('clicked?')
-      const res = await fetch('api/allowlist/route', {
+      const res = await fetch('api/allowlist/post', {
         method: 'POST',
         headers: {
           'Content-type': 'application/json'
@@ -96,40 +164,6 @@ export default function AllowlistModal({ENS, setOpenAllowlistModal, contract} : 
           holders,
         })
       })
-      const po = await res.json()
-    } catch (error) {
-      console.log(error)
-    }
-  }
-  const handleGetAllowlist = async () => {
-    try {
-      const res = await fetch('api/allowlist/', {
-        method: 'GET',
-        headers: {
-          'Contemt-type': 'application/json'
-        },
-        body: JSON.stringify({
-          address,
-        })
-      }) 
-    } catch (error) {
-      console.log(error)
-    }
-  }
-  const handleUpdateAllowlist = async () => {
-    try {
-      const res = await fetch('api/allowlist', {
-        method: 'UPDATE',
-        headers: {
-          'Contemt-type': 'application/json'
-        },
-        body: JSON.stringify({
-          address,
-          selectedAllowlistMode,
-          rootHash,
-          holders,
-        })
-      }) 
     } catch (error) {
       console.log(error)
     }
@@ -306,7 +340,7 @@ export default function AllowlistModal({ENS, setOpenAllowlistModal, contract} : 
               </div>
               <div className={styles.allowlistModalDown}>
                 <div>
-                  { selectedAllowlistMode === 'holders' && <button disabled={ERC721 == ''} onClick={handleSetAllowlistOffChain}> Confirm </button>}
+                  { selectedAllowlistMode === 'holders' && <button disabled={ERC721 == '' || offChainHolders?.merkle == rootHash} onClick={handleSetAllowlistOnChain}> Confirm </button>}
                   { selectedAllowlistMode === 'persnoal' && <button> Confirm </button>}
                 </div>
               </div>

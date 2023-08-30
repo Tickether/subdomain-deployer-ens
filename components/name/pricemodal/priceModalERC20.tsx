@@ -45,7 +45,7 @@ export default function PriceModalERC20({ENS, setOpenModal, prices, ERC20List, c
           },
         ],
         functionName: 'setLetterFeesERC20',
-        args: [ (namehash(ENS.name)), (selectedContract), (BigInt(newLetterPrices[0]*dec8)), (BigInt(newLetterPrices[1]*dec8)), (BigInt(newLetterPrices[2]*dec8)) ],
+        args: [ (namehash(ENS.name)), (selectedContract), (BigInt(newLetterPrices[0])), (BigInt(newLetterPrices[1])), (BigInt(newLetterPrices[2])) ],
         value: BigInt(0),
         chainId: 5,
       })
@@ -78,7 +78,7 @@ export default function PriceModalERC20({ENS, setOpenModal, prices, ERC20List, c
           },
         ],
         functionName: 'setNumberFeesERC20',
-        args: [ (namehash(ENS.name)), (selectedContract), (BigInt(newNumberPrices[0]*dec8)), (BigInt(newNumberPrices[1]*dec8)), (BigInt(newNumberPrices[2]*dec8)), (BigInt(newNumberPrices[3]*dec8)), (BigInt(newNumberPrices[4]*dec8)) ],
+        args: [ (namehash(ENS.name)), (selectedContract), (BigInt(newNumberPrices[0])), (BigInt(newNumberPrices[1])), (BigInt(newNumberPrices[2])), (BigInt(newNumberPrices[3])), (BigInt(newNumberPrices[4])) ],
         value: BigInt(0),
         chainId: 5,
       })

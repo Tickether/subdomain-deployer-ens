@@ -903,15 +903,16 @@ const handleContractSelect =(ERC20Contract: string, ERC20Symbol: string)=>{
                                         )
                                         :(
                                             <div className={styles.profileDownFeeChild}>
-                                                <div className={styles.profileDownFees}><span>One Number Fee</span><span>{0} {tokenSymbol}</span></div>
-                                                <div className={styles.profileDownFees}><span>Two Number Fee</span><span>{0} {tokenSymbol}</span></div>
-                                                <div className={styles.profileDownFees}><span>Three Number Fee</span><span>{0} {tokenSymbol}</span></div>
-                                                <div className={styles.profileDownFees}><span>Four Number Fee</span><span>{0} {tokenSymbol}</span></div>
-                                                <div className={styles.profileDownFees}><span>Five+ Number Fee</span><span>{0} {tokenSymbol}</span></div>
+                                                <div className={styles.profileDownFees}><span>One Number Fee</span><span>{prices.oneNumberFee} {tokenSymbol}</span></div>
+                                                <div className={styles.profileDownFees}><span>Two Number Fee</span><span>{prices.twoNumberFee} {tokenSymbol}</span></div>
+                                                <div className={styles.profileDownFees}><span>Three Number Fee</span><span>{prices.threeNumberFee} {tokenSymbol}</span></div>
+                                                <div className={styles.profileDownFees}><span>Four Number Fee</span><span>{prices.fourNumberFee} {tokenSymbol}</span></div>
+                                                <div className={styles.profileDownFees}><span>Five+ Number Fee</span><span>{prices.fiveUpNumberFee} {tokenSymbol}</span></div>
                                             </div>   
                                         )
                                     }
                                 </div>
+                                 
                               )
                             }
                             {
@@ -921,17 +922,17 @@ const handleContractSelect =(ERC20Contract: string, ERC20Symbol: string)=>{
                                         showUSD
                                         ?( 
                                             <div className={styles.profileDownFeeChild}>
-                                                <div className={styles.profileDownFees}><span>Three- Number Fee</span><span>{0} USD</span></div>
-                                                <div className={styles.profileDownFees}><span>Four/Five Number Fee</span><span>{0} USD</span></div>
-                                                <div className={styles.profileDownFees}><span>Six+ Number Fee</span><span>{0} USD</span></div>
+                                                <div className={styles.profileDownFees}><span>Three- Letter Fee</span><span>{0} USD</span></div>
+                                                <div className={styles.profileDownFees}><span>Four/Five Letter Fee</span><span>{0} USD</span></div>
+                                                <div className={styles.profileDownFees}><span>Six+ Letter Fee</span><span>{0} USD</span></div>
                                                 
                                             </div>
                                         )
                                         :(
                                             <div className={styles.profileDownFeeChild}>
-                                                <div className={styles.profileDownFees}><span>Three- Number Fee</span><span>{0} {tokenSymbol}</span></div>
-                                                <div className={styles.profileDownFees}><span>Four/Five Number Fee</span><span>{0} {tokenSymbol}</span></div>
-                                                <div className={styles.profileDownFees}><span>Six+ Number Fee</span><span>{0} {tokenSymbol}</span></div>
+                                                <div className={styles.profileDownFees}><span>Three- Letter Fee</span><span>{prices.threeNumberFee} {tokenSymbol}</span></div>
+                                                <div className={styles.profileDownFees}><span>Four/Five Letter Fee</span><span>{prices.fourFiveLetterFee} {tokenSymbol}</span></div>
+                                                <div className={styles.profileDownFees}><span>Six+ Letter Fee</span><span>{prices.sixDownLetterFee} {tokenSymbol}</span></div>
                                             </div>   
                                         )
                                     }
