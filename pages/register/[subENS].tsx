@@ -24,18 +24,15 @@ export default function Register() {
     //const [connected, setConnected] = useState<boolean>(false)
     const validatorDefault = {
         Wrapped: false,
+        FuseBurned: false,
         Approved: false,
         ActiveNode: false,
-        CanSubENS: false,
         Erc20Approved: false,
         Erc20ActiveNode: false,
-        Erc20CanSubENS: false,
         WLApproved:false,
         WLActiveNode:false,
-        WLCanSubENS: false,
         Erc20WLApproved: false,
         Erc20WLActiveNode: false,
-        Erc20WLCanSubENS: false,
     };
     const [validators, setValidators] = useState<Validator>(validatorDefault)
     const [selectedPayment, setSelectedPayment] = useState<string | null>(null);
@@ -419,25 +416,21 @@ export default function Register() {
         if (data! /*&& typeof data === 'boolean'*/) {
 
             // Extract the results from the data array
-            const [isWrapped, isApproved, isNodeActive, isCanSubENS, isERC20Approved, isERC20NodeActive, isErc20CanSubENS, isWLApproved, isWLNodeActive, isWLCanSubENS, isERC20WLApproved, isERC20WLNodeActive, isErc20WLCanSubENS] = data.map(item => item.result as boolean);
+            const [isWrapped, isFuseBurned, isApproved, isNodeActive, isERC20Approved, isERC20NodeActive, isWLApproved, isWLNodeActive, isERC20WLApproved, isERC20WLNodeActive] = data.map(item => item.result as boolean);
 
             // Create a new Validator object using the extracted data
             const validatorData: Validator = {
                 Wrapped: isWrapped,
+                FuseBurned: isFuseBurned,
                 Approved: isApproved,
                 ActiveNode: isNodeActive,
-                CanSubENS: isCanSubENS,
                 Erc20Approved: isERC20Approved,
                 Erc20ActiveNode: isERC20NodeActive,
-                Erc20CanSubENS: isErc20CanSubENS,
                 WLApproved: isWLApproved,
                 WLActiveNode: isWLNodeActive,
-                WLCanSubENS: isWLCanSubENS,
                 Erc20WLApproved: isERC20WLApproved,
                 Erc20WLActiveNode: isERC20WLNodeActive,
-                Erc20WLCanSubENS: isErc20WLCanSubENS,
             };
-
             /*
             const validatorData : Validator = {
                 wrapped: data[0].result,

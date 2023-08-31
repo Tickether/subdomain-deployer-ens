@@ -414,7 +414,7 @@ export default function SearchResult({searchresult, /*canSubdomain,*/ subEnsBox,
             <div 
                 className={styles.searchResults}
                 onClick={() => {
-                    if (validators!.Wrapped && validators!.Approved && validators!.ActiveNode || validators!.Wrapped && validators!.Erc20Approved && validators!.Erc20ActiveNode || validators!.Wrapped && validators!.WLApproved && validators!.WLActiveNode || validators!.Wrapped && validators!.Erc20WLApproved && validators!.Erc20WLActiveNode /*wrapped && approved && activeParentNode*/) {
+                    if (validators!.Wrapped && validators!.FuseBurned && validators!.Approved && validators!.ActiveNode || validators!.Wrapped && validators!.FuseBurned && validators!.Erc20Approved && validators!.Erc20ActiveNode || validators!.Wrapped &&  validators!.FuseBurned && validators!.WLApproved && validators!.WLActiveNode || validators!.Wrapped && validators!.FuseBurned && validators!.Erc20WLApproved && validators!.Erc20WLActiveNode) {
                         subEnsBox(true);
                         suggestBox(false);
                         ens(searchresult.name);
