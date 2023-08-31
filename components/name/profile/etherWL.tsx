@@ -183,7 +183,7 @@ useEffect(() => {
 // check setBase/ParentNodeActive
 
 const contractReadActiveParentNode = useContractRead({
-  address: "0x5c7d14e3d9a9b5778D8d51A0f209dCae2648c406",
+  address: "0xa172B621A6bF627c344C2a12377bE147F07376E4",
   abi: [
       {
           name: 'parentNodeActive',
