@@ -20,18 +20,15 @@ interface SearchResultProps {
 
 export interface Validator {
     Wrapped: boolean,
+    FuseBurned: boolean,
     Approved: boolean,
     ActiveNode: boolean,
-    CanSubENS: boolean,
     Erc20Approved: boolean,
     Erc20ActiveNode: boolean,
-    Erc20CanSubENS: boolean,
     WLApproved:boolean,
     WLActiveNode:boolean,
-    WLCanSubENS: boolean,
     Erc20WLApproved: boolean,
     Erc20WLActiveNode: boolean,
-    Erc20WLCanSubENS: boolean,
 }
 
 
@@ -49,18 +46,15 @@ export default function SearchResult({searchresult, /*canSubdomain,*/ subEnsBox,
 
     const validatorDefault = {
         Wrapped: false,
+        FuseBurned: false,
         Approved: false,
         ActiveNode: false,
-        CanSubENS: false,
         Erc20Approved: false,
         Erc20ActiveNode: false,
-        Erc20CanSubENS: false,
         WLApproved:false,
         WLActiveNode:false,
-        WLCanSubENS: false,
         Erc20WLApproved: false,
         Erc20WLActiveNode: false,
-        Erc20WLCanSubENS: false,
     };
     const [validators, setValidators] = useState<Validator>(validatorDefault)
 
@@ -220,7 +214,7 @@ export default function SearchResult({searchresult, /*canSubdomain,*/ subEnsBox,
 
     const { data, isLoading } = useContractReads({
         contracts: [
-            //contract 0 check if name is wrapped on nameWrapper
+            //contract 0a check if name is wrapped on nameWrapper
             {
                 address: "0x114D4603199df73e7D157787f8778E21fCd13066",
                 abi: [
@@ -234,6 +228,23 @@ export default function SearchResult({searchresult, /*canSubdomain,*/ subEnsBox,
                 ],
                 functionName: 'isWrapped',
                 args: [(namehash(searchresult.name))],
+                chainId: 5,
+            },
+            
+            //contract 0b check if fuse burned enabled on SubENS contract
+            {
+                address: "0x114D4603199df73e7D157787f8778E21fCd13066",
+                abi: [
+                    {
+                        name: 'allFusesBurned',
+                        inputs: [{ internalType: "bytes32", name: "node", type: "bytes32" }, { internalType: "uint32", name: "fuseMask", type: "uint32" }],
+                        outputs: [{ internalType: "bool", name: "", type: "bool" }],
+                        stateMutability: 'view',
+                        type: 'function',
+                    },    
+                ],
+                functionName: 'allFusesBurned',
+                args: [(namehash(searchresult.name)), (1)],
                 chainId: 5,
             },
             //contract 1a check if SubENS contract is approved on nameWrapper
@@ -265,22 +276,6 @@ export default function SearchResult({searchresult, /*canSubdomain,*/ subEnsBox,
                     },    
                 ],
                 functionName: 'parentNodeActive',
-                args: [(namehash(searchresult.name))],
-                chainId: 5,
-            },
-            //contract 1c check if CanSub name is enabled on SubENS contract
-            {
-                address: "0xDb4E489A6476ad51d32BA9F7F629aB491a16ECEC",
-                abi: [
-                    {
-                        name: 'parentNodeCanSubActive',
-                        inputs: [{ internalType: "bytes32", name: "", type: "bytes32" }],
-                        outputs: [{ internalType: "bool", name: "", type: "bool" }],
-                        stateMutability: 'view',
-                        type: 'function',
-                    },    
-                ],
-                functionName: 'parentNodeCanSubActive',
                 args: [(namehash(searchresult.name))],
                 chainId: 5,
             },
@@ -316,22 +311,6 @@ export default function SearchResult({searchresult, /*canSubdomain,*/ subEnsBox,
                 args: [(namehash(searchresult.name))],
                 chainId: 5,
             },
-            //contract 2c check if CanSub name is enabled on SubENSERC20 contract
-            {
-                address: "0x229C0715e70741F854C299913C2446eb4400e76C",
-                abi: [
-                    {
-                        name: 'parentNodeCanSubActive',
-                        inputs: [{ internalType: "bytes32", name: "", type: "bytes32" }],
-                        outputs: [{ internalType: "bool", name: "", type: "bool" }],
-                        stateMutability: 'view',
-                        type: 'function',
-                    },    
-                ],
-                functionName: 'parentNodeCanSubActive',
-                args: [(namehash(searchresult.name))],
-                chainId: 5,
-            },
             //contract 3a check if SubENSWL contract is approved on nameWrapper
             {
                 address: "0x114D4603199df73e7D157787f8778E21fCd13066",
@@ -361,22 +340,6 @@ export default function SearchResult({searchresult, /*canSubdomain,*/ subEnsBox,
                     },    
                 ],
                 functionName: 'parentNodeActive',
-                args: [(namehash(searchresult.name))],
-                chainId: 5,
-            },
-            //contract 3c check if CanSub name is enabled on SubENSWL contract
-            {
-                address: "0x229C0715e70741F854C299913C2446eb4400e76C",
-                abi: [
-                    {
-                        name: 'parentNodeCanSubActive',
-                        inputs: [{ internalType: "bytes32", name: "", type: "bytes32" }],
-                        outputs: [{ internalType: "bool", name: "", type: "bool" }],
-                        stateMutability: 'view',
-                        type: 'function',
-                    },    
-                ],
-                functionName: 'parentNodeCanSubActive',
                 args: [(namehash(searchresult.name))],
                 chainId: 5,
             },
@@ -412,23 +375,6 @@ export default function SearchResult({searchresult, /*canSubdomain,*/ subEnsBox,
                 args: [(namehash(searchresult.name))],
                 chainId: 5,
             },
-            //contract 4c check if CanSub name is enabled on SubENSERC20WL contract
-            {
-                address: "0x229C0715e70741F854C299913C2446eb4400e76C",
-                abi: [
-                    {
-                        name: 'parentNodeCanSubActive',
-                        inputs: [{ internalType: "bytes32", name: "", type: "bytes32" }],
-                        outputs: [{ internalType: "bool", name: "", type: "bool" }],
-                        stateMutability: 'view',
-                        type: 'function',
-                    },    
-                ],
-                functionName: 'parentNodeCanSubActive',
-                args: [(namehash(searchresult.name))],
-                chainId: 5,
-            },
-            
         ],
         watch: true,
     })  
@@ -438,39 +384,22 @@ export default function SearchResult({searchresult, /*canSubdomain,*/ subEnsBox,
         if (data! /*&& typeof data === 'boolean'*/) {
 
             // Extract the results from the data array
-            const [isWrapped, isApproved, isNodeActive, isCanSubENS, isERC20Approved, isERC20NodeActive, isErc20CanSubENS, isWLApproved, isWLNodeActive, isWLCanSubENS, isERC20WLApproved, isERC20WLNodeActive, isErc20WLCanSubENS] = data.map(item => item.result as boolean);
+            const [isWrapped, isFuseBurned, isApproved, isNodeActive, isERC20Approved, isERC20NodeActive, isWLApproved, isWLNodeActive, isERC20WLApproved, isERC20WLNodeActive] = data.map(item => item.result as boolean);
 
             // Create a new Validator object using the extracted data
             const validatorData: Validator = {
                 Wrapped: isWrapped,
+                FuseBurned: isFuseBurned,
                 Approved: isApproved,
                 ActiveNode: isNodeActive,
-                CanSubENS: isCanSubENS,
                 Erc20Approved: isERC20Approved,
                 Erc20ActiveNode: isERC20NodeActive,
-                Erc20CanSubENS: isErc20CanSubENS,
                 WLApproved: isWLApproved,
                 WLActiveNode: isWLNodeActive,
-                WLCanSubENS: isWLCanSubENS,
                 Erc20WLApproved: isERC20WLApproved,
                 Erc20WLActiveNode: isERC20WLNodeActive,
-                Erc20WLCanSubENS: isErc20WLCanSubENS,
             };
 
-            /*
-            const validatorData : Validator = {
-                wrapped: data[0].result,
-                approved: data[1].result,
-                activeNode: data[2].result,
-                erc20Approved: data[3].result,
-                erc20ActiveNode: data[4].result,
-                wLApproved:data[5].result,
-                wLActiveNode:data[6].result,
-                erc20WLApproved: data[7].result,
-                erc20WLActiveNode: data[8].result,
-            }
-            */
-            //dataRes.wrapped = data[0].result
             setValidators(validatorData)
         }
     },[data!])
@@ -516,7 +445,7 @@ export default function SearchResult({searchresult, /*canSubdomain,*/ subEnsBox,
                         </>
                     )
                     : (
-                        validators!.Wrapped && validators!.Approved && validators!.ActiveNode || validators!.Wrapped && validators!.Erc20Approved && validators!.Erc20ActiveNode || validators!.Wrapped && validators!.WLApproved && validators!.WLActiveNode || validators!.Wrapped && validators!.Erc20WLApproved && validators!.Erc20WLActiveNode  //wrapped && approved && activeParentNode // 
+                        validators!.Wrapped && validators!.FuseBurned && validators!.Approved && validators!.ActiveNode || validators!.Wrapped && validators!.FuseBurned && validators!.Erc20Approved && validators!.Erc20ActiveNode || validators!.Wrapped &&  validators!.FuseBurned && validators!.WLApproved && validators!.WLActiveNode || validators!.Wrapped && validators!.FuseBurned && validators!.Erc20WLApproved && validators!.Erc20WLActiveNode  //wrapped && approved && activeParentNode // 
                         ?   (
                             <div
                                 style={{

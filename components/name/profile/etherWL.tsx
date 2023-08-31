@@ -20,13 +20,6 @@ interface ENSprop {
 
 
 
-interface Conditions {
-  Wrapped: boolean,
-  CantUnwrap: boolean,
-  Approved: boolean,
-  ActiveNode: boolean,
-  CanSubActiveNode: boolean,
-}
 
 interface Hovered {
   toggleID: number,
@@ -48,14 +41,7 @@ export default function EtherWL({ENS} : ENSprop) {
     fiveUpNumberFee:('0.00'),
   };
   const [prices, setPrices] = useState<Prices>(PricesDefault)
-  const conditionsDefault = {
-    Wrapped: false,
-    CantUnwrap: false,
-    Approved: false,
-    ActiveNode: false,
-    CanSubActiveNode: false,
-  };
-  const [conditions, setConditions] = useState<Conditions>(conditionsDefault)
+  //const [conditions, setConditions] = useState<Conditions>(conditionsDefault)
   const [parentNodeBalance, setParentNodeBalance] = useState<bigint>(BigInt(0))
     const [showUSD, setShowUSD] = useState<boolean>(false)
     const [priceMenu, setPriceMenu] = useState<boolean>(false)
@@ -66,6 +52,11 @@ export default function EtherWL({ENS} : ENSprop) {
     const [roundData, setRoundData] = useState<bigint[] | null>(null)
     const [name, setName] = useState<string>('')
     const [encode, setEncode] = useState<string | null>(null)
+    const [wrapped, setWrapped] = useState<boolean>(false)
+    const [cantUnwrap, setCantUnwrap] = useState<boolean>(false)
+    const [approved, setApproved] = useState<boolean>(false)
+    const [activeNode, setActiveNode] = useState<boolean>(false)
+    const [canSubActiveNode, setCanSubActiveNode] = useState<boolean>(false)
     const hoverDefault = {
       toggleID: 0,
       isHovered: false,
@@ -110,6 +101,133 @@ export default function EtherWL({ENS} : ENSprop) {
   // after node set check for can sub enabled
 
   //validations should be ens owner not connected wallet
+  // check wrapped
+    
+  const contractReadWrapped = useContractRead({
+    address: "0x114D4603199df73e7D157787f8778E21fCd13066",
+    abi: [
+        {
+            name: 'isWrapped',
+            inputs: [{ internalType: "bytes32", name: "", type: "bytes32" }],
+            outputs: [{ internalType: "bool", name: "", type: "bool" }],
+            stateMutability: 'view',
+            type: 'function',
+        },
+    ],
+    functionName: 'isWrapped',
+    args: [(namehash(ENS.name))],
+    watch: true,
+    chainId: 5,
+})  
+console.log(contractReadWrapped.data)
+  
+useEffect(() => {
+    if (contractReadWrapped?.data! && typeof contractReadWrapped.data === 'boolean') {
+        setWrapped((contractReadWrapped?.data!))
+    }
+},[contractReadWrapped?.data!])
+
+// check cannot unwrap
+
+const contractReadFuseBurned = useContractRead({
+  address: "0x114D4603199df73e7D157787f8778E21fCd13066",
+  abi: [
+      {
+          name: 'allFusesBurned',
+          inputs: [{ internalType: "bytes32", name: "node", type: "bytes32" }, { internalType: "uint32", name: "fuseMask", type: "uint32" }],
+          outputs: [{ internalType: "bool", name: "", type: "bool" }],
+          stateMutability: 'view',
+          type: 'function',
+      },    
+  ],
+  functionName: 'allFusesBurned',
+  args: [(namehash(ENS.name)), (1)],
+  watch: true,
+  chainId: 5,
+})  
+console.log(contractReadFuseBurned.data)
+
+useEffect(() => {
+  if (contractReadFuseBurned?.data! && typeof contractReadFuseBurned.data === 'boolean') {
+    setCantUnwrap((contractReadFuseBurned?.data!))
+  }
+},[contractReadFuseBurned?.data!])
+
+// check approved // must replace address with own ofer ens in search
+
+
+const contractReadApproved = useContractRead({
+  address: "0x114D4603199df73e7D157787f8778E21fCd13066",
+  abi: [
+      {
+          name: 'isApprovedForAll',
+          inputs: [{ internalType: "address", name: "account", type: "address" }, { internalType: "address", name: "operator", type: "address" }],
+          outputs: [{ internalType: "bool", name: "", type: "bool" }],
+          stateMutability: 'view',
+          type: 'function',
+      },
+  ],
+  functionName: 'isApprovedForAll',
+  args: [(ENS.owner!), ('0xa172B621A6bF627c344C2a12377bE147F07376E4')],
+  watch: true,
+  chainId: 5,
+})  
+console.log(contractReadApproved.data)
+  
+useEffect(() => {
+    if (contractReadApproved?.data! && typeof contractReadApproved.data === 'boolean') {
+        setApproved((contractReadApproved?.data!))
+    }
+},[contractReadApproved?.data!])
+
+// check setBase/ParentNodeActive
+
+const contractReadActiveParentNode = useContractRead({
+  address: "0x5c7d14e3d9a9b5778D8d51A0f209dCae2648c406",
+  abi: [
+      {
+          name: 'parentNodeActive',
+          inputs: [{ internalType: "bytes32", name: "", type: "bytes32" }],
+          outputs: [{ internalType: "bool", name: "", type: "bool" }],
+          stateMutability: 'view',
+          type: 'function',
+      },    
+  ],
+  functionName: 'parentNodeActive',
+  args: [(namehash(ENS.name))],
+    chainId: 5,
+    watch: true,
+})
+useEffect(() => {
+    if (contractReadActiveParentNode?.data! && typeof contractReadActiveParentNode.data === 'boolean' ) {
+      setActiveNode((contractReadActiveParentNode?.data!))
+    }
+},[contractReadActiveParentNode?.data!])
+
+// check canSub/ParentNodeActive
+
+const contractReadCanSubActiveParentNode = useContractRead({
+  address: "0xa172B621A6bF627c344C2a12377bE147F07376E4",
+  abi: [
+      {
+          name: 'parentNodeCanSubActive',
+          inputs: [{ internalType: "bytes32", name: "", type: "bytes32" }],
+          outputs: [{ internalType: "bool", name: "", type: "bool" }],
+          stateMutability: 'view',
+          type: 'function',
+      },    
+  ],
+  functionName: 'parentNodeCanSubActive',
+  args: [(namehash(ENS.name))],
+  chainId: 5,
+  watch: true,
+})
+useEffect(() => {
+  if (contractReadCanSubActiveParentNode?.data! && typeof contractReadCanSubActiveParentNode.data === 'boolean' ) {
+    setCanSubActiveNode((contractReadCanSubActiveParentNode?.data!))
+  }
+},[contractReadCanSubActiveParentNode?.data!])
+  /*
   const checkConditions = useContractReads({
     contracts: [
         //contract 0 check if name is wrapped on nameWrapper
@@ -215,6 +333,7 @@ useEffect(() => {
     }
 },[checkConditions.data!])
 console.log(conditions)
+*/
 
 console.log((BigInt(labelhash(ENS.name.substring(0, ENS.name.lastIndexOf('.eth'))))))
 
@@ -725,7 +844,7 @@ const getEther = (usd : string) =>{
         <div className={styles.container}>
             <div className={styles.wrapper}>
             {
-              conditions.Wrapped && conditions.CantUnwrap && conditions.Approved && conditions.ActiveNode
+              wrapped && cantUnwrap && approved && activeNode
               ? (<div className={styles.profileDown}>
                 <div className={styles.profileDownChild}>
                   <div className={styles.profileDownPay}>
@@ -733,7 +852,7 @@ const getEther = (usd : string) =>{
                       <div className={styles.profileDownPayLeft}>
                         <p>ETH + Allowlist</p>
                         {
-                          conditions.CanSubActiveNode 
+                          canSubActiveNode 
                           ? <span onClick={handleSetParentNodeSubMode} className={styles.profileDownPayLeftActive}>Active</span>
                           : <span onClick={handleSetParentNodeSubMode} className={styles.profileDownPayLeftInactive}>Inactive</span>
                         }
@@ -886,11 +1005,11 @@ const getEther = (usd : string) =>{
                       </div>
                       <div className={styles.profileDownSteps}>
                         <div className={styles.profileDownStep}>  
-                          <div className={conditions.Approved ? styles.profileDownStepLeft : styles.profileDownStepLeftInactive}><span>1</span></div>
+                          <div className={approved ? styles.profileDownStepLeft : styles.profileDownStepLeftInactive}><span>1</span></div>
                           <div className={styles.profileDownStepMid}><p>Approve ENS</p><span>Please approve to enable domain mangement dashboard</span></div>
                           <div className={styles.profileDownStepRight}>
                             {
-                              conditions.Approved
+                              approved
                               ?(
                                 <div><Image src={toggle_onSVG} alt='' /></div>
                               )
@@ -908,11 +1027,11 @@ const getEther = (usd : string) =>{
                           </div>                               
                         </div>
                         <div className={styles.profileDownStep}> 
-                          <div className={conditions.Wrapped ? styles.profileDownStepLeft : styles.profileDownStepLeftInactive}><span>2</span></div>
+                          <div className={wrapped ? styles.profileDownStepLeft : styles.profileDownStepLeftInactive}><span>2</span></div>
                           <div className={styles.profileDownStepMid}><p>Wrap ENS domain</p><span>Please wrapped your domain to enable domain mangement dashboard</span></div>
                           <div className={styles.profileDownStepRight}>
                             {
-                              conditions.Wrapped
+                              wrapped
                               ?(
                                 <div><Image src={toggle_onSVG} alt='' /></div>
                               )
@@ -930,11 +1049,11 @@ const getEther = (usd : string) =>{
                           </div>                                      
                         </div>
                         <div className={styles.profileDownStep}>
-                          <div className={conditions.CantUnwrap ? styles.profileDownStepLeft : styles.profileDownStepLeftInactive}><span>3</span></div>
+                          <div className={cantUnwrap ? styles.profileDownStepLeft : styles.profileDownStepLeftInactive}><span>3</span></div>
                           <div className={styles.profileDownStepMid}><p>Burn Cannot Unwrap Fuse</p><span>In order to rent out subnames you must permanently wrap your domain!</span></div>
                           <div className={styles.profileDownStepRight}>
                             {
-                              conditions.CantUnwrap
+                              cantUnwrap
                               ?(
                                 <div><Image src={toggle_onSVG} alt='' /></div>
                               )
@@ -953,11 +1072,11 @@ const getEther = (usd : string) =>{
                           </div>                                
                         </div>
                         <div className={styles.profileDownStep}>   
-                          <div className={conditions.ActiveNode ? styles.profileDownStepLeft : styles.profileDownStepLeftInactive}><span>4</span></div>
+                          <div className={activeNode ? styles.profileDownStepLeft : styles.profileDownStepLeftInactive}><span>4</span></div>
                           <div className={styles.profileDownStepMid}><p>Initilaze ENS</p><span>Parent Node is not set! Dont worry click below to init</span></div>
                           <div className={styles.profileDownStepRight}>
                             {
-                              conditions.ActiveNode
+                              activeNode
                               ?(
                                 <div><Image src={toggle_onSVG} alt='' /></div>
                               )
