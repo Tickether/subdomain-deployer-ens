@@ -7,6 +7,7 @@ import minusSVG from '@/public/assets/icons/minus.svg'
 import plus_disabledSVG from '@/public/assets/icons/plus-disabled.svg'
 import minus_disabledSVG from '@/public/assets/icons/minus-disabled.svg'
 import gasSVG from '@/public/assets/icons/gas.svg'
+import gobackSVG from '@/public/assets/icons/goback.svg'
 import Image from 'next/image'
 import { goerli } from 'viem/chains'
 
@@ -35,6 +36,7 @@ export default function Ether({rootNodeENS, subLabel, clearOption} : RegisterPro
     const [roundData, setRoundData] = useState<bigint[] | null>(null)
     const [USData, setUSData] = useState<any>([])
     const [connected, setConnected] = useState<boolean>(false)
+    const [canSubActiveNode, setCanSubActiveNode] = useState<boolean>(false)
     
 
     useEffect(() => {
@@ -80,7 +82,29 @@ export default function Ether({rootNodeENS, subLabel, clearOption} : RegisterPro
     console.log((contractReadNodeData?.data!))
       
     
+    // check canSub/ParentNodeActive
     
+    const contractReadCanSubActiveParentNode = useContractRead({
+        address: "0xDb4E489A6476ad51d32BA9F7F629aB491a16ECEC",
+        abi: [
+            {
+                name: 'parentNodeCanSubActive',
+                inputs: [{ internalType: "bytes32", name: "", type: "bytes32" }],
+                outputs: [{ internalType: "bool", name: "", type: "bool" }],
+                stateMutability: 'view',
+                type: 'function',
+            },    
+        ],
+        functionName: 'parentNodeCanSubActive',
+        args: [((rootNodeENS))],
+        chainId: 5,
+        watch: true,
+    })
+    useEffect(() => {
+        if (contractReadCanSubActiveParentNode?.data! && typeof contractReadCanSubActiveParentNode.data === 'boolean' ) {
+          setCanSubActiveNode((contractReadCanSubActiveParentNode?.data!))
+        }
+    },[contractReadCanSubActiveParentNode?.data!])
     
     useEffect(()=>{
         let timeNow
@@ -288,8 +312,20 @@ export default function Ether({rootNodeENS, subLabel, clearOption} : RegisterPro
                 <div className={styles.wrapper}>
                     <div className={styles.content}>
                         <div onClick={() => clearOption()} className={styles.caption}>
-                            <p>ETHEREUM</p>
-                            <span>Select Another Payment Method</span>
+                        
+                            
+                            <div className={styles.captionTitle}>
+                                <div className={styles.captionTitleImgEther}><Image src={gobackSVG} alt='' /></div>
+                                <div className={styles.captionTitleText}><p>ETHEREUM</p></div>
+                            </div>
+                             
+                            <div className={styles.captionSub}>
+                                {
+                                    canSubActiveNode 
+                                    ? <div className={styles.captionCanSub}><span>Live</span></div>
+                                    : <div className={styles.captionCanNotSub}><span>Paused</span></div>
+                                }
+                            </div>
                         </div>
                         <div className={styles.yearButtons}>
                             {

@@ -1,6 +1,6 @@
 import styles from '@/styles/RegisterOptions.module.css'
 import { useEffect, useState } from 'react'
-import { createPublicClient, formatEther, formatGwei, fromHex, http, parseEther } from 'viem'
+import { createPublicClient, formatEther, formatGwei, fromHex, http, namehash, parseEther } from 'viem'
 import { useAccount, useContractRead, useContractWrite, useFeeData, usePrepareContractWrite, useWaitForTransaction } from 'wagmi'
 import plusSVG from '@/public/assets/icons/plus.svg'
 import minusSVG from '@/public/assets/icons/minus.svg'
@@ -9,6 +9,7 @@ import minus_disabledSVG from '@/public/assets/icons/minus-disabled.svg'
 import gasSVG from '@/public/assets/icons/gas.svg'
 import wlSVG from '@/public/assets/icons/wl.svg'
 import nowlSVG from '@/public/assets/icons/nowl.svg'
+import gobackSVG from '@/public/assets/icons/goback.svg'
 import Image from 'next/image'
 import { goerli } from 'viem/chains'
 
@@ -20,6 +21,12 @@ interface RegisterProps {
     clearOption: () => void;
 }
 
+
+interface OffChainHolders {
+    mode: string,
+    merkle: string,
+    allowlist: string[]
+  }
 
 
 export default function EtherWL({rootNodeENS, subLabel, clearOption} : RegisterProps) {
@@ -39,6 +46,8 @@ export default function EtherWL({rootNodeENS, subLabel, clearOption} : RegisterP
     const [USData, setUSData] = useState<any>([])
     const [allowlisted, setAllowlisted] = useState<boolean>(false)
     const [connected, setConnected] = useState<boolean>(false)
+    const [canSubActiveNode, setCanSubActiveNode] = useState<boolean>(false)
+    const [offChainHolders, setOffChainHolders] = useState<OffChainHolders | null >(null)
     
 
     useEffect(() => {
@@ -83,7 +92,64 @@ export default function EtherWL({rootNodeENS, subLabel, clearOption} : RegisterP
     },[contractReadNodeData?.data!])
     console.log((contractReadNodeData?.data!))
       
-    
+    // check canSub/ParentNodeActive
+
+const contractReadCanSubActiveParentNode = useContractRead({
+    address: "0xa172B621A6bF627c344C2a12377bE147F07376E4",
+    abi: [
+        {
+            name: 'parentNodeCanSubActive',
+            inputs: [{ internalType: "bytes32", name: "", type: "bytes32" }],
+            outputs: [{ internalType: "bool", name: "", type: "bool" }],
+            stateMutability: 'view',
+            type: 'function',
+        },    
+    ],
+    functionName: 'parentNodeCanSubActive',
+    args: [(rootNodeENS)],
+    chainId: 5,
+    watch: true,
+  })
+  useEffect(() => {
+    if (contractReadCanSubActiveParentNode?.data! && typeof contractReadCanSubActiveParentNode.data === 'boolean' ) {
+      setCanSubActiveNode((contractReadCanSubActiveParentNode?.data!))
+    }
+  },[contractReadCanSubActiveParentNode?.data!])
+
+  useEffect(()=>{
+    const handleGetAllowlist = async () => {
+      try {
+        const res = await fetch('../../api/allowlist/get', {
+          method: 'POST',
+          headers: {
+            'Content-type': 'application/json'
+          },
+          body: JSON.stringify({
+            address,
+          })
+        }) 
+        const data = await res.json()
+        console.log(data)
+        if (data) {
+          const offChainDefault : OffChainHolders = {
+            mode: (data.address),
+            merkle: (data.merkle),
+            allowlist: (data.allowlist),
+          };
+          
+          setOffChainHolders(offChainDefault)
+        }
+        
+        return data
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    handleGetAllowlist()
+  })
+  
+  
+  console.log(offChainHolders)
     
     
     useEffect(()=>{
@@ -290,8 +356,18 @@ export default function EtherWL({rootNodeENS, subLabel, clearOption} : RegisterP
                 <div className={styles.wrapper}>
                     <div className={styles.content}>
                         <div onClick={() => clearOption()} className={styles.caption}>
-                            <p>ETHEREUM + ALLOWLIST</p>
-                            <span>Select Another Payment Method</span>
+                        
+                            <div className={styles.captionTitle}>
+                                <div className={styles.captionTitleImgEtherWL}><Image src={gobackSVG} alt='' /></div>
+                                <div className={styles.captionTitleText}><p>ETHEREUM + ALLOWLIST</p></div>
+                            </div>
+                            <div className={styles.captionSub}>
+                                {
+                                    canSubActiveNode 
+                                    ? <div className={styles.captionCanSub}><span>Live</span></div>
+                                    : <div className={styles.captionCanNotSub}><span>Paused</span></div>
+                                }
+                            </div>
                         </div>
                         <div className={styles.allowlist}>
                             {

@@ -10,6 +10,7 @@ import gasSVG from '@/public/assets/icons/gas.svg'
 import wlSVG from '@/public/assets/icons/wl.svg'
 import nowlSVG from '@/public/assets/icons/nowl.svg'
 import dropSVG from '@/public/assets/icons/drop.svg'
+import gobackSVG from '@/public/assets/icons/goback.svg'
 import Image from 'next/image'
 
 
@@ -19,6 +20,11 @@ interface RegisterProps {
     clearOption: () => void;
 }
 
+interface OffChainHolders {
+    mode: string,
+    merkle: string,
+    allowlist: string[]
+  }
 
 
 export default function Erc20WL({rootNodeENS, subLabel, clearOption} : RegisterProps) {
@@ -33,7 +39,15 @@ export default function Erc20WL({rootNodeENS, subLabel, clearOption} : RegisterP
     const [showUSD, setShowUSD] = useState<boolean>(false)
     const [allowlisted, setAllowlisted] = useState<boolean>(false)
     const [connected, setConnected] = useState<boolean>(false)
+    const [canSubActiveNode, setCanSubActiveNode] = useState<boolean>(false)
+    const [contractMenu, setContractMenu] = useState<boolean>(false)
+    const [selectedContract, setSelectedContract] = useState<string>('');
+    const [ERC20List, setERC20List] = useState<string[] | null>(null)
+    const [offChainHolders, setOffChainHolders] = useState<OffChainHolders | null >(null)
     
+    const handleContractToggle =  () => {
+        setContractMenu(!contractMenu)
+    }
 
     useEffect(() => {
         if (isConnected && typeof isConnected === 'boolean') {
@@ -76,7 +90,96 @@ export default function Erc20WL({rootNodeENS, subLabel, clearOption} : RegisterP
     console.log((contractReadNodeData?.data!))
       
     
-    
+    // check canSub/ParentNodeActive
+
+const contractReadCanSubActiveParentNode = useContractRead({
+    address: "0x5c7d14e3d9a9b5778D8d51A0f209dCae2648c406",
+    abi: [
+        {
+            name: 'parentNodeCanSubActive',
+            inputs: [{ internalType: "bytes32", name: "", type: "bytes32" }, {internalType: "address", name: "erc20Contract", type: "address"}],
+            outputs: [{ internalType: "bool", name: "", type: "bool" }],
+            stateMutability: 'view',
+            type: 'function',
+        },    
+    ],
+    functionName: 'parentNodeCanSubActive',
+    args: [(rootNodeENS), (selectedContract)],
+    chainId: 5,
+    watch: true,
+  })
+  useEffect(() => {
+    if (contractReadCanSubActiveParentNode?.data! && typeof contractReadCanSubActiveParentNode.data === 'boolean' ) {
+      setCanSubActiveNode((contractReadCanSubActiveParentNode?.data!))
+    }
+  },[contractReadCanSubActiveParentNode?.data!])
+
+  // get erc20 list
+const contractReadERC20List = useContractRead({
+    address: "0x5c7d14e3d9a9b5778D8d51A0f209dCae2648c406",
+    abi: [
+        {
+            name: 'listERC20',
+            inputs: [{ internalType: "bytes32", name: "node", type: "bytes32" }],
+            outputs: [{ internalType: "address[]", name: "", type: "address[]" }],
+  
+            stateMutability: 'view',
+            type: 'function',
+        },    
+    ],
+    functionName: 'listERC20',
+    args: [(rootNodeENS)],
+    chainId: 5,
+    watch: true,
+  })
+  useEffect(() => {
+    if (contractReadERC20List?.data/* && contractReadETH.data === bigint[]*/) {
+      setERC20List(contractReadERC20List?.data as string[])
+    }
+  },[contractReadERC20List?.data!])
+  
+  
+  
+  const handleContractSelect =(ERC20Contract: string, ERC20Symbol: string)=>{
+    setSelectedContract(ERC20Contract); 
+    //setTokenSymbol(ERC20Symbol)
+    setContractMenu(false); 
+  }
+
+  useEffect(()=>{
+    const handleGetAllowlist = async () => {
+      try {
+        const res = await fetch('../../api/allowlist/get', {
+          method: 'POST',
+          headers: {
+            'Content-type': 'application/json'
+          },
+          body: JSON.stringify({
+            address,
+          })
+        }) 
+        const data = await res.json()
+        console.log(data)
+        if (data) {
+          const offChainDefault : OffChainHolders = {
+            mode: (data.address),
+            merkle: (data.merkle),
+            allowlist: (data.allowlist),
+          };
+          
+          setOffChainHolders(offChainDefault)
+        }
+        
+        return data
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    handleGetAllowlist()
+  })
+  
+  
+  console.log(offChainHolders)
     
     useEffect(()=>{
         let timeNow
@@ -176,8 +279,19 @@ export default function Erc20WL({rootNodeENS, subLabel, clearOption} : RegisterP
                 <div className={styles.wrapper}>
                 <div className={styles.content}>
                         <div onClick={() => clearOption()} className={styles.caption}>
-                            <p>ERC20 + ALLOWLIST</p>
-                            <span>Select Another Payment Method</span>
+                    
+                            <div className={styles.captionTitle}>
+                                <div className={styles.captionTitleImgERC20WL}><Image src={gobackSVG} alt='' /></div>
+                                <div className={styles.captionTitleText}><p>ERC20 + ALLOWLIST</p></div>
+                            </div>
+
+                            <div className={styles.captionSub}>
+                                {
+                                    canSubActiveNode 
+                                    ? <div className={styles.captionCanSub}><span>Live</span></div>
+                                    : <div className={styles.captionCanNotSub}><span>Paused</span></div>
+                                }
+                            </div>
                         </div>
                         <div className={styles.allowlist}>
                             {

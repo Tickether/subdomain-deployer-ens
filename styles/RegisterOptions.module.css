@@ -16,25 +16,75 @@
         display: flex;
         width: 100%;
         flex-direction: column;
-        align-self: center;
-        align-items: center;
         gap: 20px;
     }
 
     .caption{
         display: flex;
         flex-direction: column;
-        text-align: center;
         gap: 5px;
+        cursor: pointer;
     }
 
+    .captionTitle{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        position: relative;
+        
+    }
+
+    .captionTitleText{
+        display: flex;
+        position: fixed;
+        flex-direction: column;
+    }
+
+    .captionTitleImgEther{
+        position: relative;
+        right: 15%;
+    }
+    .captionTitleImgERC20{
+        position: relative;
+        right: 10%;
+    }
+    .captionTitleImgEtherWL{
+        position: relative;
+        right: 28.5%;
+    }
+    .captionTitleImgERC20WL{
+        position: relative;
+        right: 23.5%;
+    }
+
+
     .caption span{
-        color: #9B9BA6;
         font-weight: 600;
         font-size: small;
         cursor: pointer;
     }
 
+    .captionSub{
+        display: flex;
+        justify-content: center;
+    }
+
+    .captionCanSub{
+        display: flex;
+        padding: 3px 13px;
+        background-color: #F0F6FF;
+        border-radius: 10px;
+        color: #008000;
+    }
+
+    .captionCanNotSub{
+        display: flex;
+        padding: 3px 13px;
+        background-color: #fee8a550;
+        border-radius: 10px;
+        color: #EEC443;
+    }
     .allowlist{
         
         display: flex;
