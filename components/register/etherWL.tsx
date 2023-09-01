@@ -12,6 +12,8 @@ import nowlSVG from '@/public/assets/icons/nowl.svg'
 import gobackSVG from '@/public/assets/icons/goback.svg'
 import Image from 'next/image'
 import { goerli } from 'viem/chains'
+import { MerkleTree } from 'merkletreejs'
+import keccak256 from 'keccak256'
 
 
 
@@ -48,6 +50,8 @@ export default function EtherWL({rootNodeENS, subLabel, clearOption} : RegisterP
     const [connected, setConnected] = useState<boolean>(false)
     const [canSubActiveNode, setCanSubActiveNode] = useState<boolean>(false)
     const [offChainHolders, setOffChainHolders] = useState<OffChainHolders | null >(null)
+    const [merkleProof, setMerkleProof] = useState<string[] | null>(null)
+    //
     
 
     useEffect(() => {
@@ -180,17 +184,17 @@ const contractReadCanSubActiveParentNode = useContractRead({
     
     // check node price
     const contractReadSubNodeFee = useContractRead({
-        address: "0x229C0715e70741F854C299913C2446eb4400e76C",
+        address: "0xa172B621A6bF627c344C2a12377bE147F07376E4",
         abi: [
             {
-                name: 'getLetterFees',
+                name: 'getPricetoUse',
                 inputs: [{ internalType: "bytes32", name: "node", type: "bytes32" }, { internalType: "string", name: "label", type: "string" }, { internalType: "uint256", name: "duration", type: "uint256" }],
                 outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
                 stateMutability: 'view',
                 type: 'function',
             },    
         ],
-        functionName: 'getLetterFees',
+        functionName: 'getPricetoUse',
         args: [(rootNodeENS), (subLabel), (subsYears)],
         chainId: 5,
         watch: true,
@@ -201,6 +205,7 @@ const contractReadCanSubActiveParentNode = useContractRead({
         }
     },[contractReadSubNodeFee?.data!])
     console.log((contractReadSubNodeFee?.data!))
+    
 
     // check node price in usd
     const contractReadETH = useContractRead({
@@ -258,6 +263,22 @@ const contractReadCanSubActiveParentNode = useContractRead({
     console.log((contractReadETH?.data))
     console.log(etherPrice)
 
+    useEffect(()=>{
+        const leafNodes = offChainHolders?.allowlist.map(addr => keccak256((addr)));
+        const merkleTree = new MerkleTree(leafNodes!, keccak256, {sortPairs: true});
+        const index = offChainHolders?.allowlist.indexOf(address!.toLowerCase());
+        console.log(index)
+        
+        if (index === -1) {
+            setAllowlisted(false)
+        } else {
+            let clamingAddress = leafNodes![index!];
+            let hexProof = merkleTree.getHexProof(clamingAddress);
+            setAllowlisted(true)
+            setMerkleProof(hexProof)
+        }
+    })
+
     //transac est gas
     useEffect(()=>{
         const getGasFees = async () => {
@@ -270,19 +291,19 @@ const contractReadCanSubActiveParentNode = useContractRead({
                 
                 
                 const gasUsed = await publicClient.estimateContractGas({
-                    address: '0x229C0715e70741F854C299913C2446eb4400e76C',
+                    address: '0xa172B621A6bF627c344C2a12377bE147F07376E4',
                     abi: [
                         {
                             name: 'setSubDomain',
-                            inputs: [ {internalType: "bytes32", name: "node", type: "bytes32"}, {internalType: "string", name: "subNodeLabel", type: "string"}, {internalType: "address", name: "owner", type: "address"}, {internalType: "uint256", name: "duration", type: "uint256" } ],
+                            inputs: [ {internalType: "bytes32", name: "node", type: "bytes32"}, {internalType: "string", name: "subNodeLabel", type: "string"}, {internalType: "address", name: "owner", type: "address"}, {internalType: "uint256", name: "duration", type: "uint256" }, {internalType: "bytes32[]", name: "merkleRoot", type: "bytes32[]"} ],
                             outputs: [],
                             stateMutability: 'payable',
                             type: 'function',
                         },
                     ],
                     functionName: 'setSubDomain',
-                    account: '0x2d5Ec844CB145924AE76DFd526670F16b5f91120',
-                    args: [ (rootNodeENS), (subLabel), (address!), (BigInt(subsYears)) ],
+                    account: '0xa172B621A6bF627c344C2a12377bE147F07376E4',
+                    args: [ (rootNodeENS), (subLabel), (address!), (BigInt(subsYears)), (merkleProof) ],
                     value: subNodeFee,
                     //gasPrice: BigInt(gas)
                 })
@@ -309,18 +330,18 @@ const contractReadCanSubActiveParentNode = useContractRead({
     //read on-Allow
 
     const { config } = usePrepareContractWrite({
-        address: '0x229C0715e70741F854C299913C2446eb4400e76C',
+        address: '0xa172B621A6bF627c344C2a12377bE147F07376E4',
         abi: [
             {
               name: 'setSubDomain',
-              inputs: [ {internalType: "bytes32", name: "node", type: "bytes32"}, {internalType: "string", name: "subNodeLabel", type: "string"}, {internalType: "address", name: "owner", type: "address"}, {internalType: "uint256", name: "duration", type: "uint256" } ],
+              inputs: [ {internalType: "bytes32", name: "node", type: "bytes32"}, {internalType: "string", name: "subNodeLabel", type: "string"}, {internalType: "address", name: "owner", type: "address"}, {internalType: "uint256", name: "duration", type: "uint256" },{internalType: "bytes32[]", name: "merkleRoot", type: "bytes32[]"} ],
               outputs: [],
               stateMutability: 'payable',
               type: 'function',
             },
           ],
         functionName: 'setSubDomain',
-        args: [ (rootNodeENS), (subLabel), (address!), (subsYears) ],
+        args: [ (rootNodeENS), (subLabel), (address!), (subsYears), (merkleProof) ],
         value: subNodeFee,
         chainId: 5,
      })
@@ -347,7 +368,6 @@ const contractReadCanSubActiveParentNode = useContractRead({
         } else {
             setShowUSD(true)
         }
-        
     }
 
     return (
@@ -495,7 +515,7 @@ const contractReadCanSubActiveParentNode = useContractRead({
                         </div>
                         <div className={styles.actionButtons}>
                             <button 
-                                disabled={!connected || !allowlisted}
+                                disabled={!connected || !allowlisted || merkleProof === null || !canSubActiveNode}
                                 
                                 //onClick={() => setOpenModal(true)}
                                 onClick={handleSubdomain}

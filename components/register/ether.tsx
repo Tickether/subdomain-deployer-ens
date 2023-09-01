@@ -137,14 +137,14 @@ export default function Ether({rootNodeENS, subLabel, clearOption} : RegisterPro
         address: "0xDb4E489A6476ad51d32BA9F7F629aB491a16ECEC",
         abi: [
             {
-                name: 'getLetterFees',
+                name: 'getPricetoUse',
                 inputs: [{ internalType: "bytes32", name: "node", type: "bytes32" }, { internalType: "string", name: "label", type: "string" }, { internalType: "uint256", name: "duration", type: "uint256" }],
                 outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
                 stateMutability: 'view',
                 type: 'function',
             },    
         ],
-        functionName: 'getLetterFees',
+        functionName: 'getPricetoUse',
         args: [(rootNodeENS), (subLabel), (subsYears)],
         chainId: 5,
         watch: true,
@@ -428,7 +428,7 @@ export default function Ether({rootNodeENS, subLabel, clearOption} : RegisterPro
                         </div>
                         <div className={styles.actionButtons}>
                             <button 
-                                disabled={!connected}
+                                disabled={!connected || !canSubActiveNode}
                                 
                                 //onClick={() => setOpenModal(true)}
                                 onClick={handleSubdomain}

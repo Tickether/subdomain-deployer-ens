@@ -1,6 +1,6 @@
 import styles from '@/styles/RegisterOptions.module.css'
 import { useEffect, useState } from 'react'
-import { formatEther, fromHex } from 'viem'
+import { createPublicClient, formatEther, fromHex, http } from 'viem'
 import { useAccount, useContractRead, useContractWrite, useFeeData, usePrepareContractWrite, useWaitForTransaction } from 'wagmi'
 import plusSVG from '@/public/assets/icons/plus.svg'
 import minusSVG from '@/public/assets/icons/minus.svg'
@@ -10,6 +10,7 @@ import gasSVG from '@/public/assets/icons/gas.svg'
 import dropSVG from '@/public/assets/icons/drop.svg'
 import gobackSVG from '@/public/assets/icons/goback.svg'
 import Image from 'next/image'
+import { goerli } from 'viem/chains'
 
 
 interface RegisterProps {
@@ -25,6 +26,7 @@ export default function Erc20({rootNodeENS, subLabel, clearOption} : RegisterPro
     const {address, isConnected} = useAccount()
     const { data, isError, isLoading } = useFeeData()
     const [gas, setGas] = useState<string>('')
+    const [gasFee, setGasFee] = useState<string>('')
     const [nodeData, setNodeData] = useState<any>([])
     const [yearsLeft, setYearsLeft] = useState<number>(0)
     const [subsYears, setSubsYears] = useState<number>(1)
@@ -108,7 +110,7 @@ const contractReadCanSubActiveParentNode = useContractRead({
 
   // get erc20 list
 const contractReadERC20List = useContractRead({
-    address: "0x5c7d14e3d9a9b5778D8d51A0f209dCae2648c406",
+    address: "0x88d80671392e8D6E7b00919cCD5ca749cB1e0f3f",
     abi: [
         {
             name: 'listERC20',
@@ -166,18 +168,18 @@ const contractReadERC20List = useContractRead({
     
     // check node price
     const contractReadSubNodeFee = useContractRead({
-        address: "0x229C0715e70741F854C299913C2446eb4400e76C",
+        address: "0x5c7d14e3d9a9b5778D8d51A0f209dCae2648c406",
         abi: [
             {
-                name: 'getLetterFees',
-                inputs: [{ internalType: "bytes32", name: "node", type: "bytes32" }, { internalType: "string", name: "label", type: "string" }, { internalType: "uint256", name: "duration", type: "uint256" }],
+                name: 'getPricetoUse',
+                inputs: [{ internalType: "bytes32", name: "node", type: "bytes32" }, { internalType: "string", name: "label", type: "string" }, { internalType: "uint256", name: "duration", type: "uint256" }, { internalType: "address", name: "erc20Contract", type: "address" }],
                 outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
                 stateMutability: 'view',
                 type: 'function',
             },    
         ],
-        functionName: 'getLetterFees',
-        //args: [(rootNodeENS), (subLabel), (subsYears)],
+        functionName: 'getPricetoUse',
+        args: [(rootNodeENS), (subLabel), (subsYears), (selectedContract)],
         chainId: 5,
         watch: true,
     })
@@ -188,19 +190,61 @@ const contractReadERC20List = useContractRead({
     },[contractReadSubNodeFee?.data!])
     console.log((contractReadSubNodeFee?.data!))
 
+    //transac est gas
+    useEffect(()=>{
+        const getGasFees = async () => {
+            
+            try {
+                const publicClient = createPublicClient({
+                    chain: goerli,
+                    transport: http()
+                })
+                
+                
+                const gasUsed = await publicClient.estimateContractGas({
+                    address: '0x88d80671392e8D6E7b00919cCD5ca749cB1e0f3f',
+                    abi: [
+                        {
+                            name: 'setSubDomainERC20',
+                            inputs: [ {internalType: "bytes32", name: "node", type: "bytes32"}, {internalType: "string", name: "subNodeLabel", type: "string"}, {internalType: "address", name: "owner", type: "address"}, {internalType: "uint256", name: "duration", type: "uint256" }, {internalType: "address", name: "erc20Contract", type: "address"} ],
+                            outputs: [],
+                            stateMutability: 'payable',
+                            type: 'function',
+                        },
+                    ],
+                    functionName: 'setSubDomainERC20',
+                    account: '0x88d80671392e8D6E7b00919cCD5ca749cB1e0f3f',
+                    args: [ (rootNodeENS), (subLabel), (address!), (BigInt(subsYears)), (selectedContract) ],
+                    value: subNodeFee,
+                    //gasPrice: BigInt(gas)
+                })
+                console.log(gasUsed)
+                
+                const fee = (Number(gas) * Number(gasUsed)) * 1000000000
+    
+                setGasFee(formatEther(BigInt(fee)))
+            } catch (error) {
+                console.log(error)
+            }
+
+        }
+        getGasFees()
+        
+    },[gas])
+
     const { config } = usePrepareContractWrite({
-        address: '0x229C0715e70741F854C299913C2446eb4400e76C',
+        address: '0x88d80671392e8D6E7b00919cCD5ca749cB1e0f3f',
         abi: [
             {
-              name: 'setSubDomain',
-              inputs: [ {internalType: "bytes32", name: "node", type: "bytes32"}, {internalType: "string", name: "subNodeLabel", type: "string"}, {internalType: "address", name: "owner", type: "address"}, {internalType: "uint256", name: "duration", type: "uint256" } ],
+              name: 'setSubDomainERC20',
+              inputs: [ {internalType: "bytes32", name: "node", type: "bytes32"}, {internalType: "string", name: "subNodeLabel", type: "string"}, {internalType: "address", name: "owner", type: "address"}, {internalType: "uint256", name: "duration", type: "uint256" }, {internalType: "address", name: "erc20Contract", type: "address"} ],
               outputs: [],
               stateMutability: 'payable',
               type: 'function',
             },
           ],
-        functionName: 'setSubDomain',
-        args: [ (rootNodeENS), (subLabel), (address!), (subsYears) ],
+        functionName: 'setSubDomainERC20',
+        args: [ (rootNodeENS), (subLabel), (address!), (subsYears), (selectedContract) ],
         value: subNodeFee,
         chainId: 5,
      })

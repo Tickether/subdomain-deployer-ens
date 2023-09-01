@@ -1,6 +1,6 @@
 import styles from '@/styles/RegisterOptions.module.css'
 import { useEffect, useState } from 'react'
-import { formatEther, fromHex } from 'viem'
+import { createPublicClient, formatEther, fromHex, http } from 'viem'
 import { useAccount, useContractRead, useContractWrite, useFeeData, usePrepareContractWrite, useWaitForTransaction } from 'wagmi'
 import plusSVG from '@/public/assets/icons/plus.svg'
 import minusSVG from '@/public/assets/icons/minus.svg'
@@ -12,6 +12,9 @@ import nowlSVG from '@/public/assets/icons/nowl.svg'
 import dropSVG from '@/public/assets/icons/drop.svg'
 import gobackSVG from '@/public/assets/icons/goback.svg'
 import Image from 'next/image'
+import { MerkleTree } from 'merkletreejs'
+import keccak256 from 'keccak256'
+import { goerli } from 'viem/chains'
 
 
 interface RegisterProps {
@@ -32,6 +35,7 @@ export default function Erc20WL({rootNodeENS, subLabel, clearOption} : RegisterP
     const {address, isConnected} = useAccount()
     const { data, isError, isLoading } = useFeeData()
     const [gas, setGas] = useState<string>('')
+    const [gasFee, setGasFee] = useState<string>('')
     const [nodeData, setNodeData] = useState<any>([])
     const [yearsLeft, setYearsLeft] = useState<number>(0)
     const [subsYears, setSubsYears] = useState<number>(1)
@@ -44,6 +48,7 @@ export default function Erc20WL({rootNodeENS, subLabel, clearOption} : RegisterP
     const [selectedContract, setSelectedContract] = useState<string>('');
     const [ERC20List, setERC20List] = useState<string[] | null>(null)
     const [offChainHolders, setOffChainHolders] = useState<OffChainHolders | null >(null)
+    const [merkleProof, setMerkleProof] = useState<string[] | null>(null)
     
     const handleContractToggle =  () => {
         setContractMenu(!contractMenu)
@@ -209,18 +214,18 @@ const contractReadERC20List = useContractRead({
     
     // check node price
     const contractReadSubNodeFee = useContractRead({
-        address: "0x229C0715e70741F854C299913C2446eb4400e76C",
+        address: "0x5c7d14e3d9a9b5778D8d51A0f209dCae2648c406",
         abi: [
             {
-                name: 'getLetterFees',
-                inputs: [{ internalType: "bytes32", name: "node", type: "bytes32" }, { internalType: "string", name: "label", type: "string" }, { internalType: "uint256", name: "duration", type: "uint256" }],
+                name: 'getPricetoUse',
+                inputs: [{ internalType: "bytes32", name: "node", type: "bytes32" }, { internalType: "string", name: "label", type: "string" }, { internalType: "uint256", name: "duration", type: "uint256" }, { internalType: "address", name: "erc20Contract", type: "address" }],
                 outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
                 stateMutability: 'view',
                 type: 'function',
             },    
         ],
-        functionName: 'getLetterFees',
-        //args: [(rootNodeENS), (subLabel), (subsYears)],
+        functionName: 'getPricetoUse',
+        args: [(rootNodeENS), (subLabel), (subsYears), (selectedContract)],
         chainId: 5,
         watch: true,
     })
@@ -231,18 +236,67 @@ const contractReadERC20List = useContractRead({
     },[contractReadSubNodeFee?.data!])
     console.log((contractReadSubNodeFee?.data!))
 
+    //transac est gas
+    useEffect(()=>{
+        const getGasFees = async () => {
+            
+            try {
+                const publicClient = createPublicClient({
+                    chain: goerli,
+                    transport: http()
+                })
+                
+                
+                const gasUsed = await publicClient.estimateContractGas({
+                    address: '0x5c7d14e3d9a9b5778D8d51A0f209dCae2648c406',
+                    abi: [
+                        {
+                            name: 'setSubDomainERC20',
+                            inputs: [ {internalType: "bytes32", name: "node", type: "bytes32"}, {internalType: "string", name: "subNodeLabel", type: "string"}, {internalType: "address", name: "owner", type: "address"}, {internalType: "uint256", name: "duration", type: "uint256" }, {internalType: "address", name: "erc20Contract", type: "address"}, {internalType: "bytes32[]", name: "merkleRoot", type: "bytes32[]"} ],
+                            outputs: [],
+                            stateMutability: 'payable',
+                            type: 'function',
+                        },
+                    ],
+                    functionName: 'setSubDomainERC20',
+                    account: '0x5c7d14e3d9a9b5778D8d51A0f209dCae2648c406',
+                    args: [ (rootNodeENS), (subLabel), (address!), (BigInt(subsYears)), (selectedContract), (merkleProof) ],
+                    value: subNodeFee,
+                    //gasPrice: BigInt(gas)
+                })
+                console.log(gasUsed)
+                
+                const fee = (Number(gas) * Number(gasUsed)) * 1000000000
+    
+                setGasFee(formatEther(BigInt(fee)))
+            } catch (error) {
+                console.log(error)
+            }
+
+        }
+        getGasFees()
+        
+    },[gas])
+/*
+//total fee+gas
+useEffect(()=>{
+const total = subNodeFee + parseEther(gasFee)
+setTotalFee(formatEther(total))
+},[gasFee, subNodeFee])
+*/
+
     const { config } = usePrepareContractWrite({
-        address: '0x229C0715e70741F854C299913C2446eb4400e76C',
+        address: '0x5c7d14e3d9a9b5778D8d51A0f209dCae2648c406',
         abi: [
             {
-              name: 'setSubDomain',
-              inputs: [ {internalType: "bytes32", name: "node", type: "bytes32"}, {internalType: "string", name: "subNodeLabel", type: "string"}, {internalType: "address", name: "owner", type: "address"}, {internalType: "uint256", name: "duration", type: "uint256" } ],
+              name: 'setSubDomainERC20',
+              inputs: [ {internalType: "bytes32", name: "node", type: "bytes32"}, {internalType: "string", name: "subNodeLabel", type: "string"}, {internalType: "address", name: "owner", type: "address"}, {internalType: "uint256", name: "duration", type: "uint256" }, {internalType: "address", name: "erc20Contract", type: "address"}, {internalType: "bytes32[]", name: "merkleRoot", type: "bytes32[]"} ],
               outputs: [],
               stateMutability: 'payable',
               type: 'function',
             },
           ],
-        functionName: 'setSubDomain',
+        functionName: 'setSubDomainERC20',
         args: [ (rootNodeENS), (subLabel), (address!), (subsYears) ],
         value: subNodeFee,
         chainId: 5,
@@ -272,6 +326,22 @@ const contractReadERC20List = useContractRead({
         }
         
     }
+
+    useEffect(()=>{
+        const leafNodes = offChainHolders?.allowlist.map(addr => keccak256((addr)));
+        const merkleTree = new MerkleTree(leafNodes!, keccak256, {sortPairs: true});
+        const index = offChainHolders?.allowlist.indexOf(address!.toLowerCase());
+        console.log(index)
+        
+        if (index === -1) {
+            setAllowlisted(false)
+        } else {
+            let clamingAddress = leafNodes![index!];
+            let hexProof = merkleTree.getHexProof(clamingAddress);
+            setAllowlisted(true)
+            setMerkleProof(hexProof)
+        }
+    })
 
     return (
         <>
