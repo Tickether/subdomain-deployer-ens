@@ -85,7 +85,7 @@ export default function Ether({rootNodeENS, subLabel, clearOption} : RegisterPro
     // check canSub/ParentNodeActive
     
     const contractReadCanSubActiveParentNode = useContractRead({
-        address: "0xDb4E489A6476ad51d32BA9F7F629aB491a16ECEC",
+        address: "0x4Ec5C1381c9B049F9A737843cDFE12D761947Bc2",
         abi: [
             {
                 name: 'parentNodeCanSubActive',
@@ -134,7 +134,7 @@ export default function Ether({rootNodeENS, subLabel, clearOption} : RegisterPro
     
     // check node price
     const contractReadSubNodeFee = useContractRead({
-        address: "0xDb4E489A6476ad51d32BA9F7F629aB491a16ECEC",
+        address: "0x4Ec5C1381c9B049F9A737843cDFE12D761947Bc2",
         abi: [
             {
                 name: 'getPricetoUse',
@@ -224,7 +224,7 @@ export default function Ether({rootNodeENS, subLabel, clearOption} : RegisterPro
                 
                 
                 const gasUsed = await publicClient.estimateContractGas({
-                    address: '0xDb4E489A6476ad51d32BA9F7F629aB491a16ECEC',
+                    address: '0x4Ec5C1381c9B049F9A737843cDFE12D761947Bc2',
                     abi: [
                         {
                             name: 'setSubDomain',
@@ -261,7 +261,7 @@ export default function Ether({rootNodeENS, subLabel, clearOption} : RegisterPro
     },[gasFee, subNodeFee])
 
     const { config } = usePrepareContractWrite({
-        address: '0xDb4E489A6476ad51d32BA9F7F629aB491a16ECEC',
+        address: '0x4Ec5C1381c9B049F9A737843cDFE12D761947Bc2',
         abi: [
             {
               name: 'setSubDomain',

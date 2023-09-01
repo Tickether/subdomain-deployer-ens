@@ -168,7 +168,7 @@ const contractReadApproved = useContractRead({
       },
   ],
   functionName: 'isApprovedForAll',
-  args: [(ENS.owner!), ('0xa172B621A6bF627c344C2a12377bE147F07376E4')],
+  args: [(ENS.owner!), ('0x089052090493F92fDA947Bc9362d439f2EF979E2')],
   watch: true,
   chainId: 5,
 })  
@@ -183,7 +183,7 @@ useEffect(() => {
 // check setBase/ParentNodeActive
 
 const contractReadActiveParentNode = useContractRead({
-  address: "0xa172B621A6bF627c344C2a12377bE147F07376E4",
+  address: "0x089052090493F92fDA947Bc9362d439f2EF979E2",
   abi: [
       {
           name: 'parentNodeActive',
@@ -207,7 +207,7 @@ useEffect(() => {
 // check canSub/ParentNodeActive
 
 const contractReadCanSubActiveParentNode = useContractRead({
-  address: "0xa172B621A6bF627c344C2a12377bE147F07376E4",
+  address: "0x089052090493F92fDA947Bc9362d439f2EF979E2",
   abi: [
       {
           name: 'parentNodeCanSubActive',
@@ -274,12 +274,12 @@ useEffect(() => {
                 },
             ],
             functionName: 'isApprovedForAll',
-            args: [(ENS.owner!), ('0xa172B621A6bF627c344C2a12377bE147F07376E4')],
+            args: [(ENS.owner!), ('0x089052090493F92fDA947Bc9362d439f2EF979E2')],
             chainId: 5,
         },
         //contract 1b check if name is enabled on SubENS contract
         {
-            address: "0xa172B621A6bF627c344C2a12377bE147F07376E4",
+            address: "0x089052090493F92fDA947Bc9362d439f2EF979E2",
             abi: [
                 {
                     name: 'parentNodeActive',
@@ -295,7 +295,7 @@ useEffect(() => {
         },
         //contract 1c check if CanSub name is enabled on SubENS contract
         {
-            address: "0xa172B621A6bF627c344C2a12377bE147F07376E4",
+            address: "0x089052090493F92fDA947Bc9362d439f2EF979E2",
             abi: [
                 {
                     name: 'parentNodeCanSubActive',
@@ -479,7 +479,7 @@ const handleCantUnwrap = async () => {
               },
             ],
           functionName: 'setApprovalForAll',
-          args: [ ('0xa172B621A6bF627c344C2a12377bE147F07376E4'), (true) ],
+          args: [ ('0x089052090493F92fDA947Bc9362d439f2EF979E2'), (true) ],
           chainId: 5,
           value: BigInt(0),
       })
@@ -505,7 +505,7 @@ const handleCantUnwrap = async () => {
       }
 
   const prepareContractWriteParentNode = usePrepareContractWrite({
-    address: '0xa172B621A6bF627c344C2a12377bE147F07376E4',
+    address: '0x089052090493F92fDA947Bc9362d439f2EF979E2',
     abi: [
       {
         name: 'setBaseEns',
@@ -539,7 +539,7 @@ const handleCantUnwrap = async () => {
 
 
 const prepareContractWriteParentNodeSubMode = usePrepareContractWrite({
-address: '0xa172B621A6bF627c344C2a12377bE147F07376E4',
+address: '0x089052090493F92fDA947Bc9362d439f2EF979E2',
 abi: [
   {
     name: 'flipBaseEnsSubMode',
@@ -574,7 +574,7 @@ try {
 
 //read balance and withdraw
   const contractReadParentNodeBalance = useContractRead({
-    address: "0xa172B621A6bF627c344C2a12377bE147F07376E4",
+    address: "0x089052090493F92fDA947Bc9362d439f2EF979E2",
     abi: [
         {
             name: 'parentNodeBalance',
@@ -600,7 +600,7 @@ try {
 
 //read balance and withdraw
   const prepareContractWriteWithdraw = usePrepareContractWrite({
-    address: '0xa172B621A6bF627c344C2a12377bE147F07376E4',
+    address: '0x089052090493F92fDA947Bc9362d439f2EF979E2',
     abi: [
         {
           name: 'withdrawNodeBalance',
@@ -641,7 +641,7 @@ try {
     contracts: [
         //contract 0 check if name is wrapped on nameWrapper
         {
-          address: "0xa172B621A6bF627c344C2a12377bE147F07376E4",
+          address: "0x089052090493F92fDA947Bc9362d439f2EF979E2",
           abi: [
               {
                   name: 'threeUpLetterFee',
@@ -657,7 +657,7 @@ try {
         },
         //contract 1a check if SubENS contract is approved on nameWrapper
         {
-          address: "0xa172B621A6bF627c344C2a12377bE147F07376E4",
+          address: "0x089052090493F92fDA947Bc9362d439f2EF979E2",
           abi: [
               {
                   name: 'fourFiveLetterFee',
@@ -673,7 +673,7 @@ try {
         },
         //contract 1b check if name is enabled on SubENS contract
         {
-          address: "0xa172B621A6bF627c344C2a12377bE147F07376E4",
+          address: "0x089052090493F92fDA947Bc9362d439f2EF979E2",
           abi: [
               {
                   name: 'sixDownLetterFee',
@@ -689,7 +689,7 @@ try {
         },
         //contract 1c check if CanSub name is enabled on SubENS contract
         {
-          address: "0xa172B621A6bF627c344C2a12377bE147F07376E4",
+          address: "0x089052090493F92fDA947Bc9362d439f2EF979E2",
           abi: [
               {
                   name: 'oneNumberFee',
@@ -705,7 +705,7 @@ try {
         },
         //contract 2a check if SubENSERC20 contract is approved on nameWrapper
         {
-          address: "0xa172B621A6bF627c344C2a12377bE147F07376E4",
+          address: "0x089052090493F92fDA947Bc9362d439f2EF979E2",
           abi: [
               {
                   name: 'twoNumberFee',
@@ -721,7 +721,7 @@ try {
         },
         //contract 2b check if name is enabled on SubENSERC20 contract
         {
-          address: "0xa172B621A6bF627c344C2a12377bE147F07376E4",
+          address: "0x089052090493F92fDA947Bc9362d439f2EF979E2",
           abi: [
               {
                   name: 'threeNumberFee',
@@ -737,7 +737,7 @@ try {
         },
         //contract 2c check if CanSub name is enabled on SubENSERC20 contract
         {
-          address: "0xa172B621A6bF627c344C2a12377bE147F07376E4",
+          address: "0x089052090493F92fDA947Bc9362d439f2EF979E2",
           abi: [
               {
                   name: 'fourNumberFee',
@@ -753,7 +753,7 @@ try {
         },
         //contract 3a check if SubENSWL contract is approved on nameWrapper
         {
-          address: "0xa172B621A6bF627c344C2a12377bE147F07376E4",
+          address: "0x089052090493F92fDA947Bc9362d439f2EF979E2",
           abi: [
               {
                   name: 'fiveUpNumberFee',
@@ -880,8 +880,8 @@ const getEther = (usd : string) =>{
                                                 <div className={styles.profileDownSubChildFeeTitle}><p>Subname Prices</p></div>
                                                 <div className={styles.profileDownSubChildFeeIcon} onClick={()=> setOpenModal(true)}><Image src={editSVG} alt='' /></div>
                                               </div>
-                                              {openModal && <PriceModal ENS ={ENS} setOpenModal ={setOpenModal} prices ={prices} contract='0xa172B621A6bF627c344C2a12377bE147F07376E4'/>}
-                                              {openAllowlistModal && <AllowlistModal ENS ={ENS} setOpenAllowlistModal ={setOpenAllowlistModal} contract='0xa172B621A6bF627c344C2a12377bE147F07376E4'/>}
+                                              {openModal && <PriceModal ENS ={ENS} setOpenModal ={setOpenModal} prices ={prices} contract='0x089052090493F92fDA947Bc9362d439f2EF979E2'/>}
+                                              {openAllowlistModal && <AllowlistModal ENS ={ENS} setOpenAllowlistModal ={setOpenAllowlistModal} contract='0x089052090493F92fDA947Bc9362d439f2EF979E2'/>}
                                               <div onClick={handlePriceToggle} className={styles.profileDownSubChildOption}>
                                                 { selectedPrice === 'numbers' && <p>Numbers Only</p>}
                                                 { selectedPrice === 'letters' && <p>Letters & Numbers</p>}

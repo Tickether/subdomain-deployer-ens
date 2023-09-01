@@ -98,7 +98,7 @@ export default function Erc20WL({rootNodeENS, subLabel, clearOption} : RegisterP
     // check canSub/ParentNodeActive
 
 const contractReadCanSubActiveParentNode = useContractRead({
-    address: "0x5c7d14e3d9a9b5778D8d51A0f209dCae2648c406",
+    address: "0x2dB5dE42290cB95e49490C5F55eFe91d9f0A95ad",
     abi: [
         {
             name: 'parentNodeCanSubActive',
@@ -121,7 +121,7 @@ const contractReadCanSubActiveParentNode = useContractRead({
 
   // get erc20 list
 const contractReadERC20List = useContractRead({
-    address: "0x5c7d14e3d9a9b5778D8d51A0f209dCae2648c406",
+    address: "0x2dB5dE42290cB95e49490C5F55eFe91d9f0A95ad",
     abi: [
         {
             name: 'listERC20',
@@ -214,7 +214,7 @@ const contractReadERC20List = useContractRead({
     
     // check node price
     const contractReadSubNodeFee = useContractRead({
-        address: "0x5c7d14e3d9a9b5778D8d51A0f209dCae2648c406",
+        address: "0x2dB5dE42290cB95e49490C5F55eFe91d9f0A95ad",
         abi: [
             {
                 name: 'getPricetoUse',
@@ -248,7 +248,7 @@ const contractReadERC20List = useContractRead({
                 
                 
                 const gasUsed = await publicClient.estimateContractGas({
-                    address: '0x5c7d14e3d9a9b5778D8d51A0f209dCae2648c406',
+                    address: '0x2dB5dE42290cB95e49490C5F55eFe91d9f0A95ad',
                     abi: [
                         {
                             name: 'setSubDomainERC20',
@@ -259,7 +259,7 @@ const contractReadERC20List = useContractRead({
                         },
                     ],
                     functionName: 'setSubDomainERC20',
-                    account: '0x5c7d14e3d9a9b5778D8d51A0f209dCae2648c406',
+                    account: '0x2dB5dE42290cB95e49490C5F55eFe91d9f0A95ad',
                     args: [ (rootNodeENS), (subLabel), (address!), (BigInt(subsYears)), (selectedContract), (merkleProof) ],
                     value: subNodeFee,
                     //gasPrice: BigInt(gas)
@@ -286,7 +286,7 @@ setTotalFee(formatEther(total))
 */
 
     const { config } = usePrepareContractWrite({
-        address: '0x5c7d14e3d9a9b5778D8d51A0f209dCae2648c406',
+        address: '0x2dB5dE42290cB95e49490C5F55eFe91d9f0A95ad',
         abi: [
             {
               name: 'setSubDomainERC20',

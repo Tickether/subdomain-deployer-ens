@@ -99,7 +99,7 @@ export default function EtherWL({rootNodeENS, subLabel, clearOption} : RegisterP
     // check canSub/ParentNodeActive
 
 const contractReadCanSubActiveParentNode = useContractRead({
-    address: "0xa172B621A6bF627c344C2a12377bE147F07376E4",
+    address: "0x089052090493F92fDA947Bc9362d439f2EF979E2",
     abi: [
         {
             name: 'parentNodeCanSubActive',
@@ -184,7 +184,7 @@ const contractReadCanSubActiveParentNode = useContractRead({
     
     // check node price
     const contractReadSubNodeFee = useContractRead({
-        address: "0xa172B621A6bF627c344C2a12377bE147F07376E4",
+        address: "0x089052090493F92fDA947Bc9362d439f2EF979E2",
         abi: [
             {
                 name: 'getPricetoUse',
@@ -291,7 +291,7 @@ const contractReadCanSubActiveParentNode = useContractRead({
                 
                 
                 const gasUsed = await publicClient.estimateContractGas({
-                    address: '0xa172B621A6bF627c344C2a12377bE147F07376E4',
+                    address: '0x089052090493F92fDA947Bc9362d439f2EF979E2',
                     abi: [
                         {
                             name: 'setSubDomain',
@@ -302,7 +302,7 @@ const contractReadCanSubActiveParentNode = useContractRead({
                         },
                     ],
                     functionName: 'setSubDomain',
-                    account: '0xa172B621A6bF627c344C2a12377bE147F07376E4',
+                    account: '0x089052090493F92fDA947Bc9362d439f2EF979E2',
                     args: [ (rootNodeENS), (subLabel), (address!), (BigInt(subsYears)), (merkleProof) ],
                     value: subNodeFee,
                     //gasPrice: BigInt(gas)
@@ -330,7 +330,7 @@ const contractReadCanSubActiveParentNode = useContractRead({
     //read on-Allow
 
     const { config } = usePrepareContractWrite({
-        address: '0xa172B621A6bF627c344C2a12377bE147F07376E4',
+        address: '0x089052090493F92fDA947Bc9362d439f2EF979E2',
         abi: [
             {
               name: 'setSubDomain',
