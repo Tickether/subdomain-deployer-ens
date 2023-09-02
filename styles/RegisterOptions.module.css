@@ -276,6 +276,11 @@
         justify-content: space-between;
     }
 
+    .actionButtons{
+        display: flex;
+        justify-content: center;
+    }
+
     .actionButtons button{
         cursor: pointer;
         border-radius: 5px;

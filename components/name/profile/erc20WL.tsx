@@ -912,7 +912,7 @@ const handleContractSelect =(ERC20Contract: string, ERC20Symbol: string)=>{
                   </div>
                   <div className={styles.profileDownPayRight}>
                     <div className={styles.profileDownPayRightBalance}>
-                      <p>ETH</p>
+                      <p>{selectedContract === '' ? 'ERC20' : tokenSymbol}</p>
                       <p>USD</p>
                     </div>
                     <div className={styles.profileDownPayRightWithdraw}>

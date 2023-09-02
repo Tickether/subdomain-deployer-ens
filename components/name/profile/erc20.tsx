@@ -767,7 +767,7 @@ try {
                   type: 'function',
               },    
           ],
-          functionName: 'fourNumberFee',
+          functionName: 'fourNumberFeeERC20',
           args: [(namehash(ENS.name)), (selectedContract)],
           chainId: 5,
         },
@@ -800,14 +800,14 @@ try {
             //
             const dec8 = 100000000
             const pricesData: Prices = {
-              threeUpLetterFee: (Number(ThreeUpLetterFee)/dec8).toFixed(2),
-              fourFiveLetterFee: (Number(FourFiveLetterFee)/dec8).toFixed(2),
-              sixDownLetterFee: (Number(SixDownLetterFee)/dec8).toFixed(2),
-              oneNumberFee: (Number(OneNumberFee)/dec8).toFixed(2),
-              twoNumberFee: (Number(TwoNumberFee)/dec8).toFixed(2),
-              threeNumberFee: (Number(ThreeNumberFee)/dec8).toFixed(2),
-              fourNumberFee: (Number(FourNumberFee)/dec8).toFixed(2),
-              fiveUpNumberFee: (Number(FiveUpNumberFee)/dec8).toFixed(2),
+              threeUpLetterFee: (Number(ThreeUpLetterFee)).toFixed(2),
+              fourFiveLetterFee: (Number(FourFiveLetterFee)).toFixed(2),
+              sixDownLetterFee: (Number(SixDownLetterFee)).toFixed(2),
+              oneNumberFee: (Number(OneNumberFee)).toFixed(2),
+              twoNumberFee: (Number(TwoNumberFee)).toFixed(2),
+              threeNumberFee: (Number(ThreeNumberFee)).toFixed(2),
+              fourNumberFee: (Number(FourNumberFee)).toFixed(2),
+              fiveUpNumberFee: (Number(FiveUpNumberFee)).toFixed(2),
             };
             setPrices(pricesData)
     }
@@ -912,7 +912,7 @@ const handleContractSelect =(ERC20Contract: string, ERC20Symbol: string)=>{
                   </div>
                   <div className={styles.profileDownPayRight}>
                     <div className={styles.profileDownPayRightBalance}>
-                      <p>ETH</p>
+                      <p>{selectedContract === '' ? 'ERC20' : tokenSymbol}</p>
                       <p>USD</p>
                     </div>
                     <div className={styles.profileDownPayRightWithdraw}>
@@ -1057,7 +1057,7 @@ const handleContractSelect =(ERC20Contract: string, ERC20Symbol: string)=>{
                                         )
                                         :(
                                             <div className={styles.profileDownFeeChild}>
-                                                <div className={styles.profileDownFees}><span>Three- Letter Fee</span><span>{prices.threeNumberFee} {tokenSymbol}</span></div>
+                                                <div className={styles.profileDownFees}><span>Three- Letter Fee</span><span>{prices.threeUpLetterFee} {tokenSymbol}</span></div>
                                                 <div className={styles.profileDownFees}><span>Four/Five Letter Fee</span><span>{prices.fourFiveLetterFee} {tokenSymbol}</span></div>
                                                 <div className={styles.profileDownFees}><span>Six+ Letter Fee</span><span>{prices.sixDownLetterFee} {tokenSymbol}</span></div>
                                             </div>   
