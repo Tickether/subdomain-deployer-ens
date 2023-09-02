@@ -1,17 +1,11 @@
 import styles from '@/styles/ProfileOptions.module.css'
 import { useEffect, useState } from 'react'
-import { useToken } from 'wagmi';
+import { useToken } from 'wagmi'
 
-
-interface Contract{
-    address: string,
-    name: string,
-    symbol: string,
-}
 
 interface ERC20Props{
   erc20Contract : string
-  selectERC20 : (ERC20Contract : string, ERC20Symbol: string) => void;
+  selectERC20 : (ERC20Contract : string, ERC20Symbol: string, ERC20Decimal: number) => void;
 }
 //
 
@@ -20,6 +14,7 @@ export default function ERC20Contract({erc20Contract, selectERC20}: ERC20Props) 
 
     const [tokenName, setTokenName] = useState<string| null>(null);
     const [tokenSymbol, setTokenSymbol] = useState<string | null>(null);
+    const [tokenDecimal, setTokenDecimal] = useState<number | null>(null);
 
 
     const getToken = useToken({
@@ -31,13 +26,14 @@ export default function ERC20Contract({erc20Contract, selectERC20}: ERC20Props) 
         if (getToken?.data!) {
           setTokenName(getToken?.data!.name)
           setTokenSymbol(getToken?.data!.symbol)
+          setTokenDecimal(getToken?.data!.decimals)
         }
       },[getToken?.data!])
     return (
         <>       
             <div 
                 onClick={()=> {
-                  selectERC20(erc20Contract, tokenSymbol!);
+                  selectERC20(erc20Contract, tokenSymbol!, tokenDecimal!);
                 }}
                 className={styles.profileDownOptionToggleSpan}
             >

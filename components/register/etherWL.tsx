@@ -264,18 +264,20 @@ const contractReadCanSubActiveParentNode = useContractRead({
     console.log(etherPrice)
 
     useEffect(()=>{
-        const leafNodes = offChainHolders?.allowlist.map(addr => keccak256((addr)));
-        const merkleTree = new MerkleTree(leafNodes!, keccak256, {sortPairs: true});
-        const index = offChainHolders?.allowlist.indexOf(address!.toLowerCase());
-        console.log(index)
-        
-        if (index === -1) {
-            setAllowlisted(false)
-        } else {
-            let clamingAddress = leafNodes![index!];
-            let hexProof = merkleTree.getHexProof(clamingAddress);
-            setAllowlisted(true)
-            setMerkleProof(hexProof)
+        if (offChainHolders?.allowlist != undefined) {
+            const leafNodes = offChainHolders?.allowlist.map(addr => keccak256((addr)));
+            const merkleTree = new MerkleTree(leafNodes!, keccak256, {sortPairs: true});
+            const index = offChainHolders?.allowlist.indexOf(address!.toLowerCase());
+            console.log(index)
+            
+            if (index === -1) {
+                setAllowlisted(false)
+            } else {
+                let clamingAddress = leafNodes![index!];
+                let hexProof = merkleTree.getHexProof(clamingAddress);
+                setAllowlisted(true)
+                setMerkleProof(hexProof)
+            }
         }
     })
 
@@ -302,7 +304,7 @@ const contractReadCanSubActiveParentNode = useContractRead({
                         },
                     ],
                     functionName: 'setSubDomain',
-                    account: '0x089052090493F92fDA947Bc9362d439f2EF979E2',
+                    account: '0x2d5Ec844CB145924AE76DFd526670F16b5f91120',
                     args: [ (rootNodeENS), (subLabel), (address!), (BigInt(subsYears)), (merkleProof) ],
                     value: subNodeFee,
                     //gasPrice: BigInt(gas)

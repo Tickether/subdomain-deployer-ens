@@ -1,6 +1,6 @@
 import styles from '@/styles/RegisterOptions.module.css'
 import { useEffect, useState } from 'react'
-import { createPublicClient, formatEther, fromHex, http } from 'viem'
+import { createPublicClient, formatEther, formatGwei, fromHex, http } from 'viem'
 import { useAccount, useContractRead, useContractWrite, useFeeData, usePrepareContractWrite, useWaitForTransaction } from 'wagmi'
 import plusSVG from '@/public/assets/icons/plus.svg'
 import minusSVG from '@/public/assets/icons/minus.svg'
@@ -11,6 +11,7 @@ import dropSVG from '@/public/assets/icons/drop.svg'
 import gobackSVG from '@/public/assets/icons/goback.svg'
 import Image from 'next/image'
 import { goerli } from 'viem/chains'
+import ERC20Contract from '../name/profile/erc20Contract'
 
 
 interface RegisterProps {
@@ -24,18 +25,21 @@ interface RegisterProps {
 export default function Erc20({rootNodeENS, subLabel, clearOption} : RegisterProps) {
 
     const {address, isConnected} = useAccount()
-    const { data, isError, isLoading } = useFeeData()
+    const { data } = useFeeData({watch: true})
     const [gas, setGas] = useState<string>('')
     const [gasFee, setGasFee] = useState<string>('')
     const [nodeData, setNodeData] = useState<any>([])
     const [yearsLeft, setYearsLeft] = useState<number>(0)
     const [subsYears, setSubsYears] = useState<number>(1)
     const [subNodeFee, setSubNodeFee] = useState<bigint>(BigInt(0))
+    const [allowance, setAllowance] = useState<bigint>(BigInt(0))
     const [showUSD, setShowUSD] = useState<boolean>(false)
     const [connected, setConnected] = useState<boolean>(false)
     const [canSubActiveNode, setCanSubActiveNode] = useState<boolean>(false)
     const [contractMenu, setContractMenu] = useState<boolean>(false)
-    const [selectedContract, setSelectedContract] = useState<string>('');
+    const [selectedContract, setSelectedContract] = useState<string>('')
+    const [tokenSymbol, setTokenSymbol] = useState<string | null>(null)
+    const [tokenDecimal, setTokenDecimal] = useState<number | null>(null);
     const [ERC20List, setERC20List] = useState<string[] | null>(null)
 
     const handleContractToggle =  () => {
@@ -52,12 +56,14 @@ export default function Erc20({rootNodeENS, subLabel, clearOption} : RegisterPro
     },[isConnected])
     useEffect(() => {
         if (data /* && typeof isConnected === 'boolean'*/) {
-            const valueAsString = data?.formatted.gasPrice;
+            const value = data?.gasPrice! + BigInt(1500000000)
+            const valueAsString = formatGwei(value)
             const truncatedValue = parseFloat(valueAsString!).toFixed(2);
             setGas((truncatedValue))
         } 
     },[data])
-    console.log(data?.formatted.gasPrice)
+    console.log(data)
+    console.log(gasFee)
 
     // check node data
     const contractReadNodeData = useContractRead({
@@ -87,17 +93,17 @@ export default function Erc20({rootNodeENS, subLabel, clearOption} : RegisterPro
     // check canSub/ParentNodeActive
 
 const contractReadCanSubActiveParentNode = useContractRead({
-    address: "0x9Ed6D35eb6d05cdC7AeE2796324724f1F8a83122",
+    address: "0xB783560a30273cBCc94476f7375225d803eC12a9",
     abi: [
         {
-            name: 'parentNodeCanSubActive',
-            inputs: [{ internalType: "bytes32", name: "", type: "bytes32" }, {internalType: "address", name: "erc20Contract", type: "address"} ],
+            name: 'parentNodeCanSubERC20Active',
+            inputs: [{ internalType: "bytes32", name: "", type: "bytes32" }, {internalType: "address", name: "", type: "address"} ],
             outputs: [{ internalType: "bool", name: "", type: "bool" }],
             stateMutability: 'view',
             type: 'function',
         },    
     ],
-    functionName: 'parentNodeCanSubActive',
+    functionName: 'parentNodeCanSubERC20Active',
     args: [(rootNodeENS), (selectedContract)],
     chainId: 5,
     watch: true,
@@ -110,7 +116,7 @@ const contractReadCanSubActiveParentNode = useContractRead({
 
   // get erc20 list
 const contractReadERC20List = useContractRead({
-    address: "0x9Ed6D35eb6d05cdC7AeE2796324724f1F8a83122",
+    address: "0xB783560a30273cBCc94476f7375225d803eC12a9",
     abi: [
         {
             name: 'listERC20',
@@ -134,9 +140,10 @@ const contractReadERC20List = useContractRead({
   
   
   
-  const handleContractSelect =(ERC20Contract: string, ERC20Symbol: string)=>{
+  const handleContractSelect =(ERC20Contract: string, ERC20Symbol: string,  ERC20Decimal: number)=>{
     setSelectedContract(ERC20Contract); 
-    //setTokenSymbol(ERC20Symbol)
+    setTokenSymbol(ERC20Symbol)
+    setTokenDecimal(ERC20Decimal)
     setContractMenu(false); 
   }
     
@@ -165,10 +172,10 @@ const contractReadERC20List = useContractRead({
     };
 
 
-    
+    console.log(Number(subNodeFee) * Math.pow(10, tokenDecimal!))
     // check node price
     const contractReadSubNodeFee = useContractRead({
-        address: "0x2dB5dE42290cB95e49490C5F55eFe91d9f0A95ad",
+        address: "0xB783560a30273cBCc94476f7375225d803eC12a9",
         abi: [
             {
                 name: 'getPricetoUse',
@@ -202,20 +209,20 @@ const contractReadERC20List = useContractRead({
                 
                 
                 const gasUsed = await publicClient.estimateContractGas({
-                    address: '0x9Ed6D35eb6d05cdC7AeE2796324724f1F8a83122',
+                    address: '0xB783560a30273cBCc94476f7375225d803eC12a9',
                     abi: [
                         {
                             name: 'setSubDomainERC20',
                             inputs: [ {internalType: "bytes32", name: "node", type: "bytes32"}, {internalType: "string", name: "subNodeLabel", type: "string"}, {internalType: "address", name: "owner", type: "address"}, {internalType: "uint256", name: "duration", type: "uint256" }, {internalType: "address", name: "erc20Contract", type: "address"} ],
                             outputs: [],
-                            stateMutability: 'payable',
+                            stateMutability: 'nonpayable',
                             type: 'function',
                         },
                     ],
                     functionName: 'setSubDomainERC20',
-                    account: '0x9Ed6D35eb6d05cdC7AeE2796324724f1F8a83122',
+                    account: '0x2d5Ec844CB145924AE76DFd526670F16b5f91120',
                     args: [ (rootNodeENS), (subLabel), (address!), (BigInt(subsYears)), (selectedContract) ],
-                    value: subNodeFee,
+                    value: BigInt(0),
                     //gasPrice: BigInt(gas)
                 })
                 console.log(gasUsed)
@@ -230,22 +237,22 @@ const contractReadERC20List = useContractRead({
         }
         getGasFees()
         
-    },[gas])
+    },[gas, selectedContract])
 
     const { config } = usePrepareContractWrite({
-        address: '0x9Ed6D35eb6d05cdC7AeE2796324724f1F8a83122',
+        address: '0xB783560a30273cBCc94476f7375225d803eC12a9',
         abi: [
             {
               name: 'setSubDomainERC20',
               inputs: [ {internalType: "bytes32", name: "node", type: "bytes32"}, {internalType: "string", name: "subNodeLabel", type: "string"}, {internalType: "address", name: "owner", type: "address"}, {internalType: "uint256", name: "duration", type: "uint256" }, {internalType: "address", name: "erc20Contract", type: "address"} ],
               outputs: [],
-              stateMutability: 'payable',
+              stateMutability: 'nonpayable',
               type: 'function',
             },
           ],
         functionName: 'setSubDomainERC20',
         args: [ (rootNodeENS), (subLabel), (address!), (subsYears), (selectedContract) ],
-        value: subNodeFee,
+        value: BigInt(0),
         chainId: 5,
      })
     const contractWriteSubdomain = useContractWrite(config)
@@ -272,6 +279,63 @@ const contractReadERC20List = useContractRead({
             setShowUSD(true)
         }
         
+    }
+
+    // check allowance price
+    const contractReadAllowance = useContractRead({
+        address: `0x${selectedContract.slice(2)}`,
+        abi: [
+            {
+                name: 'allowance',
+                inputs: [  { internalType: "address", name: "owner", type: "address" }, { internalType: "address", name: "spender", type: "address" } ],
+                outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+                stateMutability: 'view',
+                type: 'function',
+            },    
+        ],
+        functionName: 'allowance',
+        args: [(address), ('0xB783560a30273cBCc94476f7375225d803eC12a9')],
+        chainId: 5,
+        watch: true,
+    })
+    useEffect(() => {
+        if (contractReadAllowance?.data! && typeof contractReadAllowance.data === 'bigint' ) {
+          setAllowance(contractReadAllowance?.data!)
+        }
+    },[contractReadAllowance?.data!])
+    console.log((contractReadAllowance?.data!))
+    //approval
+    const prepareContractWriteApproval = usePrepareContractWrite({
+        address: `0x${selectedContract.slice(2)}`,
+        abi: [
+            {
+              name: 'approve',
+              inputs: [  { internalType: "address", name: "spender", type: "address" }, { internalType: "uint256", name: "value", type: "uint256" } ],
+              outputs: [],
+              stateMutability: 'nonpayable',
+              type: 'function',
+            },
+          ],
+        functionName: 'approve',
+        args: [ ('0xB783560a30273cBCc94476f7375225d803eC12a9'), (Number(subNodeFee) * Math.pow(10, tokenDecimal!))],
+        value: BigInt(0),
+        chainId: 5,
+     })
+    const contractWriteApproval = useContractWrite(prepareContractWriteApproval.config)
+
+    const waitForApproval = useWaitForTransaction({
+        hash: contractWriteApproval.data?.hash,
+        confirmations: 2,
+        onSuccess() {
+        },
+    })
+
+    const handleApproval = async () => {
+        try {
+            await contractWriteApproval.writeAsync?.()
+        } catch (err) {
+            console.log(err)
+        }
     }
 
     return (
@@ -348,9 +412,26 @@ const contractReadERC20List = useContractRead({
                                         <span>{gas} Gwei</span>
                                     </div>
                                     <div className={styles.feeNgasTopToggleParent}>
-                                        <div /*onClick={handleToggle}*/>
+                                        <div onClick={handleContractToggle}>
                                             <Image src={dropSVG} alt='' />
                                         </div>
+                                        <div className={styles.contractDropOverlay}>
+                                            {
+                                              contractMenu && (
+                                                <div className={styles.profileDownOptionDrop}>
+                                                  <div className={styles.profileDownOptionToggle}>
+                                                    
+                                                    {ERC20List?.map((erc20Contract: string) => (
+                                                      <ERC20Contract 
+                                                        erc20Contract={erc20Contract}
+                                                        selectERC20 = {handleContractSelect}
+                                                      />
+                                                    ))}
+                                                  </div>
+                                                </div>
+                                              )
+                                            }
+                                          </div>
                                         <div onClick={handleToggle} className={styles.feeNgasTopToggle}>
                                             
                                             {
@@ -358,7 +439,7 @@ const contractReadERC20List = useContractRead({
                                                 ?(
                                                     <>
                                                         <div className={styles.feeNgasTopToggleETH}>
-                                                            <span>ETH</span>
+                                                            <span>{selectedContract === '' ? 'ERC20' : tokenSymbol}</span>
                                                         </div>
                                                         <div className={styles.feeNgasTopToggleSelectUSD}>
                                                             <span>USD</span>
@@ -367,7 +448,7 @@ const contractReadERC20List = useContractRead({
                                                 )
                                                 :(
                                                     <>
-                                                        <div className={styles.feeNgasTopToggleSelectETH}><span>ETH</span></div>
+                                                        <div className={styles.feeNgasTopToggleSelectETH}><span>{selectedContract === '' ? 'ERC20' : tokenSymbol}</span></div>
                                                         <div className={styles.feeNgasTopToggleUSD}><span>USD</span></div>
                                                     </>
                                                 )
@@ -389,9 +470,9 @@ const contractReadERC20List = useContractRead({
                                     )
                                     :(
                                         <div className={styles.feeNgasDownChild}>
-                                            <div className={styles.feeNgasDownFees}><span>{subsYears === 1 ? subsYears + ' ' + 'year' : subsYears + ' ' + 'years'} registraion</span><span>{formatEther(subNodeFee)} ETH</span></div>
+                                            <div className={styles.feeNgasDownFees}><span>{subsYears === 1 ? subsYears + ' ' + 'year' : subsYears + ' ' + 'years'} registraion</span><span>{Number(subNodeFee)} {selectedContract === '' ? 'ERC20' : tokenSymbol}</span></div>
                                             <div className={styles.feeNgasDownGas}><span>Est. network fee</span><span>0 ETH</span></div>
-                                            <div className={styles.feeNgasDownSum}><span>Estimated total</span><span>0 ETH</span></div>
+                                            <div className={styles.feeNgasDownSum}><span>Estimated total</span><span>{Number(subNodeFee)} {selectedContract === '' ? 'ERC20' : tokenSymbol} + {gasFee} ETH</span></div>
                                         </div>   
                                     )
                                 }
@@ -400,9 +481,13 @@ const contractReadERC20List = useContractRead({
                         </div>
                         <div className={styles.actionButtons}>
                             <button 
-                                disabled={!connected}
-                                
-                                //onClick={() => setOpenModal(true)}
+                                disabled={Number(allowance) === Number(subNodeFee)}
+                                onClick={handleApproval}
+                            >
+                                Approval...
+                            </button>
+                            <button 
+                                disabled={!connected || Number(allowance) <= Number(subNodeFee)}
                                 onClick={handleSubdomain}
                             >
                                 Lets Go!

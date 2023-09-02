@@ -298,3 +298,8 @@
         background-color: #E8E8E8;
         cursor: not-allowed;
     }
+
+    .contractDropOverlay{
+        position: absolute;
+        margin-top: 50px;   
+    }
