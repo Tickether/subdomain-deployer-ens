@@ -256,14 +256,14 @@ const contractReadERC20List = useContractRead({
         chainId: 5,
      })
     const contractWriteSubdomain = useContractWrite(config)
-
+/*
     const waitForTransaction = useWaitForTransaction({
         hash: contractWriteSubdomain.data?.hash,
         confirmations: 2,
         onSuccess() {
         },
     })
-
+*/
     const handleSubdomain = async () => {
         try {
             await contractWriteSubdomain.writeAsync?.()
@@ -322,14 +322,14 @@ const contractReadERC20List = useContractRead({
         chainId: 5,
      })
     const contractWriteApproval = useContractWrite(prepareContractWriteApproval.config)
-
+/*
     const waitForApproval = useWaitForTransaction({
         hash: contractWriteApproval.data?.hash,
         confirmations: 2,
         onSuccess() {
         },
     })
-
+*/
     const handleApproval = async () => {
         try {
             await contractWriteApproval.writeAsync?.()

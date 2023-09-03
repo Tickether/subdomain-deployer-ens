@@ -278,7 +278,7 @@ export default function Ether({rootNodeENS, subLabel, clearOption} : RegisterPro
     })
      
     const contractWriteSubdomain = useContractWrite(config)
-
+/*
     const waitForTransaction = useWaitForTransaction({
         hash: contractWriteSubdomain.data?.hash,
         confirmations: 2,
@@ -286,7 +286,7 @@ export default function Ether({rootNodeENS, subLabel, clearOption} : RegisterPro
         },
     })
     //
-
+*/
     const handleSubdomain = async () => {
         try {
             await contractWriteSubdomain.writeAsync?.()

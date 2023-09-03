@@ -435,14 +435,14 @@ const prepareContractWriteWrap = usePrepareContractWrite({
 })
 
 const  contractWriteWrap = useContractWrite(prepareContractWriteWrap.config)
-
+/*
 const waitForWrap = useWaitForTransaction({
   hash: contractWriteWrap.data?.hash,
   confirmations: 1,
   onSuccess() {
   },
 })
-
+*/
 const handleWrap = async () => {
   try {
       await contractWriteWrap.writeAsync?.()
@@ -472,14 +472,14 @@ const prepareContractWriteCantUnwrap = usePrepareContractWrite({
 
 
 const  contractWriteCantUnwrap = useContractWrite(prepareContractWriteCantUnwrap.config)
-
+/*
 const waitForCantUnwrap = useWaitForTransaction({
   hash: contractWriteCantUnwrap.data?.hash,
   confirmations: 1,
   onSuccess() {
   },
 })
-
+*/
 const handleCantUnwrap = async () => {
   try {
       await contractWriteCantUnwrap.writeAsync?.()
@@ -510,14 +510,14 @@ const handleCantUnwrap = async () => {
     
     
       const  contractWriteApproval = useContractWrite(prepareContractWriteApproval.config)
-    
+    /*
       const waitForApproval = useWaitForTransaction({
           hash: contractWriteApproval.data?.hash,
           confirmations: 1,
           onSuccess() {
           },
       })
-    
+    */
       const handleApproval = async () => {
           try {
               await contractWriteApproval.writeAsync?.()
@@ -543,14 +543,14 @@ const handleCantUnwrap = async () => {
     chainId: 5,
   })
   const contractWriteParentNode = useContractWrite(prepareContractWriteParentNode.config)
-
+/*
   const waitForSetParentNode = useWaitForTransaction({
     hash: contractWriteParentNode.data?.hash,
     confirmations: 2,
     onSuccess() {
     },
 })
-
+*/
   const handleSetParentNode = async () => {
     try {
         await contractWriteParentNode.writeAsync?.()
@@ -577,14 +577,14 @@ value: BigInt(0),
 chainId: 5,
 })
 const contractWriteParentNodeSubMode = useContractWrite(prepareContractWriteParentNodeSubMode.config)
-
+/*
 const waitForSetParentNodeSubMode = useWaitForTransaction({
 hash: contractWriteParentNodeSubMode.data?.hash,
 confirmations: 2,
 onSuccess() {
 },
 })
-
+*/
 const handleSetParentNodeSubMode = async () => {
 try {
     await contractWriteParentNodeSubMode.writeAsync?.()
@@ -642,14 +642,14 @@ try {
 
 
   const  contractWriteWithdraw = useContractWrite(prepareContractWriteWithdraw.config)
-
+/*
   const waitForWithdraw = useWaitForTransaction({
     hash: contractWriteWithdraw.data?.hash,
     confirmations: 1,
     onSuccess() {
     },
   })
-
+*/
   const handleWithdraw = async () => {
     try {
         await contractWriteWithdraw.writeAsync?.()
@@ -1000,17 +1000,17 @@ const getEther = (usd : string) =>{
                                               showUSD
                                               ?( 
                                                   <div className={styles.profileDownFeeChild}>
-                                                      <div className={styles.profileDownFees}><span>Three- Number Fee</span><span>{prices.threeUpLetterFee} USD</span></div>
-                                                      <div className={styles.profileDownFees}><span>Four/Five Number Fee</span><span>{prices.fourFiveLetterFee} USD</span></div>
-                                                      <div className={styles.profileDownFees}><span>Six+ Number Fee</span><span>{prices.sixDownLetterFee} USD</span></div>
+                                                      <div className={styles.profileDownFees}><span>Three- Letter Fee</span><span>{prices.threeUpLetterFee} USD</span></div>
+                                                      <div className={styles.profileDownFees}><span>Four/Five Letter Fee</span><span>{prices.fourFiveLetterFee} USD</span></div>
+                                                      <div className={styles.profileDownFees}><span>Six+ Letter Fee</span><span>{prices.sixDownLetterFee} USD</span></div>
                                                       
                                                   </div>
                                               )
                                               :(
                                                   <div className={styles.profileDownFeeChild}>
-                                                      <div className={styles.profileDownFees}><span>Three- Number Fee</span><span>{getEther(prices.threeUpLetterFee)} ETH</span></div>
-                                                      <div className={styles.profileDownFees}><span>Four/Five Number Fee</span><span>{getEther(prices.fourFiveLetterFee)} ETH</span></div>
-                                                      <div className={styles.profileDownFees}><span>Six+ Number Fee</span><span>{getEther(prices.sixDownLetterFee)} ETH</span></div>
+                                                      <div className={styles.profileDownFees}><span>Three- Letter Fee</span><span>{getEther(prices.threeUpLetterFee)} ETH</span></div>
+                                                      <div className={styles.profileDownFees}><span>Four/Five Letter Fee</span><span>{getEther(prices.fourFiveLetterFee)} ETH</span></div>
+                                                      <div className={styles.profileDownFees}><span>Six+ Letter Fee</span><span>{getEther(prices.sixDownLetterFee)} ETH</span></div>
                                                   </div>   
                                               )
                                           }

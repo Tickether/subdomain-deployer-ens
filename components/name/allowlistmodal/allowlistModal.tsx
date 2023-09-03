@@ -67,24 +67,25 @@ export default function AllowlistModal({ENS, setOpenAllowlistModal, contract} : 
     chainId: 5,
   })
   const contractWriteAllowlist = useContractWrite(prepareContractWriteAllowlist.config)
-
+  /*
   const waitForSetAllowlist = useWaitForTransaction({
     hash: contractWriteAllowlist.data?.hash,
     confirmations: 2,
     onSuccess() {
-      //if null off chain else update
-      if (offChainHolders === null) {
-        handleSetAllowlistOffChain()
-      } else {
-        handleUpdateAllowlist() 
-      }
+      
     },
   })
-
+  */
   const handleSetAllowlistOnChain = async () => {
     try {
       console.log('clicked?')
       await contractWriteAllowlist.writeAsync?.()
+      //if null off chain else update
+      if (offChainHolders === null) {
+        await handleSetAllowlistOffChain()
+      } else {
+        await handleUpdateAllowlist() 
+      }
         
     } catch (err) {
         console.log(err)
@@ -107,7 +108,7 @@ export default function AllowlistModal({ENS, setOpenAllowlistModal, contract} : 
         console.log(data)
         if (data) {
           const offChainDefault : OffChainHolders = {
-            mode: (data.address),
+            mode: (data.mode),
             merkle: (data.merkle),
             allowlist: (data.allowlist),
           };

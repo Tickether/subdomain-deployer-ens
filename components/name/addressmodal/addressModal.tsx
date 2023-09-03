@@ -41,14 +41,14 @@ export default function AddressModal({ENS, setOpenAddressModal, contract} : Addr
     chainId: 5,
   })
   const contractWriteAddERC20 = useContractWrite(prepareContractWriteAddERC20.config)
-
+/*
   const waitForAddERC20 = useWaitForTransaction({
     hash: contractWriteAddERC20.data?.hash,
     confirmations: 2,
     onSuccess() {
     },
   })
-
+*/
   const handleAddERC20 = async () => {
     try {
         await contractWriteAddERC20.writeAsync?.()

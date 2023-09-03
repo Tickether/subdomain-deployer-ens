@@ -434,14 +434,14 @@ const prepareContractWriteWrap = usePrepareContractWrite({
 })
 
 const  contractWriteWrap = useContractWrite(prepareContractWriteWrap.config)
-
+/*
 const waitForWrap = useWaitForTransaction({
   hash: contractWriteWrap.data?.hash,
   confirmations: 1,
   onSuccess() {
   },
 })
-
+*/
 const handleWrap = async () => {
   try {
       await contractWriteWrap.writeAsync?.()
@@ -471,13 +471,14 @@ const prepareContractWriteCantUnwrap = usePrepareContractWrite({
 
 
 const  contractWriteCantUnwrap = useContractWrite(prepareContractWriteCantUnwrap.config)
-
+/*
 const waitForCantUnwrap = useWaitForTransaction({
   hash: contractWriteCantUnwrap.data?.hash,
   confirmations: 1,
   onSuccess() {
   },
 })
+*/
 
 const handleCantUnwrap = async () => {
   try {
@@ -509,14 +510,14 @@ const handleCantUnwrap = async () => {
     
     
       const  contractWriteApproval = useContractWrite(prepareContractWriteApproval.config)
-    
+    /*
       const waitForApproval = useWaitForTransaction({
           hash: contractWriteApproval.data?.hash,
           confirmations: 1,
           onSuccess() {
           },
       })
-    
+    */
       const handleApproval = async () => {
           try {
               await contractWriteApproval.writeAsync?.()
@@ -542,14 +543,14 @@ const handleCantUnwrap = async () => {
     chainId: 5,
   })
   const contractWriteParentNode = useContractWrite(prepareContractWriteParentNode.config)
-
+/*
   const waitForSetParentNode = useWaitForTransaction({
     hash: contractWriteParentNode.data?.hash,
     confirmations: 2,
     onSuccess() {
     },
 })
-
+*/
   const handleSetParentNode = async () => {
     try {
         await contractWriteParentNode.writeAsync?.()
@@ -576,14 +577,14 @@ value: BigInt(0),
 chainId: 5,
 })
 const contractWriteParentNodeSubMode = useContractWrite(prepareContractWriteParentNodeSubMode.config)
-
+/*
 const waitForSetParentNodeSubMode = useWaitForTransaction({
 hash: contractWriteParentNodeSubMode.data?.hash,
 confirmations: 2,
 onSuccess() {
 },
 })
-
+*/
 const handleSetParentNodeSubMode = async () => {
 try {
     if (selectedContract.length > 1) {
@@ -643,14 +644,14 @@ try {
 
 
   const  contractWriteWithdraw = useContractWrite(prepareContractWriteWithdraw.config)
-
+/*
   const waitForWithdraw = useWaitForTransaction({
     hash: contractWriteWithdraw.data?.hash,
     confirmations: 1,
     onSuccess() {
     },
   })
-
+*/
   const handleWithdraw = async () => {
     try {
         await contractWriteWithdraw.writeAsync?.()
@@ -916,7 +917,7 @@ const handleContractSelect =(ERC20Contract: string, ERC20Symbol: string, ERC20De
                   </div>
                   <div className={styles.profileDownPayRight}>
                     <div className={styles.profileDownPayRightBalance}>
-                      <p>{formatUnits(parentNodeBalance, tokenDecimal!)} {selectedContract === '' ? 'ERC20' : tokenSymbol}</p>
+                      <p>{Number(parentNodeBalance)} {selectedContract === '' ? 'ERC20' : tokenSymbol}</p>
                       <p>USD</p>
                     </div>
                     <div className={styles.profileDownPayRightWithdraw}>

@@ -136,7 +136,7 @@ const contractReadCanSubActiveParentNode = useContractRead({
         console.log(data)
         if (data) {
           const offChainDefault : OffChainHolders = {
-            mode: (data.address),
+            mode: (data.mode),
             merkle: (data.merkle),
             allowlist: (data.allowlist),
           };
@@ -264,13 +264,13 @@ const contractReadCanSubActiveParentNode = useContractRead({
     console.log(etherPrice)
 
     useEffect(()=>{
-        if (offChainHolders?.allowlist != undefined) {
+        if (offChainHolders?.allowlist != null) {
             const leafNodes = offChainHolders?.allowlist.map(addr => keccak256((addr)));
             const merkleTree = new MerkleTree(leafNodes!, keccak256, {sortPairs: true});
             const index = offChainHolders?.allowlist.indexOf(address!.toLowerCase());
             console.log(index)
             
-            if (index === -1) {
+            if (index < 0) {
                 setAllowlisted(false)
             } else {
                 let clamingAddress = leafNodes![index!];
@@ -348,14 +348,14 @@ const contractReadCanSubActiveParentNode = useContractRead({
         chainId: 5,
      })
     const contractWriteSubdomain = useContractWrite(config)
-
+/*
     const waitForTransaction = useWaitForTransaction({
         hash: contractWriteSubdomain.data?.hash,
         confirmations: 2,
         onSuccess() {
         },
     })
-
+*/
     const handleSubdomain = async () => {
         try {
             await contractWriteSubdomain.writeAsync?.()

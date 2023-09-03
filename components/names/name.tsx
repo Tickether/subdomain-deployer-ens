@@ -76,14 +76,14 @@ console.log((contractReadSubNodeFee?.data!))
         chainId: 5,
       })
       const contractWriteExtendExp = useContractWrite(prepareContractWriteExtendExp.config)
-    
+    /*
       const waitForSetExtendExp = useWaitForTransaction({
         hash: contractWriteExtendExp.data?.hash,
         confirmations: 2,
         onSuccess() {
         },
     })
-    
+    */
     const handleExtendExp = async () => {
         try {
             await contractWriteExtendExp.writeAsync?.()

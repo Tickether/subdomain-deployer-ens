@@ -50,14 +50,14 @@ export default function PriceModalERC20({ENS, setOpenModal, prices, ERC20List, c
         chainId: 5,
       })
       const contractWriteParentNodeLetterFee = useContractWrite(prepareContractWriteParentNodeLetterFee.config)
-    
+    /*
       const waitForSetParentNodeLetterFee = useWaitForTransaction({
         hash: contractWriteParentNodeLetterFee.data?.hash,
         confirmations: 2,
         onSuccess() {
         },
       })
-    
+    */
       const handleSetParentNodeLetterFee = async () => {
         try {
             await contractWriteParentNodeLetterFee.writeAsync?.()
@@ -83,13 +83,14 @@ export default function PriceModalERC20({ENS, setOpenModal, prices, ERC20List, c
         chainId: 5,
       })
       const contractWriteParentNodeNumberFee = useContractWrite(prepareContractWriteParentNodeNumberFee.config)
-    
+      /*
       const waitForSetParentNodeNumberFee = useWaitForTransaction({
         hash: contractWriteParentNodeNumberFee.data?.hash,
         confirmations: 2,
         onSuccess() {
         },
       })
+      */
     
       const handleSetParentNodeNumberFee = async () => {
         try {
