@@ -292,12 +292,12 @@ export default function SearchResult({searchresult, /*canSubdomain,*/ subEnsBox,
                     },
                 ],
                 functionName: 'isApprovedForAll',
-                args: [(owner!), ('0xB783560a30273cBCc94476f7375225d803eC12a9')],
+                args: [(owner!), ('0x7a6901b13e520fB1c487D5aaFb032174de5791aA')],
                 chainId: 5,
             },
             //contract 2b check if name is enabled on SubENSERC20 contract
             {
-                address: "0xB783560a30273cBCc94476f7375225d803eC12a9",
+                address: "0x7a6901b13e520fB1c487D5aaFb032174de5791aA",
                 abi: [
                     {
                         name: 'parentNodeActive',
@@ -356,12 +356,12 @@ export default function SearchResult({searchresult, /*canSubdomain,*/ subEnsBox,
                     },
                 ],
                 functionName: 'isApprovedForAll',
-                args: [(owner!), ('0x87456C9B38905b130ace3c5a0c83d05972e50bbC')],
+                args: [(owner!), ('0x04D2bC82A99f6B7DeE6309AdF84d9F44a04502a6')],
                 chainId: 5,
             },
             //contract 4b check if name is enabled on SubENSERC20WL contract
             {
-                address: "0x87456C9B38905b130ace3c5a0c83d05972e50bbC",
+                address: "0x04D2bC82A99f6B7DeE6309AdF84d9F44a04502a6",
                 abi: [
                     {
                         name: 'parentNodeActive',

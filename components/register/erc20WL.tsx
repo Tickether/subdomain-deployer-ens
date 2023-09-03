@@ -104,7 +104,7 @@ export default function Erc20WL({rootNodeENS, subLabel, clearOption} : RegisterP
     // check canSub/ParentNodeActive
 
 const contractReadCanSubActiveParentNode = useContractRead({
-    address: "0x87456C9B38905b130ace3c5a0c83d05972e50bbC",
+    address: "0x04D2bC82A99f6B7DeE6309AdF84d9F44a04502a6",
     abi: [
         {
             name: 'parentNodeCanSubERC20Active',
@@ -127,7 +127,7 @@ const contractReadCanSubActiveParentNode = useContractRead({
 
   // get erc20 list
 const contractReadERC20List = useContractRead({
-    address: "0x87456C9B38905b130ace3c5a0c83d05972e50bbC",
+    address: "0x04D2bC82A99f6B7DeE6309AdF84d9F44a04502a6",
     abi: [
         {
             name: 'listERC20',
@@ -152,10 +152,10 @@ const contractReadERC20List = useContractRead({
   
   
   const handleContractSelect =(ERC20Contract: string, ERC20Symbol: string, ERC20Decimal: number)=>{
-    setSelectedContract(ERC20Contract); 
+    setSelectedContract(ERC20Contract)
     setTokenSymbol(ERC20Symbol)
     setTokenDecimal(ERC20Decimal)
-    setContractMenu(false); 
+    setContractMenu(false)
   }
 
   useEffect(()=>{
@@ -221,7 +221,7 @@ const contractReadERC20List = useContractRead({
     
     // check node price
     const contractReadSubNodeFee = useContractRead({
-        address: "0x87456C9B38905b130ace3c5a0c83d05972e50bbC",
+        address: "0x04D2bC82A99f6B7DeE6309AdF84d9F44a04502a6",
         abi: [
             {
                 name: 'getPricetoUse',
@@ -255,7 +255,7 @@ const contractReadERC20List = useContractRead({
                 
                 
                 const gasUsed = await publicClient.estimateContractGas({
-                    address: '0x87456C9B38905b130ace3c5a0c83d05972e50bbC',
+                    address: '0x04D2bC82A99f6B7DeE6309AdF84d9F44a04502a6',
                     abi: [
                         {
                             name: 'setSubDomainERC20',
@@ -286,7 +286,7 @@ const contractReadERC20List = useContractRead({
     },[gas])
 
     const { config } = usePrepareContractWrite({
-        address: '0x87456C9B38905b130ace3c5a0c83d05972e50bbC',
+        address: '0x04D2bC82A99f6B7DeE6309AdF84d9F44a04502a6',
         abi: [
             {
               name: 'setSubDomainERC20',
@@ -358,7 +358,7 @@ const contractReadERC20List = useContractRead({
             },    
         ],
         functionName: 'allowance',
-        args: [(address), ('0x87456C9B38905b130ace3c5a0c83d05972e50bbC')],
+        args: [(address), ('0x04D2bC82A99f6B7DeE6309AdF84d9F44a04502a6')],
         chainId: 5,
         watch: true,
     })
@@ -381,12 +381,12 @@ const contractReadERC20List = useContractRead({
             },
           ],
         functionName: 'approve',
-        args: [ ('0x87456C9B38905b130ace3c5a0c83d05972e50bbC'), (Number(subNodeFee) * Math.pow(10, tokenDecimal!))],
+        args: [ ('0x04D2bC82A99f6B7DeE6309AdF84d9F44a04502a6'), (Number(subNodeFee) * Math.pow(10, tokenDecimal!))],
         value: BigInt(0),
         chainId: 5,
      })
     const contractWriteApproval = useContractWrite(prepareContractWriteApproval.config)
-     
+
     const waitForApproval = useWaitForTransaction({
         hash: contractWriteApproval.data?.hash,
         confirmations: 2,

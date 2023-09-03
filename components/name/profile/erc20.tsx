@@ -11,7 +11,7 @@ import addSVG from '@/public/assets/icons/add.svg'
 import { Prices } from './ether'
 import { ENS } from '@/pages/[ensName]'
 import { useAccount, useContractRead, useContractReads, useContractWrite, usePrepareContractWrite, useWaitForTransaction, useToken } from 'wagmi'
-import { labelhash, namehash } from 'viem'
+import { formatUnits, labelhash, namehash } from 'viem'
 import AddressModal from '../addressmodal/addressModal'
 import PriceModalERC20 from '../pricemodal/priceModalERC20'
 import ERC20Contract from './erc20Contract'
@@ -62,6 +62,7 @@ export default function Erc20({ENS} : ENSprop) {
     const [selectedContract, setSelectedContract] = useState<string>('');
     //const [tokenName, setTokenName] = useState<string| null>(null);
     const [tokenSymbol, setTokenSymbol] = useState<string | null>(null);
+    const [tokenDecimal, setTokenDecimal] = useState<number | null>(null);
     const [etherPrice, setEtherPrice] = useState<number>(0)
     const [roundData, setRoundData] = useState<bigint[] | null>(null)
     const [ERC20List, setERC20List] = useState<string[] | null>(null)
@@ -188,7 +189,7 @@ const contractReadApproved = useContractRead({
       },
   ],
   functionName: 'isApprovedForAll',
-  args: [(ENS.owner!), ('0xB783560a30273cBCc94476f7375225d803eC12a9')],
+  args: [(ENS.owner!), ('0x7a6901b13e520fB1c487D5aaFb032174de5791aA')],
   watch: true,
   chainId: 5,
 })  
@@ -203,7 +204,7 @@ useEffect(() => {
 // check setBase/ParentNodeActive
 
 const contractReadActiveParentNode = useContractRead({
-    address: "0xB783560a30273cBCc94476f7375225d803eC12a9",
+    address: "0x7a6901b13e520fB1c487D5aaFb032174de5791aA",
     abi: [
         {
             name: 'parentNodeActive',
@@ -227,7 +228,7 @@ useEffect(() => {
 // check canSub/ParentNodeActive
 
 const contractReadCanSubActiveParentNode = useContractRead({
-  address: "0xB783560a30273cBCc94476f7375225d803eC12a9",
+  address: "0x7a6901b13e520fB1c487D5aaFb032174de5791aA",
   abi: [
       {
           name: 'parentNodeCanSubERC20Active',
@@ -294,12 +295,12 @@ useEffect(() => {
                 },
             ],
             functionName: 'isApprovedForAll',
-            args: [(ENS.owner!), ('0xB783560a30273cBCc94476f7375225d803eC12a9')],
+            args: [(ENS.owner!), ('0x7a6901b13e520fB1c487D5aaFb032174de5791aA')],
             chainId: 5,
         },
         //contract 1b check if name is enabled on SubENS contract
         {
-            address: "0xB783560a30273cBCc94476f7375225d803eC12a9",
+            address: "0x7a6901b13e520fB1c487D5aaFb032174de5791aA",
             abi: [
                 {
                     name: 'parentNodeActive',
@@ -315,7 +316,7 @@ useEffect(() => {
         },
         //contract 1c check if CanSub name is enabled on SubENS contract
         {
-            address: "0xB783560a30273cBCc94476f7375225d803eC12a9",
+            address: "0x7a6901b13e520fB1c487D5aaFb032174de5791aA",
             abi: [
                 {
                     name: 'parentNodeCanSubActive',
@@ -499,7 +500,7 @@ const handleCantUnwrap = async () => {
               },
             ],
           functionName: 'setApprovalForAll',
-          args: [ ('0xB783560a30273cBCc94476f7375225d803eC12a9'), (true) ],
+          args: [ ('0x7a6901b13e520fB1c487D5aaFb032174de5791aA'), (true) ],
           chainId: 5,
           value: BigInt(0),
       })
@@ -525,7 +526,7 @@ const handleCantUnwrap = async () => {
       }
 
   const prepareContractWriteParentNode = usePrepareContractWrite({
-    address: '0xB783560a30273cBCc94476f7375225d803eC12a9',
+    address: '0x7a6901b13e520fB1c487D5aaFb032174de5791aA',
     abi: [
       {
         name: 'setBaseEns',
@@ -559,7 +560,7 @@ const handleCantUnwrap = async () => {
 
 
 const prepareContractWriteParentNodeSubMode = usePrepareContractWrite({
-address: '0xB783560a30273cBCc94476f7375225d803eC12a9',
+address: '0x7a6901b13e520fB1c487D5aaFb032174de5791aA',
 abi: [
   {
     name: 'flipBaseEnsSubMode',
@@ -596,17 +597,17 @@ try {
 
 //read balance and withdraw
   const contractReadParentNodeBalance = useContractRead({
-    address: "0xB783560a30273cBCc94476f7375225d803eC12a9",
+    address: "0x7a6901b13e520fB1c487D5aaFb032174de5791aA",
     abi: [
         {
-            name: 'parentNodeBalance',
-            inputs: [{ internalType: "bytes32", name: "node", type: "bytes32" }],
+            name: 'parentNodeBalanceERC20',
+            inputs: [{ internalType: "bytes32", name: "node", type: "bytes32" }, {internalType: "address", name: "erc20Contract", type: "address"}],
             outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
             stateMutability: 'view',
             type: 'function',
         },    
     ],
-    functionName: 'parentNodeBalance',
+    functionName: 'parentNodeBalanceERC20',
     args: [(namehash(ENS.name)), (selectedContract)],
     chainId: 5,
     watch: true,
@@ -618,11 +619,11 @@ try {
     }
 
   },[ contractReadParentNodeBalance?.data!])
-  
+  console.log(parentNodeBalance)
 
 //read balance and withdraw
   const prepareContractWriteWithdraw = usePrepareContractWrite({
-    address: '0xB783560a30273cBCc94476f7375225d803eC12a9',
+    address: '0x7a6901b13e520fB1c487D5aaFb032174de5791aA',
     abi: [
         {
           name: 'withdrawNodeBalance',
@@ -663,7 +664,7 @@ try {
     contracts: [
         //contract 0 check if name is wrapped on nameWrapper
         {
-          address: "0xB783560a30273cBCc94476f7375225d803eC12a9",
+          address: "0x7a6901b13e520fB1c487D5aaFb032174de5791aA",
           abi: [
               {
                   name: 'threeUpLetterFeeERC20',
@@ -679,7 +680,7 @@ try {
         },
         //contract 1a check if SubENS contract is approved on nameWrapper
         {
-          address: "0xB783560a30273cBCc94476f7375225d803eC12a9",
+          address: "0x7a6901b13e520fB1c487D5aaFb032174de5791aA",
           abi: [
               {
                   name: 'fourFiveLetterFeeERC20',
@@ -695,7 +696,7 @@ try {
         },
         //contract 1b check if name is enabled on SubENS contract
         {
-          address: "0xB783560a30273cBCc94476f7375225d803eC12a9",
+          address: "0x7a6901b13e520fB1c487D5aaFb032174de5791aA",
           abi: [
               {
                   name: 'sixDownLetterFeeERC20',
@@ -711,7 +712,7 @@ try {
         },
         //contract 1c check if CanSub name is enabled on SubENS contract
         {
-          address: "0xB783560a30273cBCc94476f7375225d803eC12a9",
+          address: "0x7a6901b13e520fB1c487D5aaFb032174de5791aA",
           abi: [
               {
                   name: 'oneNumberFeeERC20',
@@ -727,7 +728,7 @@ try {
         },
         //contract 2a check if SubENSERC20 contract is approved on nameWrapper
         {
-          address: "0xB783560a30273cBCc94476f7375225d803eC12a9",
+          address: "0x7a6901b13e520fB1c487D5aaFb032174de5791aA",
           abi: [
               {
                   name: 'twoNumberFeeERC20',
@@ -743,7 +744,7 @@ try {
         },
         //contract 2b check if name is enabled on SubENSERC20 contract
         {
-          address: "0xB783560a30273cBCc94476f7375225d803eC12a9",
+          address: "0x7a6901b13e520fB1c487D5aaFb032174de5791aA",
           abi: [
               {
                   name: 'threeNumberFeeERC20',
@@ -759,7 +760,7 @@ try {
         },
         //contract 2c check if CanSub name is enabled on SubENSERC20 contract
         {
-          address: "0xB783560a30273cBCc94476f7375225d803eC12a9",
+          address: "0x7a6901b13e520fB1c487D5aaFb032174de5791aA",
           abi: [
               {
                   name: 'fourNumberFeeERC20',
@@ -775,7 +776,7 @@ try {
         },
         //contract 3a check if SubENSWL contract is approved on nameWrapper
         {
-          address: "0xB783560a30273cBCc94476f7375225d803eC12a9",
+          address: "0x7a6901b13e520fB1c487D5aaFb032174de5791aA",
           abi: [
               {
                   name: 'fiveUpNumberFeeERC20',
@@ -864,7 +865,7 @@ const getEther = (usd : string) =>{
 
 // get erc20 list
 const contractReadERC20List = useContractRead({
-  address: "0xB783560a30273cBCc94476f7375225d803eC12a9",
+  address: "0x7a6901b13e520fB1c487D5aaFb032174de5791aA",
   abi: [
       {
           name: 'listERC20',
@@ -889,10 +890,11 @@ console.log(contractReadERC20List?.data!)
 console.log((namehash(ENS.name)))
 
 
-const handleContractSelect =(ERC20Contract: string, ERC20Symbol: string)=>{
-  setSelectedContract(ERC20Contract); 
+const handleContractSelect =(ERC20Contract: string, ERC20Symbol: string, ERC20Decimal: number)=>{
+  setSelectedContract(ERC20Contract)
   setTokenSymbol(ERC20Symbol)
-  setContractMenu(false); 
+  setTokenDecimal(ERC20Decimal)
+  setContractMenu(false)
 }
     return (
         <>
@@ -914,7 +916,7 @@ const handleContractSelect =(ERC20Contract: string, ERC20Symbol: string)=>{
                   </div>
                   <div className={styles.profileDownPayRight}>
                     <div className={styles.profileDownPayRightBalance}>
-                      <p>{selectedContract === '' ? 'ERC20' : tokenSymbol}</p>
+                      <p>{formatUnits(parentNodeBalance, tokenDecimal!)} {selectedContract === '' ? 'ERC20' : tokenSymbol}</p>
                       <p>USD</p>
                     </div>
                     <div className={styles.profileDownPayRightWithdraw}>
@@ -930,8 +932,8 @@ const handleContractSelect =(ERC20Contract: string, ERC20Symbol: string)=>{
                                               <div className={styles.profileDownSubChildFeeTitle}><p>Subname Prices</p></div>
                                               <div className={styles.profileDownSubChildFeeIcon} onClick={()=> setOpenModal(true)}><Image src={editSVG} alt='' /></div>
                                             </div>
-                                            {openModal && <PriceModalERC20 ENS ={ENS} setOpenModal ={setOpenModal} prices ={prices} ERC20List={ERC20List} contract='0xB783560a30273cBCc94476f7375225d803eC12a9'/>}
-                                            {openAddressModal && <AddressModal ENS ={ENS} setOpenAddressModal ={setOpenAddressModal} contract='0xB783560a30273cBCc94476f7375225d803eC12a9'/>}
+                                            {openModal && <PriceModalERC20 ENS ={ENS} setOpenModal ={setOpenModal} prices ={prices} ERC20List={ERC20List} contract='0x7a6901b13e520fB1c487D5aaFb032174de5791aA'/>}
+                                            {openAddressModal && <AddressModal ENS ={ENS} setOpenAddressModal ={setOpenAddressModal} contract='0x7a6901b13e520fB1c487D5aaFb032174de5791aA'/>}
                                             <div onClick={handlePriceToggle} className={styles.profileDownSubChildOption}>
                                                 { selectedPrice === 'numbers' && <p>Numbers Only</p>}
                                                 { selectedPrice === 'letters' && <p>Letters & Numbers</p>}
