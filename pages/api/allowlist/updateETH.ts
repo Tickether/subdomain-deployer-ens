@@ -1,23 +1,23 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import Allowlist from '@/models/allowlist'
+import AllowlistETH from '@/models/allowlisteth'
 import connectDB from '@/utils/mongodb'
 import { NextApiRequest, NextApiResponse } from 'next'
 
 
-export default async function UPDATE(
+export default async function UPDATEETH(
     req: NextApiRequest,
     res: NextApiResponse,
 ) {
     //find address and input new mode/list
-    const { address, selectedAllowlistMode, rootHash, holders } = req.body
+    const { enshash, selectedAllowlistMode, rootHash, holders } = req.body
     try {
         await connectDB()
-        const allowlist = await Allowlist.findOneAndUpdate(
-            { address }, 
-            {mode: selectedAllowlistMode, merkle: rootHash, allowlist: holders}, 
+        const allowlistETH = await AllowlistETH.findOneAndUpdate(
+            { namehashETH: enshash }, 
+            { modeETH: selectedAllowlistMode, merkleETH: rootHash, allowlistETH: holders }, 
             { new: true }
         )        
-        return res.json(allowlist)
+        return res.json(allowlistETH)
     } catch (error) {
         return res.json(error)
     }

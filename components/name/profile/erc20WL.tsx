@@ -1006,7 +1006,7 @@ const handleContractSelect =(ERC20Contract: string, ERC20Symbol: string, ERC20De
                                                   ?(
                                                       <>
                                                           <div className={styles.profileDownToggleETH}>
-                                                              <span>{tokenSymbol}</span>
+                                                              <span>{selectedContract === '' ? 'ERC20' : tokenSymbol}</span>
                                                           </div>
                                                           <div className={styles.profileDownToggleSelectUSD}>
                                                               <span>USD</span>
@@ -1015,7 +1015,7 @@ const handleContractSelect =(ERC20Contract: string, ERC20Symbol: string, ERC20De
                                                   )
                                                   :(
                                                       <>
-                                                          <div className={styles.profileDownToggleSelectETH}><span>{tokenSymbol}</span></div>
+                                                          <div className={styles.profileDownToggleSelectETH}><span>{selectedContract === '' ? 'ERC20' : tokenSymbol}</span></div>
                                                           <div className={styles.profileDownToggleUSD}><span>USD</span></div>
                                                       </>
                                                   )

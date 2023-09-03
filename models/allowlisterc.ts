@@ -1,21 +1,20 @@
 import mongoose from "mongoose"
 
-const AllowlistSchema = new mongoose.Schema({
-    address: {
+const AllowlistERCSchema = new mongoose.Schema({
+    namehashERC: {
         type: String,
         required: true,
         unique: true,
         //minLength: [42, 'address must be 42 characters'],
         //maxLength: [42, 'address must be 42 characters'],
     },
-    mode: {
+    modeERC: {
         type: String,
     },
-    merkle: {
+    merkleERC: {
         type: String,
-        unique: true,
     },
-    allowlist: {
+    allowlistERC: {
         type: [String],
         //required: true,
         //unique: true,
@@ -25,6 +24,6 @@ const AllowlistSchema = new mongoose.Schema({
     }
 })
 
-const Allowlist = mongoose.models.Allowlist || mongoose.model('Allowlist', AllowlistSchema)
+const AllowlistERC = mongoose.models.AllowlistERC || mongoose.model('AllowlistERC', AllowlistERCSchema)
 
-export default Allowlist
+export default AllowlistERC

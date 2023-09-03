@@ -160,32 +160,33 @@ const contractReadERC20List = useContractRead({
 
   useEffect(()=>{
     const handleGetAllowlist = async () => {
-      try {
-        const res = await fetch('../../api/allowlist/get', {
-          method: 'POST',
-          headers: {
-            'Content-type': 'application/json'
-          },
-          body: JSON.stringify({
-            address,
-          })
-        }) 
-        const data = await res.json()
-        console.log(data)
-        if (data) {
-          const offChainDefault : OffChainHolders = {
-            mode: (data.address),
-            merkle: (data.merkle),
-            allowlist: (data.allowlist),
-          };
-          
-          setOffChainHolders(offChainDefault)
+        const enshash = rootNodeENS
+        try {
+            const res = await fetch('../../api/allowlist/getERC', {
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify({
+                enshash,
+            })
+            }) 
+            const data = await res.json()
+            console.log(data)
+            if (data) {
+            const offChainData : OffChainHolders = {
+                mode: (data.modeERC),
+                merkle: (data.merkleERC),
+                allowlist: (data.allowlistERC),
+            };
+            
+            setOffChainHolders(offChainData)
+            }
+            
+            return data
+        } catch (error) {
+            console.log(error)
         }
-        
-        return data
-      } catch (error) {
-        console.log(error)
-      }
     }
     handleGetAllowlist()
   })
@@ -424,10 +425,10 @@ const contractReadERC20List = useContractRead({
                         </div>
                         <div className={styles.allowlist}>
                             {
-                                allowlisted
-                                ?(
+                                allowlisted && 
+                                (
                                     <div className={styles.allowlisted}>
-                                        <div>
+                                        <div className={styles.allowlistedInfoImg}>
                                             <Image src={wlSVG} alt='' />
                                         </div>
                                         <div className={styles.allowlistedInfoText}>
@@ -435,13 +436,16 @@ const contractReadERC20List = useContractRead({
                                         </div>
                                     </div>
                                 )
-                                :(
+                            }
+                            {
+                                !allowlisted &&
+                                (
                                     <div className={styles.allowlistNot}>
-                                        <div>
+                                        <div className={styles.allowlistedInfoImg}>
                                             <Image src={nowlSVG} alt='' />
                                         </div>
                                         <div className={styles.allowlistedInfoText}>
-                                            <span>You are not  on allowlist.</span>
+                                            <span>You are not on allowlist.</span>
                                         </div>
                                     </div>
                                 )

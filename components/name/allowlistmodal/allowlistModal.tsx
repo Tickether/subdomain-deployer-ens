@@ -94,32 +94,64 @@ export default function AllowlistModal({ENS, setOpenAllowlistModal, contract} : 
 
   useEffect(()=>{
     const handleGetAllowlist = async () => {
-      try {
-        const res = await fetch('api/allowlist/get', {
-          method: 'POST',
-          headers: {
-            'Content-type': 'application/json'
-          },
-          body: JSON.stringify({
-            address,
-          })
-        }) 
-        const data = await res.json()
-        console.log(data)
-        if (data) {
-          const offChainDefault : OffChainHolders = {
-            mode: (data.mode),
-            merkle: (data.merkle),
-            allowlist: (data.allowlist),
-          };
-          
-          setOffChainHolders(offChainDefault)
-        }
+      const enshash = namehash(ENS.name)
+      if (contract == '0x04D2bC82A99f6B7DeE6309AdF84d9F44a04502a6') { // erc
         
-        return data
-      } catch (error) {
-        console.log(error)
+        try {
+          const res = await fetch('api/allowlist/getERC', {
+            method: 'POST',
+            headers: {
+              'Content-type': 'application/json'
+            },
+            body: JSON.stringify({
+              enshash,
+            })
+          }) 
+          const data = await res.json()
+          console.log(data)
+          if (data) {
+            const offChainData : OffChainHolders = {
+              mode: (data.modeERC),
+              merkle: (data.merkleERC),
+              allowlist: (data.allowlistERC),
+            };
+            
+            setOffChainHolders(offChainData)
+          }
+          
+          return data
+        } catch (error) {
+          console.log(error)
+        }
+      } else if (contract == '0x089052090493F92fDA947Bc9362d439f2EF979E2') { //eth
+        try {
+          const res = await fetch('api/allowlist/getETH', {
+            method: 'POST',
+            headers: {
+              'Content-type': 'application/json'
+            },
+            body: JSON.stringify({
+              enshash,
+            })
+          }) 
+          const data = await res.json()
+          console.log(data)
+          if (data) {
+            const offChainData : OffChainHolders = {
+              mode: (data.modeETH),
+              merkle: (data.merkleETH),
+              allowlist: (data.allowlistETH),
+            };
+            
+            setOffChainHolders(offChainData)
+          }
+          
+          return data
+        } catch (error) {
+          console.log(error)
+        }
       }
+      
     }
     handleGetAllowlist()
   })
@@ -128,46 +160,91 @@ export default function AllowlistModal({ENS, setOpenAllowlistModal, contract} : 
   console.log(offChainHolders)
   
   
-
   //console.log(handleGetAllowlist())
 
   // new off chain old update
   const handleUpdateAllowlist = async () => {
-    try {
-      const res = await fetch('api/allowlist/update', {
-        method: 'POST',
-        headers: {
-          'Content-type': 'application/json'
-        },
-        body: JSON.stringify({
-          address,
-          selectedAllowlistMode,
-          rootHash,
-          holders,
-        })
-      }) 
-    } catch (error) {
-      console.log(error)
+    const enshash = namehash(ENS.name)
+    if (contract == '0x04D2bC82A99f6B7DeE6309AdF84d9F44a04502a6') { // erc
+      const option = 'erc20'
+      try {
+        const res = await fetch('api/allowlist/updateERC', {
+          method: 'POST',
+          headers: {
+            'Content-type': 'application/json'
+          },
+          body: JSON.stringify({
+            enshash,
+            selectedAllowlistMode,
+            rootHash,
+            holders,
+          })
+        }) 
+      } catch (error) {
+        console.log(error)
+      }
+    } else if (contract == '0x089052090493F92fDA947Bc9362d439f2EF979E2') { //eth
+      const option = 'ether'
+      try {
+        const res = await fetch('api/allowlist/updateETH', {
+          method: 'POST',
+          headers: {
+            'Content-type': 'application/json'
+          },
+          body: JSON.stringify({
+            enshash,
+            selectedAllowlistMode,
+            rootHash,
+            holders,
+          })
+        }) 
+      } catch (error) {
+        console.log(error)
+      }
     }
+    
   }
   const handleSetAllowlistOffChain = async () => {
-    try {
-      console.log('clicked?')
-      const res = await fetch('api/allowlist/post', {
-        method: 'POST',
-        headers: {
-          'Content-type': 'application/json'
-        },
-        body: JSON.stringify({
-          address,
-          selectedAllowlistMode,
-          rootHash,
-          holders,
+    const enshash = namehash(ENS.name)
+    if (contract == '0x04D2bC82A99f6B7DeE6309AdF84d9F44a04502a6') { // erc
+      try {
+        console.log('clicked?')
+        const res = await fetch('api/allowlist/postERC', {
+          method: 'POST',
+          headers: {
+            'Content-type': 'application/json'
+          },
+          body: JSON.stringify({
+            enshash,
+            selectedAllowlistMode,
+            rootHash,
+            holders,
+          })
         })
-      })
-    } catch (error) {
-      console.log(error)
+      } catch (error) {
+        console.log(error)
+      }
+    } else if (contract == '0x089052090493F92fDA947Bc9362d439f2EF979E2') { //eth
+      try {
+        console.log('clicked?')
+        const res = await fetch('api/allowlist/postETH', {
+          method: 'POST',
+          headers: {
+            'Content-type': 'application/json'
+          },
+          body: JSON.stringify({
+            enshash,
+            selectedAllowlistMode,
+            rootHash,
+            holders,
+          })
+        })
+      } catch (error) {
+        console.log(error)
+      }
     }
+    
+    
   }
   
   const handleDecrement = () => {
