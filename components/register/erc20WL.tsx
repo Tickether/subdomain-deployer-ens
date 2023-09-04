@@ -565,9 +565,9 @@ const contractReadERC20List = useContractRead({
                                     )
                                     :(
                                         <div className={styles.feeNgasDownChild}>
-                                            <div className={styles.feeNgasDownFees}><span>{subsYears === 1 ? subsYears + ' ' + 'year' : subsYears + ' ' + 'years'} registraion</span><span>{formatEther(subNodeFee)} {selectedContract === '' ? 'ERC20' : tokenSymbol}</span></div>
+                                            <div className={styles.feeNgasDownFees}><span>{subsYears === 1 ? subsYears + ' ' + 'year' : subsYears + ' ' + 'years'} registraion</span><span>{Number(subNodeFee)} {selectedContract === '' ? 'ERC20' : tokenSymbol}</span></div>
                                             <div className={styles.feeNgasDownGas}><span>Est. network fee</span><span>0 ETH</span></div>
-                                            <div className={styles.feeNgasDownSum}><span>Estimated total</span><span>0 {selectedContract === '' ? 'ERC20' : tokenSymbol}</span></div>
+                                            <div className={styles.feeNgasDownSum}><span>Estimated total</span><span>{Number(subNodeFee)} {selectedContract === '' ? 'ERC20' : tokenSymbol} + {gasFee} ETH</span></div>
                                         </div>   
                                     )
                                 }
@@ -576,13 +576,13 @@ const contractReadERC20List = useContractRead({
                         </div>
                         <div className={styles.actionButtons}>
                             <button 
-                                disabled={Number(allowance) == Number(subNodeFee)}
+                                disabled={Number(allowance) >= Number(subNodeFee) || !canSubActiveNode}
                                 onClick={handleApproval}
                             >
                                 Approval...
                             </button>
                             <button 
-                                disabled={!connected || Number(allowance) <= Number(subNodeFee)}
+                                disabled={!connected || Number(allowance) <= Number(subNodeFee) || !canSubActiveNode}
                                 onClick={handleSubdomain}
                             >
                                 Lets Go!
