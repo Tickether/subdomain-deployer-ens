@@ -298,7 +298,7 @@ const contractReadERC20List = useContractRead({
             },
           ],
         functionName: 'setSubDomainERC20',
-        args: [ (rootNodeENS), (subLabel), (address!), (subsYears) ],
+        args: [ (rootNodeENS), (subLabel), (address!), (subsYears), (selectedContract), (merkleProof) ],
         value: BigInt(0),
         chainId: 5,
      })
@@ -313,6 +313,7 @@ const contractReadERC20List = useContractRead({
 */
     const handleSubdomain = async () => {
         try {
+            console.log('cliiik')
             await contractWriteSubdomain.writeAsync?.()
         } catch (err) {
             console.log(err)
