@@ -214,44 +214,11 @@ export default function Ether({rootNodeENS, subLabel, clearOption} : RegisterPro
 
     //transac est gas
     useEffect(()=>{
-        const getGasFees = async () => {
-            
-            try {
-                const publicClient = createPublicClient({
-                    chain: goerli,
-                    transport: http()
-                })
-                
-                
-                const gasUsed = await publicClient.estimateContractGas({
-                    address: '0x4Ec5C1381c9B049F9A737843cDFE12D761947Bc2',
-                    abi: [
-                        {
-                            name: 'setSubDomain',
-                            inputs: [ {internalType: "bytes32", name: "node", type: "bytes32"}, {internalType: "string", name: "subNodeLabel", type: "string"}, {internalType: "address", name: "owner", type: "address"}, {internalType: "uint256", name: "duration", type: "uint256" } ],
-                            outputs: [],
-                            stateMutability: 'payable',
-                            type: 'function',
-                        },
-                    ],
-                    functionName: 'setSubDomain',
-                    account: '0x2d5Ec844CB145924AE76DFd526670F16b5f91120',
-                    args: [ (rootNodeENS), (subLabel), (address!), (BigInt(subsYears)) ],
-                    value: subNodeFee,
-                    //gasPrice: BigInt(gas)
-                })
-                console.log(gasUsed)
-                
-                const fee = (Number(gas) * Number(gasUsed)) * 1000000000
-    
-                setGasFee(formatEther(BigInt(fee)))
-            } catch (error) {
-                console.log(error)
-            }
-
-        }
-        getGasFees()
+        const gasUsed = 260000
         
+        const fee = (Number(gas) * (gasUsed)) * 1000000000
+    
+        setGasFee(formatEther(BigInt(fee))) 
     },[gas])
     
     //total fee+gas

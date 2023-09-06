@@ -284,44 +284,11 @@ const contractReadCanSubActiveParentNode = useContractRead({
 
     //transac est gas
     useEffect(()=>{
-        const getGasFees = async () => {
-            
-            try {
-                const publicClient = createPublicClient({
-                    chain: goerli,
-                    transport: http()
-                })
-                
-                
-                const gasUsed = await publicClient.estimateContractGas({
-                    address: '0x089052090493F92fDA947Bc9362d439f2EF979E2',
-                    abi: [
-                        {
-                            name: 'setSubDomain',
-                            inputs: [ {internalType: "bytes32", name: "node", type: "bytes32"}, {internalType: "string", name: "subNodeLabel", type: "string"}, {internalType: "address", name: "owner", type: "address"}, {internalType: "uint256", name: "duration", type: "uint256" }, {internalType: "bytes32[]", name: "merkleRoot", type: "bytes32[]"} ],
-                            outputs: [],
-                            stateMutability: 'payable',
-                            type: 'function',
-                        },
-                    ],
-                    functionName: 'setSubDomain',
-                    account: '0x2d5Ec844CB145924AE76DFd526670F16b5f91120',
-                    args: [ (rootNodeENS), (subLabel), (address!), (BigInt(subsYears)), (merkleProof) ],
-                    value: subNodeFee,
-                    //gasPrice: BigInt(gas)
-                })
-                console.log(gasUsed)
-                
-                const fee = (Number(gas) * Number(gasUsed)) * 1000000000
-    
-                setGasFee(formatEther(BigInt(fee)))
-            } catch (error) {
-                console.log(error)
-            }
-
-        }
-        getGasFees()
+        const gasUsed =  278006
         
+        const fee = (Number(gas) * (gasUsed)) * 1000000000
+    
+        setGasFee(formatEther(BigInt(fee)))
     },[gas])
     
     //total fee+gas

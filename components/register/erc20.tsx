@@ -199,44 +199,11 @@ const contractReadERC20List = useContractRead({
 
     //transac est gas
     useEffect(()=>{
-        const getGasFees = async () => {
-            
-            try {
-                const publicClient = createPublicClient({
-                    chain: goerli,
-                    transport: http()
-                })
-                
-                
-                const gasUsed = await publicClient.estimateContractGas({
-                    address: '0x7a6901b13e520fB1c487D5aaFb032174de5791aA',
-                    abi: [
-                        {
-                            name: 'setSubDomainERC20',
-                            inputs: [ {internalType: "bytes32", name: "node", type: "bytes32"}, {internalType: "string", name: "subNodeLabel", type: "string"}, {internalType: "address", name: "owner", type: "address"}, {internalType: "uint256", name: "duration", type: "uint256" }, {internalType: "address", name: "erc20Contract", type: "address"} ],
-                            outputs: [],
-                            stateMutability: 'nonpayable',
-                            type: 'function',
-                        },
-                    ],
-                    functionName: 'setSubDomainERC20',
-                    account: '0x2d5Ec844CB145924AE76DFd526670F16b5f91120',
-                    args: [ (rootNodeENS), (subLabel), (address!), (BigInt(subsYears)), (selectedContract) ],
-                    value: BigInt(0),
-                    //gasPrice: BigInt(gas)
-                })
-                console.log(gasUsed)
-                
-                const fee = (Number(gas) * Number(gasUsed)) * 1000000000
-    
-                setGasFee(formatEther(BigInt(fee)))
-            } catch (error) {
-                console.log(error)
-            }
-
-        }
-        getGasFees()
+        const gasUsed = 260000
         
+        const fee = (Number(gas) * (gasUsed)) * 1000000000
+    
+        setGasFee(formatEther(BigInt(fee)))
     },[gas, selectedContract])
 
     const { config } = usePrepareContractWrite({
@@ -471,7 +438,7 @@ const contractReadERC20List = useContractRead({
                                     :(
                                         <div className={styles.feeNgasDownChild}>
                                             <div className={styles.feeNgasDownFees}><span>{subsYears === 1 ? subsYears + ' ' + 'year' : subsYears + ' ' + 'years'} registraion</span><span>{Number(subNodeFee)} {selectedContract === '' ? 'ERC20' : tokenSymbol}</span></div>
-                                            <div className={styles.feeNgasDownGas}><span>Est. network fee</span><span>0 ETH</span></div>
+                                            <div className={styles.feeNgasDownGas}><span>Est. network fee</span><span>{gasFee} ETH</span></div>
                                             <div className={styles.feeNgasDownSum}><span>Estimated total</span><span>{Number(subNodeFee)} {selectedContract === '' ? 'ERC20' : tokenSymbol} + {gasFee} ETH</span></div>
                                         </div>   
                                     )

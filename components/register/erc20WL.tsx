@@ -246,43 +246,11 @@ const contractReadERC20List = useContractRead({
 
     //transac est gas
     useEffect(()=>{
-        const getGasFees = async () => {
-            
-            try {
-                const publicClient = createPublicClient({
-                    chain: goerli,
-                    transport: http()
-                })
-                
-                
-                const gasUsed = await publicClient.estimateContractGas({
-                    address: '0x04D2bC82A99f6B7DeE6309AdF84d9F44a04502a6',
-                    abi: [
-                        {
-                            name: 'setSubDomainERC20',
-                            inputs: [ {internalType: "bytes32", name: "node", type: "bytes32"}, {internalType: "string", name: "subNodeLabel", type: "string"}, {internalType: "address", name: "owner", type: "address"}, {internalType: "uint256", name: "duration", type: "uint256" }, {internalType: "address", name: "erc20Contract", type: "address"}, {internalType: "bytes32[]", name: "merkleRoot", type: "bytes32[]"} ],
-                            outputs: [],
-                            stateMutability: 'nonpayable',
-                            type: 'function',
-                        },
-                    ],
-                    functionName: 'setSubDomainERC20',
-                    account: '0x2d5Ec844CB145924AE76DFd526670F16b5f91120',
-                    args: [ (rootNodeENS), (subLabel), (address!), (BigInt(subsYears)), (selectedContract), (merkleProof) ],
-                    value: BigInt(0),
-                    //gasPrice: BigInt(gas)
-                })
-                console.log(gasUsed)
-                
-                const fee = (Number(gas) * Number(gasUsed)) * 1000000000
+        const gasUsed = 297146
+        
+        const fee = (Number(gas) * (gasUsed)) * 1000000000
     
-                setGasFee(formatEther(BigInt(fee)))
-            } catch (error) {
-                console.log(error)
-            }
-
-        }
-        getGasFees()
+        setGasFee(formatEther(BigInt(fee)))
         
     },[gas])
 
