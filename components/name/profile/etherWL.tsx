@@ -11,7 +11,7 @@ import setting_wlSVG from '@/public/assets/icons/setting-wl.svg'
 import { Prices } from './ether'
 import { ENS } from '@/pages/[ensName]'
 import { useAccount, useContractRead, useContractReads, useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi'
-import { labelhash, namehash } from 'viem'
+import { formatEther, labelhash, namehash } from 'viem'
 import AllowlistModal from '../allowlistmodal/allowlistModal'
 
 interface ENSprop {
@@ -865,7 +865,7 @@ const getEther = (usd : string) =>{
                     </div>
                     <div className={styles.profileDownPayRight}>
                       <div className={styles.profileDownPayRightBalance}>
-                        <p>ETH</p>
+                        <p>{formatEther(parentNodeBalance)} ETH</p>
                         <p>USD</p>
                       </div>
                       <div className={styles.profileDownPayRightWithdraw}>
