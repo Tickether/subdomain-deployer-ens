@@ -79,7 +79,7 @@ export default function AllowlistModal({ENS, setOpenAllowlistModal, contract} : 
   const handleSetAllowlistOnChain = async () => {
     try {
       console.log('clicked?')
-      await contractWriteAllowlist.writeAsync?.()
+      contractWriteAllowlist.write?.()
       //if null off chain else update
       if (offChainHolders === null) {
         await handleSetAllowlistOffChain()

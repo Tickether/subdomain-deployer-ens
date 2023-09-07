@@ -326,7 +326,7 @@ const contractReadCanSubActiveParentNode = useContractRead({
 */
     const handleSubdomain = async () => {
         try {
-            await contractWriteSubdomain.writeAsync?.()
+            contractWriteSubdomain.write?.()
         } catch (err) {
             console.log(err)
         }

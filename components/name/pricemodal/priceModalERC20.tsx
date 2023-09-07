@@ -60,7 +60,7 @@ export default function PriceModalERC20({ENS, setOpenModal, prices, ERC20List, c
     */
       const handleSetParentNodeLetterFee = async () => {
         try {
-            await contractWriteParentNodeLetterFee.writeAsync?.()
+            contractWriteParentNodeLetterFee.write?.()
         } catch (err) {
             console.log(err)
         }
@@ -94,7 +94,7 @@ export default function PriceModalERC20({ENS, setOpenModal, prices, ERC20List, c
     
       const handleSetParentNodeNumberFee = async () => {
         try {
-            await contractWriteParentNodeNumberFee.writeAsync?.()
+            contractWriteParentNodeNumberFee.write?.()
         } catch (err) {
             console.log(err)
         }

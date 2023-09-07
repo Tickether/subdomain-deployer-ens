@@ -445,7 +445,7 @@ const waitForWrap = useWaitForTransaction({
 */
 const handleWrap = async () => {
   try {
-      await contractWriteWrap.writeAsync?.()
+      contractWriteWrap.write?.()
   } catch (err) {
       console.log(err)
   }    
@@ -482,7 +482,7 @@ const waitForCantUnwrap = useWaitForTransaction({
 */
 const handleCantUnwrap = async () => {
   try {
-      await contractWriteCantUnwrap.writeAsync?.()
+      contractWriteCantUnwrap.write?.()
   } catch (err) {
       console.log(err)
   }    
@@ -520,7 +520,7 @@ const handleCantUnwrap = async () => {
     */
       const handleApproval = async () => {
           try {
-              await contractWriteApproval.writeAsync?.()
+              contractWriteApproval.write?.()
           } catch (err) {
               console.log(err)
           }    
@@ -553,7 +553,7 @@ const handleCantUnwrap = async () => {
 */
   const handleSetParentNode = async () => {
     try {
-        await contractWriteParentNode.writeAsync?.()
+        contractWriteParentNode.write?.()
     } catch (err) {
         console.log(err)
     }
@@ -587,7 +587,7 @@ onSuccess() {
 */
 const handleSetParentNodeSubMode = async () => {
 try {
-    await contractWriteParentNodeSubMode.writeAsync?.()
+    contractWriteParentNodeSubMode.write?.()
 } catch (err) {
     console.log(err)
 }
@@ -652,7 +652,7 @@ try {
 */
   const handleWithdraw = async () => {
     try {
-        await contractWriteWithdraw.writeAsync?.()
+        contractWriteWithdraw.write?.()
     } catch (err) {
         console.log(err)
     }    
@@ -791,30 +791,81 @@ try {
         },
     ],
     watch: true,
+    allowFailure: false,
   })  
   
   useEffect(() => {
     if (getPrices.data!) {
+      /*
+      let ThreeUpLetterFee = BigInt(0);
+      let FourFiveLetterFee = BigInt(0);
+      let SixDownLetterFee = BigInt(0);
+      let OneNumberFee = BigInt(0);
+      let TwoNumberFee = BigInt(0);
+      let ThreeNumberFee = BigInt(0);
+      let FourNumberFee = BigInt(0);
+      let FiveUpNumberFee = BigInt(0);
+    
+      for (let i = 0; i < getPrices.data!.length; i++) {
+        if (typeof getPrices.data![i] === 'bigint') {
+          // Update the variables based on the 'result' value
+          switch (i) {
+            case 0:
+              ThreeUpLetterFee = getPrices.data![i];
+              break;
+            case 1:
+              FourFiveLetterFee = item.result;
+              break;
+            case 2:
+              SixDownLetterFee = item.result;
+              break;
+            case 3:
+              OneNumberFee = item.result;
+              break;
+            case 4:
+              TwoNumberFee = item.result;
+              break;
+            case 5:
+              ThreeNumberFee = item.result;
+              break;
+            case 6:
+              FourNumberFee = item.result;
+              break;
+            case 7:
+              FiveUpNumberFee = item.result;
+              break;
+            default:
+              break;
+          }
+        }
+        
+      }
+     */
+     
       const [ThreeUpLetterFee, FourFiveLetterFee, SixDownLetterFee, 
         OneNumberFee, TwoNumberFee, ThreeNumberFee,
-        FourNumberFee, FiveUpNumberFee, ] =getPrices.data.map(item => item.result as bigint);
+        FourNumberFee, FiveUpNumberFee, ] = getPrices.data.map(item =>item as bigint)
+      ;
+      
 
-            //
-            const dec8 = 100000000
-            const pricesData: Prices = {
-              threeUpLetterFee: (Number(ThreeUpLetterFee)/dec8).toFixed(2),
-              fourFiveLetterFee: (Number(FourFiveLetterFee)/dec8).toFixed(2),
-              sixDownLetterFee: (Number(SixDownLetterFee)/dec8).toFixed(2),
-              oneNumberFee: (Number(OneNumberFee)/dec8).toFixed(2),
-              twoNumberFee: (Number(TwoNumberFee)/dec8).toFixed(2),
-              threeNumberFee: (Number(ThreeNumberFee)/dec8).toFixed(2),
-              fourNumberFee: (Number(FourNumberFee)/dec8).toFixed(2),
-              fiveUpNumberFee: (Number(FiveUpNumberFee)/dec8).toFixed(2),
-            };
-            setPrices(pricesData)
-    }
+      //
+      const dec8 = 100000000
+      const pricesData: Prices = {
+        threeUpLetterFee: (Number(ThreeUpLetterFee)/dec8).toFixed(2),
+        fourFiveLetterFee: (Number(FourFiveLetterFee)/dec8).toFixed(2),
+        sixDownLetterFee: (Number(SixDownLetterFee)/dec8).toFixed(2),
+        oneNumberFee: (Number(OneNumberFee)/dec8).toFixed(2),
+        twoNumberFee: (Number(TwoNumberFee)/dec8).toFixed(2),
+        threeNumberFee: (Number(ThreeNumberFee)/dec8).toFixed(2),
+        fourNumberFee: (Number(FourNumberFee)/dec8).toFixed(2),
+        fiveUpNumberFee: (Number(FiveUpNumberFee)/dec8).toFixed(2),
+      };
+      setPrices(pricesData)
+}
   },[getPrices.data!])
   console.log(getPrices.data!)
+  console.log(getPrices.isLoading!)
+  console.log(getPrices.isError!)
   console.log(prices)
 
   // check node price in usd

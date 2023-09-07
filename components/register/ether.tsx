@@ -256,7 +256,7 @@ export default function Ether({rootNodeENS, subLabel, clearOption} : RegisterPro
 */
     const handleSubdomain = async () => {
         try {
-            await contractWriteSubdomain.writeAsync?.()
+            contractWriteSubdomain.write?.()
         } catch (err) {
             console.log(err)
         }

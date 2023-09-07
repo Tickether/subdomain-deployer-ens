@@ -187,7 +187,7 @@ export default function Register() {
 
     const handleSubdomain = async () => {
         try {
-            await contractWriteSubdomain.writeAsync?.()
+            contractWriteSubdomain.write?.()
         } catch (err) {
             console.log(err)
         }

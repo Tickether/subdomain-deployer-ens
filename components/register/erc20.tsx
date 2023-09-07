@@ -233,7 +233,7 @@ const contractReadERC20List = useContractRead({
 */
     const handleSubdomain = async () => {
         try {
-            await contractWriteSubdomain.writeAsync?.()
+            contractWriteSubdomain.write?.()
         } catch (err) {
             console.log(err)
         }
@@ -299,7 +299,7 @@ const contractReadERC20List = useContractRead({
 */
     const handleApproval = async () => {
         try {
-            await contractWriteApproval.writeAsync?.()
+            contractWriteApproval.write?.()
         } catch (err) {
             console.log(err)
         }

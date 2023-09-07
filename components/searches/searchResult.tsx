@@ -377,14 +377,15 @@ export default function SearchResult({searchresult, /*canSubdomain,*/ subEnsBox,
             },
         ],
         watch: true,
+        allowFailure: false,
     })  
     console.log(data)
     useEffect(() => {
         //let dataRes : Validaters[] = [] 
-        if (data! /*&& typeof data === 'boolean'*/) {
+        if (data!) {
 
             // Extract the results from the data array
-            const [isWrapped, isFuseBurned, isApproved, isNodeActive, isERC20Approved, isERC20NodeActive, isWLApproved, isWLNodeActive, isERC20WLApproved, isERC20WLNodeActive] = data.map(item => item.result as boolean);
+            const [isWrapped, isFuseBurned, isApproved, isNodeActive, isERC20Approved, isERC20NodeActive, isWLApproved, isWLNodeActive, isERC20WLApproved, isERC20WLNodeActive] = data.map(item => item as boolean);
 
             // Create a new Validator object using the extracted data
             const validatorData: Validator = {

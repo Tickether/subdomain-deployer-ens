@@ -440,7 +440,7 @@ const waitForWrap = useWaitForTransaction({
 
 const handleWrap = async () => {
   try {
-      await contractWriteWrap.writeAsync?.()
+      contractWriteWrap.write?.()
   } catch (err) {
       console.log(err)
   }    
@@ -478,7 +478,7 @@ const waitForCantUnwrap = useWaitForTransaction({
 
 const handleCantUnwrap = async () => {
   try {
-      await contractWriteCantUnwrap.writeAsync?.()
+      contractWriteCantUnwrap.write?.()
   } catch (err) {
       console.log(err)
   }    
@@ -516,7 +516,7 @@ const handleCantUnwrap = async () => {
     */
       const handleApproval = async () => {
           try {
-              await contractWriteApproval.writeAsync?.()
+              contractWriteApproval.write?.()
           } catch (err) {
               console.log(err)
           }    
@@ -550,7 +550,7 @@ const handleCantUnwrap = async () => {
 
   const handleSetParentNode = async () => {
     try {
-        await contractWriteParentNode.writeAsync?.()
+        contractWriteParentNode.write?.()
     } catch (err) {
         console.log(err)
     }
@@ -585,7 +585,7 @@ onSuccess() {
 
 const handleSetParentNodeSubMode = async () => {
 try {
-    await contractWriteParentNodeSubMode.writeAsync?.()
+    contractWriteParentNodeSubMode.write?.()
 } catch (err) {
     console.log(err)
 }
@@ -651,7 +651,7 @@ try {
 */
   const handleWithdraw = async () => {
     try {
-        await contractWriteWithdraw.writeAsync?.()
+        contractWriteWithdraw.write?.()
     } catch (err) {
         console.log(err)
     }    
@@ -790,13 +790,14 @@ try {
         },
     ],
     watch: true,
+    allowFailure: false,
   })  
   
   useEffect(() => {
     if (getPrices.data!) {
       const [ThreeUpLetterFee, FourFiveLetterFee, SixDownLetterFee, 
         OneNumberFee, TwoNumberFee, ThreeNumberFee,
-        FourNumberFee, FiveUpNumberFee, ] =getPrices.data.map(item => item.result as bigint);
+        FourNumberFee, FiveUpNumberFee, ] =getPrices.data.map(item => item as bigint);
 
             //
             const dec8 = 100000000

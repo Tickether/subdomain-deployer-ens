@@ -86,7 +86,7 @@ console.log((contractReadSubNodeFee?.data!))
     */
     const handleExtendExp = async () => {
         try {
-            await contractWriteExtendExp.writeAsync?.()
+            contractWriteExtendExp.write?.()
         } catch (err) {
             console.log(err)
         }

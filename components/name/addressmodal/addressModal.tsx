@@ -51,7 +51,7 @@ export default function AddressModal({ENS, setOpenAddressModal, contract} : Addr
 */
   const handleAddERC20 = async () => {
     try {
-        await contractWriteAddERC20.writeAsync?.()
+        contractWriteAddERC20.write?.()
     } catch (err) {
         console.log(err)
     }
